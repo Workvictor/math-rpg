@@ -5,8 +5,9 @@ import { Vector } from "../../utils/Vector";
 import { ElemEvent } from "../../utils/ElemEvent";
 import { Viewport } from "../../utils/Viewport";
 import kw from "./img/kobold-worker-xs.png";
+import northshireMine from "./img/northshireMine.png";
 import { Spot } from "../Spot";
-import { Border } from "../Border";
+import { Border } from "../layout/Border";
 
 const Wrapper = styled(Border)`
   overflow: hidden;
@@ -94,7 +95,12 @@ export const Map = ({ map }: { map: { src: string; name: string } }) => {
       <Title>{map.name}</Title>
       <Image x={position.x} y={position.y}>
         <img ref={imgRef} src={map.src} alt={map.name} />
-        <Spot src={kw} x={0.25} y={0.25} />
+        <Spot
+          src={northshireMine}
+          name={"Mine"}
+          id={"northshireMine"}
+          position={new Vector(0.25, 0.09)}
+        />
       </Image>
     </Wrapper>
   );

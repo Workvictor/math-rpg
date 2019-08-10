@@ -1,16 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Bowser from "bowser";
+import "animate.css";
 
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
-const parser = Bowser.getParser(window.navigator.userAgent);
-const isValidBrowser = parser.satisfies({
-  Chrome: ">=70",
-  "Yandex Browser": "~19"
-});
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

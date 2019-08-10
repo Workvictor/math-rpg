@@ -1359,13 +1359,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/bowser@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@types/bowser/-/bowser-1.1.1.tgz#9bbe3c93fef1c787f565d252ce51326ada506611"
-  integrity sha512-JEJrXQI6H+wJsj8Q5gmR2u3v+fsI00cmatVKq9EzXk66xGNueUi8MFOnuHo3S9poNnTxrLiEUMFuiLW7JVVN8g==
-  dependencies:
-    bowser "*"
-
 "@types/history@*":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
@@ -1784,6 +1777,11 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+
+animate.css@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-3.7.2.tgz#e73e0d50e92cb1cfef1597d9b38a9481020e08ea"
+  integrity sha512-0bE8zYo7C0KvgOYrSVfrzkbYk6IOTVPNqkiHg2cbyF4Pq/PXzilz4BRWA3hwEUBoMp5VBgrC29lQIZyhRWdBTw==
 
 ansi-colors@^3.0.0:
   version "3.2.4"
@@ -2299,11 +2297,6 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
-
-bowser@*, bowser@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.5.2.tgz#5eac42a9ad4a4c95182b122fab8dd03d5941c891"
-  integrity sha512-82oFIAwiSzvw7wwMjg7fXOBq0ZXHXcH+vo9Ul6xleXmBvdlCvctrcFGJXCmckWXj2Qsspkhr1lIrRwK30oibRA==
 
 brace-expansion@^1.1.7:
   version "1.1.11"

@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Border } from "./Border";
+import { Border } from "./layout/Border";
 import { Vector } from "../utils/Vector";
 import { MapPageContext } from "./MapPage";
+import { Link } from "react-router-dom";
 
 export interface INpc {
   position: Vector;
@@ -14,6 +15,7 @@ export interface ISpot {
   position: Vector;
   name: string;
   id: string;
+  src: string;
 }
 
 interface Coords {
@@ -21,11 +23,7 @@ interface Coords {
   readonly y: number;
 }
 
-interface IProps extends Coords {
-  readonly src: string;
-}
-
-const Wrapper = styled(Border)<Coords>`
+const Wrapper = styled(Border)<{ position: Vector }>`
   transition: all 150ms;
   transform-origin: center;
   overflow: hidden;
@@ -34,9 +32,14 @@ const Wrapper = styled(Border)<Coords>`
   border-radius: 64px;
   padding: 0;
   position: absolute;
-  top: ${({ x }) => (x > 1 ? `${x}px` : `${x * 100}%`)};
-  left: ${({ y }) => (y > 1 ? `${y}px` : `${y * 100}%`)};
+  left: ${({ position }) =>
+    position.x > 1 ? `${position.x}px` : `${position.x * 100}%`};
+  top: ${({ position }) =>
+    position.y > 1 ? `${position.y}px` : `${position.y * 100}%`};
   background-color: rgba(51, 51, 51, 0.7);
+  &:hover {
+    filter: brightness(1.3);
+  }
 `;
 
 const Mob = styled(Border)<{ src: string }>`
@@ -50,19 +53,21 @@ const Mob = styled(Border)<{ src: string }>`
   background-size: cover;
 `;
 
-export const Spot = (props: IProps) => {
+export const Spot = ({ src, position, name, id }: ISpot) => {
   const onClick = () => {
     mapPageContext.onSelect({
-      name: "test",
-      position: new Vector(props.x, props.y)
+      name,
+      position
     });
   };
 
   const mapPageContext = React.useContext(MapPageContext);
 
   return (
-    <Wrapper x={props.x} y={props.y} onClick={onClick}>
-      <Mob src={props.src} />
+    <Wrapper position={position}>
+      <Link to={"/map/" + id}>
+        <Mob src={src} />
+      </Link>
     </Wrapper>
   );
 };

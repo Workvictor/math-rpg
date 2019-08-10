@@ -52,12 +52,6 @@ export const MapPage = () => {
           <Map map={northshire} />
         </Half>
         <Half>
-          {selected && (
-            <Content>
-              <div>test</div>
-              <Button>Атаковать</Button>
-            </Content>
-          )}
           <PlayerFrame />
         </Half>
       </Wrapper>

@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { Border } from "../Border";
+import { Border } from "../layout/Border";
 
 const Inner = styled.span`
   position: relative;
-  border-radius: inherit;
+  border-radius: 2px;
   display: flex;
   text-align: center;
   align-items: center;
@@ -14,9 +14,9 @@ const Inner = styled.span`
   justify-content: center;
   line-height: 120%;
   font-size: 14px;
-  padding: 1px 8px 2px;
+  padding: 1px 8px 3px;
   color: goldenrod;
-  text-shadow: 0 1px 1px #282c34;
+  text-shadow: 0 1px 1px #080808;
   background-color: darkred;
   box-shadow: inset 0 0 4px #0c1919, inset 0 0 1px #0c1919,
     inset 0 2px 0 #bf0707, inset 0 -2px 0 #650303;
@@ -35,7 +35,7 @@ const Inner = styled.span`
 
 export const Wrapper = styled(Border)`
   outline: none;
-  cursor: pointer;
+  cursor: unset;
   margin: 4px;
   :active {
     ${Inner} {
@@ -48,15 +48,26 @@ export const Wrapper = styled(Border)`
   }
 `;
 
-export const Button: React.FC<{ to?: string }> = ({ children, to }) => {
+interface Interface {
+  className?: string;
+  to?: string;
+  onClick?: () => void;
+}
+
+export const Button: React.FC<Interface> = ({
+  children,
+  to,
+  onClick,
+  className
+}) => {
   return (
-    <Wrapper as="button">
+    <Wrapper as="button" onClick={onClick} className={className}>
       {to ? (
         <Link to={to}>
-          <Inner>{children}</Inner>
+          <Inner className={"inner"}>{children}</Inner>
         </Link>
       ) : (
-        <Inner>{children}</Inner>
+        <Inner className={"inner"}>{children}</Inner>
       )}
     </Wrapper>
   );
