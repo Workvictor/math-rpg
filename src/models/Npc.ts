@@ -5,8 +5,8 @@ export class Npc {
   public healthPoints: number;
   public healthPointsMax: number;
   public damage: number;
-  public target: string = "";
-  constructor(name: string, type: "humanoid" | "beast", level: number) {
+  public target: string = '';
+  constructor(name: string, type: 'humanoid' | 'beast', level: number) {
     this.name = name;
     this.type = type;
     this.level = level;
@@ -27,7 +27,7 @@ export class Npc {
       );
     }
     if (!this.target) {
-      console.log("no target");
+      console.log('no target');
     }
   };
 }

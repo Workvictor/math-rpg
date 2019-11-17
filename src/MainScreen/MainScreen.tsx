@@ -1,11 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-import { Howl } from "howler";
+import React from 'react';
+import styled from 'styled-components';
+import { Howl } from 'howler';
 
-import bg1 from "./img/bg1.jpg";
-import { Button } from "../components/Button";
-import { Border } from "../components/layout/Border";
-import { Rythm } from "../components/layout/Rythm";
+import bg1 from './img/bg1.jpg';
+import { Button } from '../components/Button';
+import { Border } from '../components/layout/Border';
+import { Rythm } from '../components/layout/Rythm';
+import { PlayerContext } from '../store/PlayerContext';
 
 const Bg = styled.div`
   height: 250px;
@@ -37,6 +38,15 @@ export const MainScreen = () => {
     // mainTitle.play();
     // Howler.volume(0.25);
   }, []);
+  const player = React.useContext(PlayerContext);
+  const onClick = () => {
+    player.dispatch({
+      type: 'update',
+      payload: {
+        name: 'testest'
+      }
+    });
+  };
   return (
     <Wrapper>
       <Rythm>
@@ -46,7 +56,7 @@ export const MainScreen = () => {
       </Rythm>
       <StyledBorder>
         <div>Добро пожаловать в игру</div>
-        <Button to={"/map"}>Продолжить</Button>
+        <Button onClick={onClick}>Продолжить</Button>
       </StyledBorder>
     </Wrapper>
   );

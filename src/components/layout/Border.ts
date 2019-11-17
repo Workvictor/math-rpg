@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Frame } from "./Frame";
+import styled from 'styled-components';
+import { Frame } from './Frame';
 
 export const Border = styled(Frame)`
   padding: 2px;

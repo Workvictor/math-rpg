@@ -1,1 +1,1 @@
-export { SpotPage } from "./SpotPage";
+export { SpotPage } from './SpotPage';

@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { Vector } from "../../utils/Vector";
-import { ElemEvent } from "../../utils/ElemEvent";
-import { Viewport } from "../../utils/Viewport";
-import kw from "./img/kobold-worker-xs.png";
-import northshireMine from "./img/northshireMine.png";
-import { Spot } from "../Spot";
-import { Border } from "../layout/Border";
+import { Vector } from '../../utils/Vector';
+import { ElemEvent } from '../../utils/ElemEvent';
+import { Viewport } from '../../utils/Viewport';
+import kw from './img/kobold-worker-xs.png';
+import northshireMine from './img/northshireMine.png';
+import { Spot } from '../Spot';
+import { Border } from '../layout/Border';
 
 const Wrapper = styled(Border)`
   overflow: hidden;
@@ -55,12 +55,12 @@ export const Map = ({ map }: { map: { src: string; name: string } }) => {
   const onMouseUp = (e: Event) => {
     e.preventDefault();
     togglePicked(false);
-    window.removeEventListener("mouseup", onMouseUp);
+    window.removeEventListener('mouseup', onMouseUp);
   };
 
   const onMouseDown = ElemEvent.mouseEvent(e => {
     e.preventDefault();
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener('mouseup', onMouseUp);
     togglePicked(true);
     const vp = new Viewport(e.currentTarget.getBoundingClientRect());
     setViewport(vp);
@@ -97,8 +97,8 @@ export const Map = ({ map }: { map: { src: string; name: string } }) => {
         <img ref={imgRef} src={map.src} alt={map.name} />
         <Spot
           src={northshireMine}
-          name={"Mine"}
-          id={"northshireMine"}
+          name={'Mine'}
+          id={'northshireMine'}
           position={new Vector(0.25, 0.09)}
         />
       </Image>

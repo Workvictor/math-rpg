@@ -1,10 +1,10 @@
-import "styled-components";
-import { DefaultTheme, createGlobalStyle, css } from "styled-components";
+import 'styled-components';
+import { DefaultTheme, createGlobalStyle, css } from 'styled-components';
 
-import marble from "./img/UI-Background-Marble.png";
-import rock from "./img/UI-Background-Rock.png";
-import guard from "./img/guard.png";
-import pointer from "./img/Point.png";
+import marble from './img/UI-Background-Marble.png';
+import rock from './img/UI-Background-Rock.png';
+import guard from './img/guard.png';
+import pointer from './img/Point.png';
 
 const images = {
   marble,
@@ -13,9 +13,9 @@ const images = {
 };
 
 const shadows = {
-  blueGlow: "0 0 100px #1270a0, 1px 0 0px #2a556f, -1px 0 0px #2a556f",
-  bodyGlow: "inset 0 0 50px rgba(13, 109, 160, 0.3)",
-  textCommon: "0 1px 1px #000",
+  blueGlow: '0 0 100px #1270a0, 1px 0 0px #2a556f, -1px 0 0px #2a556f',
+  bodyGlow: 'inset 0 0 50px rgba(13, 109, 160, 0.3)',
+  textCommon: '0 1px 1px #000',
   cssBlueGlow: css`
     box-shadow: 0 0 100px #1270a0, 1px 0 0 #2a556f, -1px 0 0 #2a556f,
       0 1px 0 #2a556f, 0 -1px 0 #2a556f;
@@ -23,9 +23,9 @@ const shadows = {
 };
 
 const colors = {
-  blueAccent: "#1270a0",
-  colden: "#c0aa29",
-  grey: "#242424"
+  blueAccent: '#1270a0',
+  colden: '#c0aa29',
+  grey: '#242424'
 };
 
 const bg = {
@@ -37,7 +37,7 @@ const bg = {
   `
 };
 
-declare module "styled-components" {
+declare module 'styled-components' {
   export interface DefaultTheme {
     colors: typeof colors;
     shadows: typeof shadows;

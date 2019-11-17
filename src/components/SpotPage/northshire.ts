@@ -1,5 +1,3 @@
 export const northshire = {
-  npcs: [
-
-  ]
-}
+  npcs: []
+};

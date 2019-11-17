@@ -1,5 +1,5 @@
-import React from "react";
-import { Vector } from "./Vector";
+import React from 'react';
+import { Vector } from './Vector';
 
 type TEvent = React.MouseEvent<HTMLDivElement, MouseEvent>;
 

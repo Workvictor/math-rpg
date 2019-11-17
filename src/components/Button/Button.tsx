@@ -1,73 +1,86 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-import { Border } from "../layout/Border";
+import { Border } from '../layout';
 
-const Inner = styled.span`
-  position: relative;
+export const ButtonInner = styled.span`
   border-radius: 2px;
   display: flex;
   text-align: center;
   align-items: center;
-  margin: 0 auto;
   justify-content: center;
+  margin: 0 auto;
   line-height: 120%;
-  font-size: 14px;
+  font-size: inherit;
   padding: 1px 8px 3px;
-  color: goldenrod;
-  text-shadow: 0 1px 1px #080808;
+  color: inherit;
+  text-shadow: inherit;
   background-color: darkred;
   box-shadow: inset 0 0 4px #0c1919, inset 0 0 1px #0c1919,
     inset 0 2px 0 #bf0707, inset 0 -2px 0 #650303;
-  :hover:after {
-    box-shadow: inset 0 -4px 6px rgba(255, 234, 74, 0.29);
-  }
-  :after {
-    position: absolute;
-    border-radius: inherit;
-    pointer-events: none;
-    content: "";
-    width: 100%;
-    height: 100%;
-  }
 `;
 
-export const Wrapper = styled(Border)`
+const Wrapper = styled(Border)`
+  position: relative;
+  color: goldenrod;
   outline: none;
   cursor: unset;
   margin: 4px;
-  :active {
-    ${Inner} {
-      transform: scale(0.96);
-      box-shadow: inset 0 0 5px #0c1919, inset 0 0 2px #0c1919;
-      :hover:after {
-        box-shadow: inset 0 -4px 6px rgba(255, 234, 74, 0.13);
-      }
+  font-size: 14px;
+  text-shadow: 0 1px 1px #080808;
+  :after {
+    top: 0;
+    left: 0;
+    position: absolute;
+    border-radius: inherit;
+    pointer-events: none;
+    content: '';
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 5px #0c1919, inset 0 0 2px #0c1919;
+  }
+  :hover:after {
+    box-shadow: inset 0 -6px 6px 0px rgba(255, 234, 74, 0.16);
+  }
+  :active,
+  &.active {
+    color: goldenrod;
+    :after {
+      box-shadow: inset 0 0 4px 3px #000000;
+    }
+    ${ButtonInner} {
+      transform: scale(0.98) translate(1px, 1px);
     }
   }
 `;
 
-interface Interface {
+export interface Interface {
   className?: string;
   to?: string;
+  navigation?: boolean;
   onClick?: () => void;
 }
 
 export const Button: React.FC<Interface> = ({
   children,
-  to,
+  to = '',
   onClick,
-  className
+  className,
+  navigation
 }) => {
+  const classNames =
+    window.location.pathname === to && navigation
+      ? [className, 'active'].join(' ')
+      : className;
   return (
-    <Wrapper as="button" onClick={onClick} className={className}>
+    <Wrapper as="button" onClick={onClick} className={classNames}>
       {to ? (
         <Link to={to}>
-          <Inner className={"inner"}>{children}</Inner>
+          <ButtonInner>{children}</ButtonInner>
         </Link>
       ) : (
-        <Inner className={"inner"}>{children}</Inner>
+        <ButtonInner>{children}</ButtonInner>
       )}
     </Wrapper>
   );

@@ -1,15 +1,15 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import src from "./Map/img/northshire.jpg";
-import { Map } from "./Map";
-import { INpc } from "./Spot";
-import { Button } from "./Button";
-import {PlayerFrame} from "./PlayerFrame";
+import src from './Map/img/northshire.jpg';
+import { Map } from './Map';
+import { INpc } from './Spot';
+import { Button } from './Button';
+import { PlayerFrame } from './PlayerFrame';
 
 const northshire = {
   src,
-  name: "Northshire"
+  name: 'Northshire'
 };
 
 const Half = styled.div`

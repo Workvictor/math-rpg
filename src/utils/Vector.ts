@@ -8,11 +8,11 @@ export class Vector {
   }
 
   constructor(x: number | { x: number; y: number } = 0, y = 0) {
-    if (typeof x === "number") {
+    if (typeof x === 'number') {
       this._x = x;
       this._y = y;
     }
-    if (typeof x === "object") {
+    if (typeof x === 'object') {
       this._x = x.x;
       this._y = x.y;
     }

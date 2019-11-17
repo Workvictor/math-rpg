@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { Border } from "../layout/Border";
-import { BorderInner } from "../layout/BorderInner";
-import { StatusBar } from "../StatusBar";
-import { Npc } from "../../models/Npc";
+import { Border } from '../layout/Border';
+import { BorderInner } from '../layout/BorderInner';
+import { StatusBar } from '../StatusBar';
+import { Npc } from '../../models/Npc';
 
 const Wrapper = styled(Border)`
   width: 100%;
@@ -51,12 +51,12 @@ export const PlayerFrame = ({ target }: Interface) => {
   const [autoattack, toggleAutoattack] = React.useState<boolean>(false);
   React.useEffect(() => {
     if (target && !autoattack && target.healthPoints > 0) {
-      console.log("Player start attack target: ", target.name);
+      console.log('Player start attack target: ', target.name);
       setTimeout(() => {
         toggleAutoattack(true);
-        console.log("target hp: ", target.healthPoints);
+        console.log('target hp: ', target.healthPoints);
         target.receiveDamage(1);
-        console.log("reload autoattack");
+        console.log('reload autoattack');
       }, 1000);
       // return () => {
       //   if (timerId) {

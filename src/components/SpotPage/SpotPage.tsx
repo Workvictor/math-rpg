@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { PlayerFrame } from "../PlayerFrame";
-import { Button } from "../Button";
-import { Border } from "../layout/Border";
-import { StatusBar } from "../StatusBar";
-import { Npc } from "../../models/Npc";
+import { PlayerFrame } from '../PlayerFrame';
+import { Button } from '../Button';
+import { Border } from '../layout/Border';
+import { StatusBar } from '../StatusBar';
+import { Npc } from '../../models/Npc';
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,9 +19,9 @@ const Pool = styled(Wrapper)`
 `;
 
 const enemes: Npc[] = [
-  new Npc("enemy1", "humanoid", 1),
-  new Npc("enemy2", "humanoid", 1),
-  new Npc("enemy3", "humanoid", 1)
+  new Npc('enemy1', 'humanoid', 1),
+  new Npc('enemy2', 'humanoid', 1),
+  new Npc('enemy3', 'humanoid', 1)
 ];
 
 export const SpotPage = () => {
@@ -29,14 +29,14 @@ export const SpotPage = () => {
   const [selectedEnemy, setSelectedEnemy] = React.useState<Npc>();
   const onAttack = () => {
     if (selectedEnemy) {
-      console.log("onAttack", selectedEnemy);
+      console.log('onAttack', selectedEnemy);
       setEnemyHealthPoints(enemyHealthPoints - 1);
     } else {
-      console.log("no target", selectedEnemy);
+      console.log('no target', selectedEnemy);
     }
   };
   const onSelectEnemy = (enemy: Npc) => {
-    console.log("onSelectEnemy", enemy.name);
+    console.log('onSelectEnemy', enemy.name);
     setSelectedEnemy(enemy);
   };
   const onTargetDamage = (damage: number) => {
@@ -59,7 +59,7 @@ export const SpotPage = () => {
         {selectedEnemy && (
           <div>
             <Button onClick={onAttack}>Атаковать</Button>
-            {selectedEnemy.name}{" "}
+            {selectedEnemy.name}{' '}
             <StatusBar
               value={selectedEnemy.healthPoints / selectedEnemy.healthPointsMax}
             />

@@ -1,40 +1,40 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import { RouteComponentProps } from 'react-router';
 
-import { BorderInner, Padbox, Flex } from "../layout";
-import { Backpack } from "../icons";
-import { IconButton } from "../Button";
+import { Padbox, FlexBetween } from '../layout';
+import { IconButton } from '../Button';
+import { useGameState } from '../../hooks/useGameState';
+import { Group } from './Group';
 
-const Wrapper = styled(Padbox)`
-  position: absolute;
+const Wrapper = styled(Padbox.withComponent(FlexBetween))`
   width: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
 `;
 
-const WrapperInner = styled(BorderInner)`
-  padding: 1px;
-`;
+export const Navbar = ({
+  location: { pathname },
+  match: {
+    url,
+    params: { gameName = '' }
+  }
+}: RouteComponentProps<{ gameName?: string; location?: string }>) => {
+  const gameState = useGameState();
+  const isGameEnable = gameState.ids.includes(gameName);
+  const homeBtnVisible = pathname.split('/').filter(String).length > 0;
 
-const StyledFlex = styled(Flex)`
-  justify-content: flex-end;
-`;
-
-export const Navbar = () => {
   return (
     <Wrapper>
-      <WrapperInner>
-        <StyledFlex>
-          <IconButton>P</IconButton>
-          <IconButton>
-            <Backpack />
-          </IconButton>
-          <IconButton>M</IconButton>
-          <IconButton>Q</IconButton>
-          <IconButton>S</IconButton>
-        </StyledFlex>
-      </WrapperInner>
+      <Group visible={homeBtnVisible}>
+        <IconButton to={'/'} type={'quit'} />
+      </Group>
+      <Group visible={isGameEnable}>
+        <IconButton navigation to={`${url}/character`} type={'player'} />
+        <IconButton navigation to={`${url}/backpack`} type={'backpack'} />
+        <IconButton navigation to={`${url}/map`} type={'compass'} />
+        <IconButton navigation to={`${url}/questbook`} type={'questbook'} />
+        <IconButton navigation to={`${url}/inn`} type={'house'} />
+        <IconButton navigation to={`${url}/adventure`} type={'adventure'} />
+      </Group>
     </Wrapper>
   );
 };

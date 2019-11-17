@@ -1,14 +1,30 @@
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { Button } from "./Button";
+import { Button, ButtonInner, Interface as ButtonInterface } from './Button';
+import { SvgIcon } from '../icons';
+import { TIcon } from '../icons/TIcon';
 
-export const IconButton = styled(Button)`
+export const StyledButton = styled(Button)`
   margin: 1px;
   width: 32px;
   height: 32px;
-  & .inner {
+  font-size: 22px;
+  color: #310000;
+  &:hover {
+    color: goldenrod;
+  }
+  & ${ButtonInner} {
     padding: 2px;
-    height: 26px;
-    width: 26px;
   }
 `;
+
+interface IIconButton extends ButtonInterface {
+  type: TIcon;
+}
+
+export const IconButton = ({ type, ...buttonProps }: IIconButton) => (
+  <StyledButton {...buttonProps}>
+    <SvgIcon type={type} />
+  </StyledButton>
+);

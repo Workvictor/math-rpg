@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { Border } from "./layout/Border";
+import { Border } from './layout/Border';
 
 const Wrapper = styled(Border)`
   display: block;
-  width: 100%;
+  width: 100px;
   min-height: 14px;
   height: 14px;
   padding: 1px;
@@ -21,7 +21,8 @@ const Inner = styled.div.attrs<{ width: number }>(props => ({
   }
 }))<{ width: number }>`
   transition: all 150ms;
-  background-color: #4b7504;
+  //background-color: #4b7504;
+  background-color: #55574c;
   border-radius: inherit;
   height: 100%;
   box-shadow: inset 0 0 5px rgb(0, 0, 0);

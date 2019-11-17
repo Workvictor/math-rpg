@@ -7,6 +7,7 @@ body {
   color: beige;
   height: 100vh;
   display: flex;
+  user-select: none;
 }
 
 #root {
@@ -22,12 +23,20 @@ body * {
 
 a {
   text-decoration: none;
-  cursor: pointer;
+  cursor: inherit;
   color: inherit;
 }
 
 a :hover {
   text-decoration: none;
+}
+
+p {
+  margin: 0 0 0.5rem;
+}
+
+h1 {
+  margin: 1rem 0;
 }
 
 code {

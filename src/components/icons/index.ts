@@ -1,1 +1,1 @@
-export { Backpack } from "./Backpack";
+export { SvgIcon } from './SvgIcon';

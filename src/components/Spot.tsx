@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { Border } from "./layout/Border";
-import { Vector } from "../utils/Vector";
-import { MapPageContext } from "./MapPage";
-import { Link } from "react-router-dom";
+import { Border } from './layout/Border';
+import { Vector } from '../utils/Vector';
+import { MapPageContext } from './MapPage';
+import { Link } from 'react-router-dom';
 
 export interface INpc {
   position: Vector;
@@ -65,7 +65,7 @@ export const Spot = ({ src, position, name, id }: ISpot) => {
 
   return (
     <Wrapper position={position}>
-      <Link to={"/map/" + id}>
+      <Link to={'/map/' + id}>
         <Mob src={src} />
       </Link>
     </Wrapper>
