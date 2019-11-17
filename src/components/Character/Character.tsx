@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Border, BorderInner } from '../../../components/layout';
-import { StatusBar } from '../../../components/StatusBar';
+import { Border, BorderInner } from '../layout';
+import { StatusBar } from '../StatusBar';
 
 const Wrapper = styled(Border)`
   width: 100%;

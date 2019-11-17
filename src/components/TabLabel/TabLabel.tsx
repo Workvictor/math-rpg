@@ -13,13 +13,12 @@ const StyledIconButton = styled(IconButton)`
 interface ITabLabel {
   label: string;
   fromUrl?: string;
-  visible?: boolean;
 }
 
 export const TabLabel: FC<ITabLabel> = props => {
-  const { label, fromUrl, visible = true } = props;
+  const { label, fromUrl } = props;
 
-  return visible ? (
+  return label ? (
     <FlexStart>
       <Tab>{label}</Tab>
       {fromUrl && <StyledIconButton to={fromUrl} type={'cancel'} />}

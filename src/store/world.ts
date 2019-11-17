@@ -1,5 +1,5 @@
-type Towns = 't1' | 't2';
-type LocationIds = 't1-1' | 't1-2' | 't1-3' | 't2-1';
+export type Towns = 't1' | 't2';
+export type LocationIds = 't1-1' | 't1-2' | 't1-3' | 't2-1';
 
 export interface Location {
   id: LocationIds;
@@ -9,7 +9,14 @@ export interface Location {
   unlockTown?: Towns;
 }
 
-export interface Town {
+export interface ICreature {
+  id: string;
+  name: string;
+  hp: number;
+  dmg: number;
+}
+
+export interface ITown {
   id: Towns;
   name: string;
   locationIds: LocationIds[];
@@ -37,7 +44,7 @@ export const locations: Location[] = [
   }
 ];
 
-export const towns: Town[] = [
+export const towns: ITown[] = [
   {
     id: 't1',
     name: 'village',

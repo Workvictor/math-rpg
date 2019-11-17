@@ -1,10 +1,9 @@
 import React from 'react';
 import { Redirect, Route, Switch, RouteComponentProps } from 'react-router';
 
-import { Location } from './components/Location';
-import { Quest } from '../Quest';
+import { Location } from '../Location';
+import { Quest } from '../../pages/Quest';
 import { useGameState } from '../../hooks/useGameState';
-import { useGameProvider } from '../../hooks/useGameProvider';
 import { towns } from '../../store/world';
 
 export const path = {
@@ -34,7 +33,7 @@ export const Game = (props: RouteComponentProps<{ gameName: string }>) => {
   return isGameEnable ? (
     <Switch>
       <Route path={`${path}/quest/:id`} component={Quest} />
-      <Route path={`${path}/:location/:tab?`} component={Location} />
+      <Route path={`${path}/:townId/:tab?`} component={Location} />
       <Redirect to={`${url}/${townId}`} />
     </Switch>
   ) : (

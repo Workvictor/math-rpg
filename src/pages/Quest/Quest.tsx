@@ -11,10 +11,10 @@ import {
 } from '../../components/layout';
 
 import { Typer } from '../../components/Typer';
-import { getQuestById } from '../../store/quests';
 import { Button } from '../../components/Button';
 import { useGameProvider } from '../../hooks/useGameProvider';
 import { useGameState } from '../../hooks/useGameState';
+import { getQuestById } from '../../components/Quests/quests';
 
 const Block = Flex.withComponent(
   Rythm.withComponent(Padbox.withComponent(UIBlockInner))

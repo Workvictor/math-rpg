@@ -28,11 +28,11 @@ export const Navbar = ({
         <IconButton to={'/'} type={'quit'} />
       </Group>
       <Group visible={isGameEnable}>
+        <IconButton navigation to={`${url}`} type={'house'} />
         <IconButton navigation to={`${url}/character`} type={'player'} />
         <IconButton navigation to={`${url}/backpack`} type={'backpack'} />
         <IconButton navigation to={`${url}/map`} type={'compass'} />
         <IconButton navigation to={`${url}/questbook`} type={'questbook'} />
-        <IconButton navigation to={`${url}/inn`} type={'house'} />
         <IconButton navigation to={`${url}/adventure`} type={'adventure'} />
       </Group>
     </Wrapper>

@@ -4,8 +4,8 @@ import { ThemeProvider } from 'styled-components';
 
 import { theme, AppGlobalStyle } from './theme';
 import { Navbar } from './components/Navigation/Navbar';
+import { Game } from './components/Game';
 import { Home } from './pages/Home';
-import { Game } from './pages/Game';
 import { NewGame } from './pages/NewGame';
 import { GameProvider } from './store/GameContext';
 import { AppFrame } from './components/AppFrame';

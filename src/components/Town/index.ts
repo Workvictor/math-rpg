@@ -1,0 +1,1 @@
+export { Town } from './Town';

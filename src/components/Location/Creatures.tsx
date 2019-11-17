@@ -1,36 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { FlexColumnWide, UIBlockInner } from '../import';
-import { Route, RouteComponentProps, Switch } from 'react-router';
-import { Tab } from '../../../../components/layout/Tab';
-import { Rythm } from '../../../../components/layout';
-import { Quest } from '../../../Quest';
-import { Character } from '../Character';
-import { Questbook } from '../Questbook';
-import { TabLabel } from '../../../../components/TabLabel';
-import { Player } from '../../../../components/Player';
-
-interface ICreature {
-  id: string;
-  name: string;
-  hp: number;
-  dmg: number;
-}
+import { RouteComponentProps } from 'react-router';
+import { Rythm, UIBlockInner } from '../layout';
+import { TabLabel } from '../TabLabel';
+import { Player } from '../Player';
 
 interface ILocation {
   name: string;
   creatureIds: string[];
 }
-
-const creatures: { [key: string]: ICreature } = {
-  '1': {
-    id: '1',
-    name: 'Kobold',
-    hp: 10,
-    dmg: 2
-  }
-};
 
 type TLocation = 'northshire' | 'elvin';
 

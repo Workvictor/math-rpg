@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 
-import { FlexColumnWide, UIBlockInner } from '../../../components/layout';
-import { useGameState } from '../../../hooks/useGameState';
-import { getQuestById, quests } from '../../../store/quests';
-import { TabLabel } from '../../../components/TabLabel';
+import { getQuestById } from './quests';
+import { UIBlockInner } from '../layout';
+import { TabLabel } from '../TabLabel';
+import { useGameState } from '../../hooks/useGameState';
 
 export const Questbook = (
   props: RouteComponentProps<{ gameName: string; location: string }>
@@ -25,7 +25,7 @@ export const Questbook = (
     .join('/');
 
   return (
-    <FlexColumnWide>
+    <>
       <TabLabel label={'Questbook'} fromUrl={fromUrl} />
 
       <div>
@@ -41,6 +41,6 @@ export const Questbook = (
           ) : null;
         })}
       </div>
-    </FlexColumnWide>
+    </>
   );
 };
