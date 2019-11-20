@@ -1,9 +1,10 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { Redirect, RouteComponentProps } from 'react-router';
 
 import { TabLabel } from '../TabLabel';
 import { locations, Towns, towns } from '../../store/world';
 import { UIBlockInner } from '../layout';
+import { Link } from 'react-router-dom';
 
 export const Town = (
   props: RouteComponentProps<{
@@ -14,8 +15,7 @@ export const Town = (
 ) => {
   const {
     match: {
-      path,
-      params: { townId }
+      params: { townId, gameName }
     }
   } = props;
   const town = towns.find(({ id }) => id === townId);
@@ -26,12 +26,16 @@ export const Town = (
       {town.locationIds.map(locationId => {
         const loc = locations.find(item => item.id === locationId);
         return loc ? (
-          <UIBlockInner key={locationId}>
-            <div>{loc.name}</div>
-            Уровень мостров: {loc.level.join(' - ')}
-          </UIBlockInner>
+          <Link key={locationId} to={`adventure/${loc.id}`}>
+            <UIBlockInner>
+              <div>{loc.name}</div>
+              Уровень мостров: {loc.level.join(' - ')}
+            </UIBlockInner>
+          </Link>
         ) : null;
       })}
     </>
-  ) : null;
+  ) : (
+    <Redirect to={`/${gameName}/${towns[0].id}`} />
+  );
 };

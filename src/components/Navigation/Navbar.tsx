@@ -15,25 +15,25 @@ export const Navbar = ({
   location: { pathname },
   match: {
     url,
-    params: { gameName = '' }
+    params: { gameName = '', location }
   }
 }: RouteComponentProps<{ gameName?: string; location?: string }>) => {
   const gameState = useGameState();
   const isGameEnable = gameState.ids.includes(gameName);
-  const homeBtnVisible = pathname.split('/').filter(String).length > 0;
+  const home = `/${gameName}/${location}`;
 
   return (
     <Wrapper>
-      <Group visible={homeBtnVisible}>
+      <Group visible={url === home}>
         <IconButton to={'/'} type={'quit'} />
       </Group>
       <Group visible={isGameEnable}>
-        <IconButton navigation to={`${url}`} type={'house'} />
-        <IconButton navigation to={`${url}/character`} type={'player'} />
-        <IconButton navigation to={`${url}/backpack`} type={'backpack'} />
-        <IconButton navigation to={`${url}/map`} type={'compass'} />
-        <IconButton navigation to={`${url}/questbook`} type={'questbook'} />
-        <IconButton navigation to={`${url}/adventure`} type={'adventure'} />
+        <IconButton navigation to={`${home}`} type={'house'} />
+        <IconButton navigation to={`${home}/character`} type={'player'} />
+        <IconButton navigation to={`${home}/backpack`} type={'backpack'} />
+        <IconButton navigation to={`${home}/map`} type={'compass'} />
+        <IconButton navigation to={`${home}/questbook`} type={'questbook'} />
+        <IconButton navigation to={`${home}/adventure`} type={'adventure'} />
       </Group>
     </Wrapper>
   );

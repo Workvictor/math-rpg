@@ -1,71 +1,49 @@
 import React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 
-import { UIBlockInner } from '../layout';
-import { Questbook } from '../Quests';
-import { Character } from '../Character';
 import { Towns, towns } from '../../store/world';
-
-const tabs = [
-  {
-    name: 'character',
-    component: Character
-  },
-  {
-    name: 'questbook',
-    component: Questbook
-  },
-  {
-    name: 'adventure',
-    component: UIBlockInner
-  },
-  {
-    name: 'backpack',
-    component: UIBlockInner
-  },
-  {
-    name: 'map',
-    component: UIBlockInner
-  }
-];
+import { Character } from '../Character';
+import { Questbook } from '../Quests';
+import { UnderConstruction } from '../UnderConstruction';
 
 export const Location = (
   props: RouteComponentProps<{
     gameName: string;
     townId: Towns;
-    tab: string;
   }>
 ) => {
   const {
     match: {
       path,
-      params: { townId, gameName, tab }
+      params: { townId, gameName }
     }
   } = props;
-  console.log(props);
   const town = towns.find(({ id }) => id === townId);
   const pathTab = path
     .split('/')
     .slice(0, -1)
     .join('/');
 
-  const validUrl = town && tabs.map(item => item.name).includes(tab);
-
-  return validUrl ? (
+  return town ? (
     <>
       <Switch>
-        {tabs.map(tab => (
-          <Route
-            key={tab.name}
-            exact
-            path={`${pathTab}/${tab.name}`}
-            component={tab.component}
-          />
-        ))}
+        <Route exact path={`${pathTab}/character`} component={Character} />
+        <Route exact path={`${pathTab}/questbook`} component={Questbook} />
+        <Route
+          exact
+          path={`${pathTab}/adventure`}
+          component={UnderConstruction}
+        />
+        <Route
+          exact
+          path={`${pathTab}/backpack`}
+          component={UnderConstruction}
+        />
+        <Route exact path={`${pathTab}/map`} component={UnderConstruction} />
+        <Redirect to={`/${gameName}/${townId}`} />
       </Switch>
-      <Redirect to={`/${gameName}/${townId}/${tab}`} />
     </>
   ) : (
-    <Redirect to={`/${gameName}/${townId}`} />
+    <Redirect to={`/${gameName}/${towns[0].id}`} />
   );
 };

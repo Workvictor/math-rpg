@@ -6,6 +6,8 @@ import { Quest } from '../../pages/Quest';
 import { useGameState } from '../../hooks/useGameState';
 import { towns } from '../../store/world';
 import { Town } from '../Town';
+import { UnderConstruction } from '../UnderConstruction';
+import { Adventure } from '../Adventure';
 
 export const path = {
   character: 'character',
@@ -19,24 +21,21 @@ export const Game = (props: RouteComponentProps<{ gameName: string }>) => {
   const {
     match: {
       path,
-      url,
       params: { gameName }
     }
   } = props;
   const gameState = useGameState();
-  const isGameEnable = gameState.ids.includes(gameName);
 
-  const town = towns.find(
-    town => gameState.game[gameName].location === town.id
-  );
-  const townId = town ? town.id : '';
-
-  return isGameEnable ? (
+  return gameState.ids.includes(gameName) ? (
     <Switch>
       <Route exact path={`${path}/:townId`} component={Town} />
+      <Route exact path={`${path}/adventure/:id`} component={Adventure} />
       <Route path={`${path}/quest/:id`} component={Quest} />
-      <Route path={`${path}/:townId/:tab`} component={Location} />
-      <Redirect to={`/${gameName}/${townId}`} />
+      <Route
+        path={`${path}/:townId/:tab(character|questbook|adventure|backpack|map)`}
+        component={Location}
+      />
+      <Redirect to={`/${gameName}/${towns[0].id}`} />
     </Switch>
   ) : (
     <Redirect to={'/'} />

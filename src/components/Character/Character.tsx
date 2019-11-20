@@ -28,9 +28,9 @@ const Avatar = styled(Border.withComponent(FlexColumn))`
 `;
 
 interface IPlayer {
-  healthPoints: number;
-  healthPointsMax: number;
-  name: string;
+  healthPoints?: number;
+  healthPointsMax?: number;
+  name?: string;
 }
 
 export const Character: FC<IPlayer> = ({
