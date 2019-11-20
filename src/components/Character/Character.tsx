@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Border, BorderInner } from '../layout';
+import { Border, BorderInner, FlexColumn } from '../layout';
 import { StatusBar } from '../StatusBar';
+import { SvgIcon } from '../icons';
 
 const Wrapper = styled(Border)`
   width: 100%;
@@ -21,12 +22,9 @@ const Content = styled.div`
   width: 100%;
 `;
 
-const Avatar = styled(Border)`
-  min-width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: url(${props => props.theme.images.guard}) no-repeat center;
-  background-size: cover;
+const Avatar = styled(Border.withComponent(FlexColumn))`
+  font-size: 64px;
+  color: goldenrod;
 `;
 
 interface IPlayer {
@@ -36,14 +34,16 @@ interface IPlayer {
 }
 
 export const Character: FC<IPlayer> = ({
-  healthPoints,
-  healthPointsMax,
+  healthPoints = 100,
+  healthPointsMax = 100,
   name
 }) => {
   return (
     <Wrapper>
       <Inner>
-        <Avatar />
+        <Avatar>
+          <SvgIcon type={'player'} />
+        </Avatar>
         <Content>
           {name}
           <StatusBar value={healthPoints / healthPointsMax} />
