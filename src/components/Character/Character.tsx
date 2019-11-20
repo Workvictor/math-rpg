@@ -24,7 +24,7 @@ const Content = styled.div`
 
 const Avatar = styled(Border.withComponent(FlexColumn))`
   font-size: 64px;
-  color: goldenrod;
+  color: #3a3a3a;
 `;
 
 interface IPlayer {

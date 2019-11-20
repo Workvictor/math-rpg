@@ -5,6 +5,7 @@ import { Location } from '../Location';
 import { Quest } from '../../pages/Quest';
 import { useGameState } from '../../hooks/useGameState';
 import { towns } from '../../store/world';
+import { Town } from '../Town';
 
 export const path = {
   character: 'character',
@@ -32,9 +33,10 @@ export const Game = (props: RouteComponentProps<{ gameName: string }>) => {
 
   return isGameEnable ? (
     <Switch>
+      <Route exact path={`${path}/:townId`} component={Town} />
       <Route path={`${path}/quest/:id`} component={Quest} />
-      <Route path={`${path}/:townId/:tab?`} component={Location} />
-      <Redirect to={`${url}/${townId}`} />
+      <Route path={`${path}/:townId/:tab`} component={Location} />
+      <Redirect to={`/${gameName}/${townId}`} />
     </Switch>
   ) : (
     <Redirect to={'/'} />

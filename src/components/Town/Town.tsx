@@ -23,7 +23,6 @@ export const Town = (
   return town ? (
     <>
       <TabLabel label={town.name} />
-      test {town.name}
       {town.locationIds.map(locationId => {
         const loc = locations.find(item => item.id === locationId);
         return loc ? (

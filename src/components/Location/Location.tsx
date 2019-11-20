@@ -1,11 +1,33 @@
 import React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 
 import { UIBlockInner } from '../layout';
-import { Town } from '../Town';
 import { Questbook } from '../Quests';
 import { Character } from '../Character';
 import { Towns, towns } from '../../store/world';
+
+const tabs = [
+  {
+    name: 'character',
+    component: Character
+  },
+  {
+    name: 'questbook',
+    component: Questbook
+  },
+  {
+    name: 'adventure',
+    component: UIBlockInner
+  },
+  {
+    name: 'backpack',
+    component: UIBlockInner
+  },
+  {
+    name: 'map',
+    component: UIBlockInner
+  }
+];
 
 export const Location = (
   props: RouteComponentProps<{
@@ -17,27 +39,33 @@ export const Location = (
   const {
     match: {
       path,
-      params: { townId, tab }
+      params: { townId, gameName, tab }
     }
   } = props;
+  console.log(props);
   const town = towns.find(({ id }) => id === townId);
   const pathTab = path
     .split('/')
     .slice(0, -1)
     .join('/');
 
-  return town ? (
+  const validUrl = town && tabs.map(item => item.name).includes(tab);
+
+  return validUrl ? (
     <>
       <Switch>
-        <Route path={`${pathTab}/character`} component={Character} />
-        <Route path={`${pathTab}/questbook`} component={Questbook} />
-        <Route path={`${pathTab}/adventure`} component={UIBlockInner} />
-        <Route path={`${pathTab}/backpack`} component={UIBlockInner} />
-        <Route path={`${pathTab}/map`} component={UIBlockInner} />
-        <Route exact path={`${path}`} component={Town} />
+        {tabs.map(tab => (
+          <Route
+            key={tab.name}
+            exact
+            path={`${pathTab}/${tab.name}`}
+            component={tab.component}
+          />
+        ))}
       </Switch>
+      <Redirect to={`/${gameName}/${townId}/${tab}`} />
     </>
   ) : (
-    <div>нет такой локации здесь</div>
+    <Redirect to={`/${gameName}/${townId}`} />
   );
 };
