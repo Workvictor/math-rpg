@@ -48,7 +48,7 @@ export const towns: ITown[] = [
   {
     id: 't1',
     name: 'village',
-    locationIds: ['t1-1', 't1-2'],
+    locationIds: ['t1-1', 't1-2', 't1-3'],
     availableLocations: ['t1-1']
   },
   {
