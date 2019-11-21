@@ -2,12 +2,13 @@ import React, { FC, useEffect, useState } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 
-import { Rythm, UIBlockInner } from '../layout';
+import { BorderInner, Rythm, ScrollArea, UIBlockInner } from '../layout';
 import { locations, towns } from '../../store/world';
 import { Character } from '../Character';
 import { MobView } from '../Mob';
 import { IMobAttack } from '../Mob/MobView';
 import { useGameProvider } from '../../hooks/useGameProvider';
+import { Divider } from '../layout/Divider';
 
 export const Adventure: FC<
   RouteComponentProps<{ id: string; gameName: string }>
@@ -55,25 +56,31 @@ export const Adventure: FC<
 
   return loc ? (
     <>
-      <UIBlockInner>
-        Приключение
-        <div>{loc.name}</div>
-        <div>Уровень монстров: {loc.level.join(' - ')}</div>
-      </UIBlockInner>
-      <Character name={gameName} />
-      {mobIds.map(key => {
-        return (
-          <Rythm key={key}>
-            <MobView
-              levelRange={loc.level}
-              onAttack={onAttack}
-              index={key}
-              playerHp={player.healthPoints}
-              playerDmg={player.damage}
-            />
-          </Rythm>
-        );
-      })}
+      <BorderInner>
+        <UIBlockInner>
+          Приключение
+          <div>{loc.name}</div>
+          <div>Уровень монстров: {loc.level.join(' - ')}</div>
+        </UIBlockInner>
+        <Character name={gameName} />
+      </BorderInner>
+      <Divider />
+
+      <ScrollArea>
+        {mobIds.map(key => {
+          return (
+            <Rythm key={key}>
+              <MobView
+                levelRange={loc.level}
+                onAttack={onAttack}
+                index={key}
+                playerHp={player.healthPoints}
+                playerDmg={player.damage}
+              />
+            </Rythm>
+          );
+        })}
+      </ScrollArea>
     </>
   ) : (
     <Redirect to={`/${gameName}/${towns[0].id}`} />

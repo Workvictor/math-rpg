@@ -3,7 +3,14 @@ import { Redirect, RouteComponentProps } from 'react-router';
 
 import { TabLabel } from '../TabLabel';
 import { locations, Towns, towns } from '../../store/world';
-import { UIBlockInner, Padbox, Flex } from '../layout';
+import {
+  UIBlockInner,
+  Padbox,
+  Flex,
+  ScrollArea,
+  BorderInner,
+  Rythm
+} from '../layout';
 import { Link } from 'react-router-dom';
 import { Character } from '../Character';
 import { useGameProvider } from '../../hooks/useGameProvider';
@@ -59,37 +66,45 @@ export const Town = (
 
   return town ? (
     <>
-      <TabLabel label={town.name} />
+      <BorderInner>
+        <TabLabel label={town.name} />
 
-      <Character name={gameName} />
-      <Padbox>
-        Действия:
-        <Flex>
-          {player.healthPoints < player.healthPointsMax && (
-            <HealButton disable={healRefresh > 0} onClick={onHeal}>
-              лечить
-              {healRefresh > 0 && (
-                <span>({Math.floor(healRefresh / 1000)})</span>
-              )}
-            </HealButton>
-          )}
-          <HealButton disable>чинить(300)</HealButton>
-          <HealButton disable>отдых(1000)</HealButton>
-        </Flex>
-      </Padbox>
+        <Character name={gameName} />
+        <Padbox>
+          Действия:
+          <Flex>
+            {player.healthPoints < player.healthPointsMax && (
+              <HealButton disable={healRefresh > 0} onClick={onHeal}>
+                лечить
+                {healRefresh > 0 && (
+                  <span>({Math.floor(healRefresh / 1000)})</span>
+                )}
+              </HealButton>
+            )}
+            <HealButton disable>чинить(300)</HealButton>
+            <HealButton disable>отдых(1000)</HealButton>
+          </Flex>
+        </Padbox>
+      </BorderInner>
       <Divider />
-      <Padbox>Локации:</Padbox>
-      {town.locationIds.map(locationId => {
-        const loc = locations.find(item => item.id === locationId);
-        return loc ? (
-          <Link key={locationId} to={`adventure/${loc.id}`}>
-            <UIBlockInner>
-              <div>{loc.name}</div>
-              Уровень мостров: {loc.level.join(' - ')}
-            </UIBlockInner>
-          </Link>
-        ) : null;
-      })}
+      {/*<BorderInner>*/}
+        <ScrollArea>
+          <Padbox>Локации:</Padbox>
+          {town.locationIds.map(locationId => {
+            const loc = locations.find(item => item.id === locationId);
+            return loc ? (
+              <Rythm r={2} key={locationId}>
+                <Link to={`adventure/${loc.id}`}>
+                  <UIBlockInner>
+                    <div>{loc.name}</div>
+                    Уровень мостров: {loc.level.join(' - ')}
+                  </UIBlockInner>
+                </Link>
+              </Rythm>
+            ) : null;
+          })}
+        </ScrollArea>
+      {/*</BorderInner>*/}
     </>
   ) : (
     <Redirect to={`/${gameName}/${towns[0].id}`} />

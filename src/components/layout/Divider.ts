@@ -5,4 +5,5 @@ export const Divider = styled.hr`
   background-color: #000000;
   height: 2px;
   border: none;
+  flex-shrink: 0;
 `;

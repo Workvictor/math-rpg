@@ -6,7 +6,11 @@ import {
   Border,
   Rythm,
   FullWidth,
-  UIBlockInner
+  UIBlockInner,
+  Flex,
+  ScrollArea,
+  BorderInner,
+  Padbox
 } from '../../components/layout';
 
 import { Input } from '../../components/Input';
@@ -14,6 +18,7 @@ import { Button } from '../../components/Button';
 import { Typography } from '../../components/layout/Typography';
 import { useGameState } from '../../hooks/useGameState';
 import { useGameProvider } from '../../hooks/useGameProvider';
+import { Divider } from '../../components/layout/Divider';
 
 const Header = styled(Border.withComponent(FullWidth).withComponent(Rythm))`
   height: 250px;
@@ -39,29 +44,38 @@ export const NewGame = () => {
     startNewGame(name);
   };
 
+  const validName = name.length >= 3 && !gameState.ids.includes(name);
+
   return gameState.ids.length < 3 ? (
     <>
-      <Header />
-      <div>
-        <Typography>
-          <h1>Создание персонажа</h1>
-        </Typography>
-        <Block>
-          <div>
+      <BorderInner>
+        <Header />
+      </BorderInner>
+      <BorderInner>
+        <Padbox>
+          <Typography>
+            <h1>Создание персонажа</h1>
+          </Typography>
+        </Padbox>
+      </BorderInner>
+      <Divider />
+      <ScrollArea>
+        <Padbox>
+          <Flex>
             <label>
               Имя:
               <Input value={name} onChange={setName} />
             </label>
-          </div>
-          <div>
-            {name.length >= 3 && !gameState.ids.includes(name) && (
-              <Button to={`/${name}/quest/1`} onClick={onStartNewGame}>
-                Далее
-              </Button>
-            )}
-          </div>
-        </Block>
-      </div>
+            <Button
+              disable={!validName}
+              to={validName ? `/${name}/quest/1` : undefined}
+              onClick={validName ? onStartNewGame : undefined}
+            >
+              Далее
+            </Button>
+          </Flex>
+        </Padbox>
+      </ScrollArea>
     </>
   ) : (
     <Redirect to={'/'} />

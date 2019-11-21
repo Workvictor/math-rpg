@@ -2,13 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router';
 
-import { Padbox, FlexBetween } from '../layout';
+import { FlexBetween } from '../layout';
 import { IconButton } from '../Button';
 import { useGameState } from '../../hooks/useGameState';
 import { Group } from './Group';
 
-const Wrapper = styled(Padbox.withComponent(FlexBetween))`
+const Wrapper = styled(FlexBetween)`
   width: 100%;
+  padding: 6px 0;
 `;
 
 export const Navbar = ({

@@ -4,20 +4,20 @@ import { BorderInner } from '../layout';
 
 export const ScrollArea = styled(BorderInner)`
   overflow-y: auto;
+  width: 100%;
   height: 100%;
   &::-webkit-scrollbar-track {
-    -webkit-box-shadow: 0 0 1px rgb(255, 255, 255);
     border-radius: 2px;
     background-color: #080808;
+    border: 2px solid #000000;
   }
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
     background-color: #080808;
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 2px;
-    -webkit-box-shadow: inset 0 0 5px rgb(0, 77, 119);
-    background-color: #1a1a1a;
-    border: 1px solid #080808;
+    background-color: #142a35;
+    border: 2px solid #080808;
   }
 `;
