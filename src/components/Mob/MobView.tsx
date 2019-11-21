@@ -1,13 +1,33 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { UIBlockInner } from '../layout';
+import { Border, FlexColumn, FlexWide, UIBlockInner } from '../layout';
 import { locations, towns } from '../../store/world';
 import styled from 'styled-components';
+import { mobTypes } from './mobTypes';
+import { SvgIcon } from '../icons';
+
+const Stats = styled(FlexWide)`
+  padding: 2px;
+  justify-content: space-between;
+`;
+
+const StatsWrapper = styled.div`
+  padding: 0 4px;
+  width: 100%;
+`;
+
+const Avatar = styled(FlexWide.withComponent(Border))`
+  font-size: 32px;
+  color: #2e2e2e;
+  flex-shrink: 0;
+`;
 
 const Wrapper = styled(UIBlockInner)`
   opacity: 0.45;
+  color: #484848;
   &.active {
     opacity: 1;
+    color: inherit;
     &:hover {
       outline: 1px solid goldenrod;
     }
@@ -39,17 +59,23 @@ export const MobView: FC<IMobView & IMobAction> = props => {
   const [level] = useState(
     Math.floor(levelRange[0] + Math.random() * levelRange[1])
   );
-  const [name] = useState(`mob_name_${Math.ceil(Math.random() * 100)}`);
 
-  const healthPoints = 40 + (level - 1) * 6;
+  const availableMobTypes = mobTypes.filter(item => item.level.includes(level));
+
+  const mob =
+    availableMobTypes[Math.floor(Math.random() * availableMobTypes.length)];
+
+  const healthPoints = Math.floor(
+    (20 + (level - 1) * 4) * mob.healthPointValue
+  );
   const expRewardForKill = Math.floor(healthPoints * 0.4);
-  const damage = 6 + (level - 1) * 2;
+  const damage = Math.floor((4 + (level - 1) * 1.2) * mob.damageValue);
   const hits = Math.ceil(healthPoints / playerDmg);
   const active = playerHp - damage * hits > 0;
 
   const onMobClick = () => {
     onAttack({
-      damage,
+      damage: -damage * hits,
       expRewardForKill,
       index
     });
@@ -60,9 +86,21 @@ export const MobView: FC<IMobView & IMobAction> = props => {
       className={active ? 'active' : ''}
       onClick={active ? onMobClick : undefined}
     >
-      <div>{name}</div>
-      <div>Урон: {damage}</div>
-      <div>Здоровье: {healthPoints}</div>
+      <FlexWide>
+        <Avatar>
+          <SvgIcon type={mob.icon} />
+        </Avatar>
+        <StatsWrapper>
+          <Stats>
+            <div>{mob.name}</div>
+            <div>Уровень: {level}</div>
+          </Stats>
+          <Stats>
+            <div>Урон: {damage}</div>
+            <div>Здоровье: {healthPoints}</div>
+          </Stats>
+        </StatsWrapper>
+      </FlexWide>
     </Wrapper>
   );
 };

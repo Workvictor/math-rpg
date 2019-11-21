@@ -40,7 +40,7 @@ export const Adventure: FC<
   const onAttack = (attack: IMobAttack) => {
     const { damage, expRewardForKill, index = 0 } = attack;
     setMobIds(prev => prev.filter(item => item !== index));
-    setPlayerHp(prev => prev - damage);
+    setPlayerHp(prev => prev + damage);
     setPlayerExp(prev => prev + expRewardForKill);
   };
 

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Border, BorderInner, Flex, FlexColumn, FlexWide } from '../layout';
+import { Border, BorderInner, FlexColumn, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { SvgIcon } from '../icons';
 
@@ -33,7 +33,7 @@ const Avatar = styled(Border.withComponent(FlexColumn))`
   color: #3a3a3a;
 `;
 
-interface IPlayer {
+export interface IPlayer {
   name?: string;
   level?: number;
   healthPoints?: number;
@@ -50,7 +50,7 @@ export const Character: FC<IPlayer> = ({
   exp = 1,
   expMax = 1,
   attack = 0,
-  level
+  level = 1
 }) => {
   return (
     <Wrapper>
@@ -62,16 +62,16 @@ export const Character: FC<IPlayer> = ({
           <Stats>{name}</Stats>
           <StatusBar value={healthPoints / healthPointsMax} />
           <Stats>
-            <div>Уровень: {level}</div>
+            <div>
+              Здоровье: {healthPoints}/{healthPointsMax}
+            </div>
             <div>
               Опыт: {exp}/{expMax}
             </div>
           </Stats>
           <Stats>
             <div>Атака: {attack}</div>
-            <div>
-              Здоровье: {healthPoints}/{healthPointsMax}
-            </div>
+            <div>Уровень: {level}</div>
           </Stats>
         </Content>
       </Inner>

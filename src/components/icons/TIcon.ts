@@ -13,4 +13,5 @@ export type TIcon =
   | 'tavern'
   | 'house'
   | 'wolf'
+  | 'bear'
   | 'barbarian';
