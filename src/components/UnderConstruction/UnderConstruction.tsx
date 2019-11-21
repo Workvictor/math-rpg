@@ -1,6 +1,16 @@
 import React from 'react';
-import { UIBlockInner } from '../layout';
+import styled from 'styled-components';
+
+import { Padbox, BorderInner } from '../layout';
+
+const Wrapper = styled(BorderInner)`
+  height: 100%;
+`;
 
 export const UnderConstruction = () => {
-  return <UIBlockInner>В разработке</UIBlockInner>;
+  return (
+    <Wrapper>
+      <Padbox>В разработке</Padbox>
+    </Wrapper>
+  );
 };

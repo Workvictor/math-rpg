@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 
 import { Towns, towns } from '../../store/world';
-import { Character } from '../Character';
 import { Questbook } from '../Quests';
 import { UnderConstruction } from '../UnderConstruction';
 
@@ -32,7 +31,11 @@ export const Location = (
           path={`${pathTab}/character`}
           component={UnderConstruction}
         />
-        <Route exact path={`${pathTab}/questbook`} component={Questbook} />
+        <Route
+          exact
+          path={`${pathTab}/questbook`}
+          component={UnderConstruction}
+        />
         <Route
           exact
           path={`${pathTab}/adventure`}

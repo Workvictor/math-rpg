@@ -30,11 +30,31 @@ export const Navbar = ({
       </Group>
       <Group visible={isGameEnable}>
         <IconButton navigation to={`${home}`} type={'house'} />
-        <IconButton navigation to={`${home}/character`} type={'player'} />
-        <IconButton navigation to={`${home}/backpack`} type={'backpack'} />
-        <IconButton navigation to={`${home}/map`} type={'compass'} />
-        <IconButton navigation to={`${home}/questbook`} type={'questbook'} />
-        <IconButton navigation to={`${home}/adventure`} type={'adventure'} />
+        <IconButton
+          disable
+          navigation
+          to={`${home}/character`}
+          type={'player'}
+        />
+        <IconButton
+          disable
+          navigation
+          to={`${home}/backpack`}
+          type={'backpack'}
+        />
+        <IconButton disable navigation to={`${home}/map`} type={'compass'} />
+        <IconButton
+          disable
+          navigation
+          to={`${home}/questbook`}
+          type={'questbook'}
+        />
+        <IconButton
+          disable
+          navigation
+          to={`${home}/adventure`}
+          type={'adventure'}
+        />
       </Group>
     </Wrapper>
   );
