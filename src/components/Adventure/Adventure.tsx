@@ -28,17 +28,21 @@ export const Adventure: FC<
 
   // levelUp
   useEffect(() => {
-    if (player.exp >= player.level * 100) {
+    if (player.exp >= player.expMax) {
       updateGame(gameName, prevGameState => {
         const nextHpMax = prevGameState.healthPointsMax + 12;
+        const nextLevel = prevGameState.level + 1;
         return {
-          level: prevGameState.level + 1,
+          level: nextLevel,
+          skillPoints: prevGameState.skillPoints + 1,
           healthPointsMax: nextHpMax,
-          healthPoints: nextHpMax
+          healthPoints: nextHpMax,
+          expMax: prevGameState.expMax + nextLevel * 100,
+          damage: Math.floor(prevGameState.damage + nextLevel * 1.2)
         };
       });
     }
-  }, [gameName, player.exp, player.level, updateGame]);
+  }, [gameName, player.exp, player.expMax, player.level, updateGame]);
 
   const onAttack = (attack: IMobAttack) => {
     const { damage, expRewardForKill, index = 0 } = attack;

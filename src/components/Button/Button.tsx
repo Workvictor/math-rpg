@@ -26,7 +26,6 @@ const Wrapper = styled(Border)`
   color: goldenrod;
   outline: none;
   cursor: unset;
-  margin: 4px;
   font-size: 14px;
   text-shadow: 0 1px 1px #080808;
   :after {

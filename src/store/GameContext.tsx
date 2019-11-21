@@ -18,6 +18,8 @@ export class Game {
   public healthPoints: number = 100;
   public healthPointsMax: number = 100;
   public healthPointsPerSecond: number = 1;
+  public skillPoints: number = 0;
+  public healValue: number = 25;
   public exp: number = 1;
   public expMax: number = 100;
   public damage: number = 6;

@@ -59,9 +59,7 @@ export const Character: FC<IPlayer> = ({ name }) => {
         </Avatar>
         <Content>
           <Stats>
-            <div>
-              {name}
-            </div>
+            <div>{name}</div>
             <div>
               Здоровье: {healthPoints}/{healthPointsMax}
             </div>

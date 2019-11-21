@@ -3,7 +3,7 @@ import { Redirect, RouteComponentProps } from 'react-router';
 
 import { TabLabel } from '../TabLabel';
 import { locations, Towns, towns } from '../../store/world';
-import { UIBlockInner, Padbox } from '../layout';
+import { UIBlockInner, Padbox, Flex } from '../layout';
 import { Link } from 'react-router-dom';
 import { Character } from '../Character';
 import { useGameProvider } from '../../hooks/useGameProvider';
@@ -40,7 +40,10 @@ export const Town = (
   const onHeal = () => {
     if (healRefresh === 0) {
       updateGame(gameName, prev => ({
-        healthPoints: Math.min(prev.healthPointsMax, prev.healthPoints + 20)
+        healthPoints: Math.min(
+          prev.healthPointsMax,
+          prev.healthPoints + player.healValue
+        )
       }));
       setHealRefresh(healRefreshTimeout);
     }
@@ -61,7 +64,7 @@ export const Town = (
       <Character name={gameName} />
       <Padbox>
         Действия:
-        <div>
+        <Flex>
           {player.healthPoints < player.healthPointsMax && (
             <HealButton disable={healRefresh > 0} onClick={onHeal}>
               лечить
@@ -70,7 +73,9 @@ export const Town = (
               )}
             </HealButton>
           )}
-        </div>
+          <HealButton disable>чинить(300)</HealButton>
+          <HealButton disable>отдых(1000)</HealButton>
+        </Flex>
       </Padbox>
       <Divider />
       <Padbox>Локации:</Padbox>
