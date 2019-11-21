@@ -6,7 +6,6 @@ import { Quest } from '../../pages/Quest';
 import { useGameState } from '../../hooks/useGameState';
 import { towns } from '../../store/world';
 import { Town } from '../Town';
-import { UnderConstruction } from '../UnderConstruction';
 import { Adventure } from '../Adventure';
 
 export const path = {

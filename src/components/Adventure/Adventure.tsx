@@ -7,6 +7,7 @@ import { locations, towns } from '../../store/world';
 import { Character } from '../Character';
 import { MobView } from '../Mob';
 import { IMobAttack } from '../Mob/MobView';
+import { useGameProvider } from '../../hooks/useGameProvider';
 
 export const Adventure: FC<
   RouteComponentProps<{ id: string; gameName: string }>
@@ -16,32 +17,36 @@ export const Adventure: FC<
       params: { id, gameName }
     }
   } = props;
-  const loc = locations.find(item => item.id === id);
 
-  const playerDmg = 6;
-  const [playerHpMax, setPlayerHpMax] = useState(100);
-  const [playerLevel, setPlayerLevel] = useState(1);
-  const [playerExp, setPlayerExp] = useState(1);
-  const [playerHp, setPlayerHp] = useState(100);
+  const { updateGame, state } = useGameProvider();
+
+  const player = state.game[gameName];
+
+  const loc = locations.find(item => item.id === id);
 
   const [mobIds, setMobIds] = useState(new Array(10).fill(0).map((_, i) => i));
 
+  // levelUp
   useEffect(() => {
-    if (playerExp >= playerLevel * 100) {
-      setPlayerLevel(prev => prev + 1);
-      setPlayerHpMax(prev => prev + 12);
+    if (player.exp >= player.level * 100) {
+      updateGame(gameName, prevGameState => {
+        const nextHpMax = prevGameState.healthPointsMax + 12;
+        return {
+          level: prevGameState.level + 1,
+          healthPointsMax: nextHpMax,
+          healthPoints: nextHpMax
+        };
+      });
     }
-  }, [playerExp, playerLevel]);
-
-  useEffect(() => {
-    setPlayerHp(playerHpMax);
-  }, [playerHpMax]);
+  }, [gameName, player.exp, player.level, updateGame]);
 
   const onAttack = (attack: IMobAttack) => {
     const { damage, expRewardForKill, index = 0 } = attack;
     setMobIds(prev => prev.filter(item => item !== index));
-    setPlayerHp(prev => prev + damage);
-    setPlayerExp(prev => prev + expRewardForKill);
+    updateGame(gameName, prevGameState => ({
+      healthPoints: prevGameState.healthPoints + damage,
+      exp: prevGameState.exp + expRewardForKill
+    }));
   };
 
   return loc ? (
@@ -51,15 +56,7 @@ export const Adventure: FC<
         <div>{loc.name}</div>
         <div>Уровень монстров: {loc.level.join(' - ')}</div>
       </UIBlockInner>
-      <Character
-        name={gameName}
-        healthPoints={playerHp}
-        healthPointsMax={playerHpMax}
-        attack={playerDmg * playerLevel}
-        exp={playerExp}
-        expMax={playerLevel * 100}
-        level={playerLevel}
-      />
+      <Character name={gameName} />
       {mobIds.map(key => {
         return (
           <Rythm key={key}>
@@ -67,8 +64,8 @@ export const Adventure: FC<
               levelRange={loc.level}
               onAttack={onAttack}
               index={key}
-              playerHp={playerHp}
-              playerDmg={playerDmg}
+              playerHp={player.healthPoints}
+              playerDmg={player.damage}
             />
           </Rythm>
         );

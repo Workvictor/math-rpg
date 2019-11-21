@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react';
 import { Game, GameContext, IGameState } from '../store/GameContext';
 
 export const useGameProvider = () => {
-  const { setState } = useContext(GameContext);
+  const { setState, state } = useContext(GameContext);
 
   const setGame = (name: string, callback: (game: Game) => Partial<Game>) => (
     prevState: IGameState
@@ -20,8 +20,8 @@ export const useGameProvider = () => {
   });
 
   const updateGame = useCallback(
-    (name: string) => {
-      setState(setGame(name, game => game));
+    (name: string, callback: (game: Game) => Partial<Game>) => {
+      setState(setGame(name, callback));
     },
     [setState]
   );
@@ -56,6 +56,7 @@ export const useGameProvider = () => {
   );
 
   return {
+    state,
     setState,
     addQuest,
     startNewGame,

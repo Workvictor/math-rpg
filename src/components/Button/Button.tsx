@@ -53,12 +53,16 @@ const Wrapper = styled(Border)`
       transform: scale(0.98) translate(1px, 1px);
     }
   }
+  &.disable {
+    filter: grayscale(100);
+  }
 `;
 
 export interface Interface {
   className?: string;
   to?: string;
   navigation?: boolean;
+  disable?: boolean;
   onClick?: () => void;
 }
 
@@ -67,14 +71,21 @@ export const Button: React.FC<Interface> = ({
   to = '',
   onClick,
   className,
-  navigation
+  navigation,
+  disable
 }) => {
-  const classNames =
-    window.location.pathname === to && navigation
-      ? [className, 'active'].join(' ')
-      : className;
+  const classNames = [className];
+
+  if (window.location.pathname === to && navigation) {
+    classNames.push('active');
+  }
+
+  if (disable) {
+    classNames.push('disable');
+  }
+
   return (
-    <Wrapper as="button" onClick={onClick} className={classNames}>
+    <Wrapper as="button" onClick={onClick} className={classNames.join(' ')}>
       {to ? (
         <Link to={to}>
           <ButtonInner>{children}</ButtonInner>

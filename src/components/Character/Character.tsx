@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { Border, BorderInner, FlexColumn, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { SvgIcon } from '../icons';
+import { useGameProvider } from '../../hooks/useGameProvider';
+import { TextSize } from '../layout/TextSize';
 
 const Wrapper = styled(Border)`
   width: 100%;
@@ -34,24 +36,21 @@ const Avatar = styled(Border.withComponent(FlexColumn))`
 `;
 
 export interface IPlayer {
-  name?: string;
-  level?: number;
-  healthPoints?: number;
-  healthPointsMax?: number;
-  exp?: number;
-  expMax?: number;
-  attack?: number;
+  name: string;
 }
 
-export const Character: FC<IPlayer> = ({
-  healthPoints = 100,
-  healthPointsMax = 100,
-  name,
-  exp = 1,
-  expMax = 1,
-  attack = 0,
-  level = 1
-}) => {
+export const Character: FC<IPlayer> = ({ name }) => {
+  const { state } = useGameProvider();
+
+  const {
+    healthPoints,
+    healthPointsMax,
+    level,
+    exp,
+    expMax,
+    damage
+  } = state.game[name];
+
   return (
     <Wrapper>
       <Inner>
@@ -59,19 +58,23 @@ export const Character: FC<IPlayer> = ({
           <SvgIcon type={'player'} />
         </Avatar>
         <Content>
-          <Stats>{name}</Stats>
-          <StatusBar value={healthPoints / healthPointsMax} />
           <Stats>
+            <div>
+              {name}
+            </div>
             <div>
               Здоровье: {healthPoints}/{healthPointsMax}
             </div>
-            <div>
-              Опыт: {exp}/{expMax}
-            </div>
+          </Stats>
+          <StatusBar value={healthPoints / healthPointsMax} />
+          <Stats>
+            <div>Атака: {damage}</div>
+            <div>Уровень: {level}</div>
           </Stats>
           <Stats>
-            <div>Атака: {attack}</div>
-            <div>Уровень: {level}</div>
+            <TextSize size={'small'}>
+              Опыт: {exp}/{expMax}
+            </TextSize>
           </Stats>
         </Content>
       </Inner>

@@ -27,7 +27,11 @@ export const Location = (
   return town ? (
     <>
       <Switch>
-        <Route exact path={`${pathTab}/character`} component={Character} />
+        <Route
+          exact
+          path={`${pathTab}/character`}
+          component={UnderConstruction}
+        />
         <Route exact path={`${pathTab}/questbook`} component={Questbook} />
         <Route
           exact

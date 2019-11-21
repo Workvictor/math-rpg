@@ -14,6 +14,14 @@ export class Game {
   public level: number;
   public questbook: string[];
   public location: string;
+
+  public healthPoints: number = 100;
+  public healthPointsMax: number = 100;
+  public healthPointsPerSecond: number = 1;
+  public exp: number = 1;
+  public expMax: number = 100;
+  public damage: number = 6;
+
   constructor(public name: string) {
     this.lastUpdate = Date.now();
     this.level = 1;
