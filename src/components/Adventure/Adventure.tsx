@@ -2,13 +2,21 @@ import React, { FC, useEffect, useState } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 
-import { BorderInner, Rythm, ScrollArea, UIBlockInner } from '../layout';
+import {
+  BorderInner,
+  Flex,
+  Padbox,
+  Rythm,
+  ScrollArea,
+  UIBlockInner
+} from '../layout';
 import { locations, towns } from '../../store/world';
 import { Character } from '../Character';
 import { MobView } from '../Mob';
 import { IMobAttack } from '../Mob/MobView';
 import { useGameProvider } from '../../hooks/useGameProvider';
 import { Divider } from '../layout/Divider';
+import { Button } from '../Button';
 
 export const Adventure: FC<
   RouteComponentProps<{ id: string; gameName: string }>
@@ -58,11 +66,20 @@ export const Adventure: FC<
     <>
       <BorderInner>
         <UIBlockInner>
-          Приключение
-          <div>{loc.name}</div>
-          <div>Уровень монстров: {loc.level.join(' - ')}</div>
+          <Padbox>
+            <div>Режим: приключения</div>
+            <div>Локация: {loc.name}</div>
+            <div>Уровень монстров: {loc.level.join(' - ')}</div>
+          </Padbox>
         </UIBlockInner>
         <Character name={gameName} />
+        <Padbox>
+          Действия:
+          <Divider />
+          <Flex>
+            <Button to={`/${gameName}/${id}`}>в город</Button>
+          </Flex>
+        </Padbox>
       </BorderInner>
       <Divider />
 

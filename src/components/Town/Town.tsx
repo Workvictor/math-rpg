@@ -9,17 +9,25 @@ import {
   Flex,
   ScrollArea,
   BorderInner,
-  Rythm
+  Rythm,
+  FlexWide,
+  Border
 } from '../layout';
-import { Link } from 'react-router-dom';
 import { Character } from '../Character';
-import { useGameProvider } from '../../hooks/useGameProvider';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 import styled from 'styled-components';
+import { SvgIcon } from '../icons';
+import { HealButton } from '../HealButton';
 
-const HealButton = styled(Button)`
-  width: 90px;
+const LocWrapper = styled(UIBlockInner)`
+  color: #22485d;
+`;
+
+const Avatar = styled(FlexWide.withComponent(Border))`
+  font-size: 32px;
+  color: #2e2e2e;
+  flex-shrink: 0;
 `;
 
 export const Town = (
@@ -34,35 +42,8 @@ export const Town = (
       params: { townId, gameName }
     }
   } = props;
-  const { updateGame, state } = useGameProvider();
-
-  const player = state.game[gameName];
-
-  const healRefreshTimeout = 5000;
-
-  const [healRefresh, setHealRefresh] = useState(healRefreshTimeout);
 
   const town = towns.find(({ id }) => id === townId);
-
-  const onHeal = () => {
-    if (healRefresh === 0) {
-      updateGame(gameName, prev => ({
-        healthPoints: Math.min(
-          prev.healthPointsMax,
-          prev.healthPoints + player.healValue
-        )
-      }));
-      setHealRefresh(healRefreshTimeout);
-    }
-  };
-
-  useEffect(() => {
-    if (healRefresh > 0) {
-      setTimeout(() => {
-        setHealRefresh(prev => Math.max(0, prev - 1000));
-      }, 1000);
-    }
-  }, [healRefresh]);
 
   return town ? (
     <>
@@ -73,38 +54,38 @@ export const Town = (
         <Padbox>
           Действия:
           <Flex>
-            {player.healthPoints < player.healthPointsMax && (
-              <HealButton disable={healRefresh > 0} onClick={onHeal}>
-                лечить
-                {healRefresh > 0 && (
-                  <span>({Math.floor(healRefresh / 1000)})</span>
-                )}
-              </HealButton>
-            )}
-            <HealButton disable>чинить(300)</HealButton>
-            <HealButton disable>отдых(1000)</HealButton>
+            <HealButton gameName={gameName} />
+            <Button disable>чинить(300)</Button>
+            <Button disable>отдых(1000)</Button>
           </Flex>
         </Padbox>
       </BorderInner>
       <Divider />
-      {/*<BorderInner>*/}
-        <ScrollArea>
-          <Padbox>Локации:</Padbox>
-          {town.locationIds.map(locationId => {
-            const loc = locations.find(item => item.id === locationId);
-            return loc ? (
-              <Rythm r={2} key={locationId}>
-                <Link to={`adventure/${loc.id}`}>
-                  <UIBlockInner>
+      <ScrollArea>
+        <Padbox>Локации:</Padbox>
+        {town.locationIds.map(locationId => {
+          const loc = locations.find(item => item.id === locationId);
+          return loc ? (
+            <Rythm r={2} key={locationId}>
+              <LocWrapper>
+                <Flex>
+                  <Avatar>
+                    <SvgIcon type={loc.icon} />
+                  </Avatar>
+                  <Padbox>
                     <div>{loc.name}</div>
                     Уровень мостров: {loc.level.join(' - ')}
-                  </UIBlockInner>
-                </Link>
-              </Rythm>
-            ) : null;
-          })}
-        </ScrollArea>
-      {/*</BorderInner>*/}
+                  </Padbox>
+                </Flex>
+                <Divider />
+                <Button disable={loc.locked} to={`adventure/${loc.id}`}>
+                  перейти
+                </Button>
+              </LocWrapper>
+            </Rythm>
+          ) : null;
+        })}
+      </ScrollArea>
     </>
   ) : (
     <Redirect to={`/${gameName}/${towns[0].id}`} />

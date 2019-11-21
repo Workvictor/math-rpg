@@ -14,4 +14,8 @@ export type TIcon =
   | 'house'
   | 'wolf'
   | 'bear'
+  | 'granary'
+  | 'windmill'
+  | 'wheat'
+  | 'forest'
   | 'barbarian';

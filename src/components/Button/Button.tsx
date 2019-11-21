@@ -39,7 +39,6 @@ const Wrapper = styled(Border)`
     height: 100%;
     box-shadow: inset 0 0 5px #0c1919, inset 0 0 2px #0c1919;
   }
-  :focus,
   :hover:after {
     box-shadow: inset 0 -6px 6px 0px rgba(255, 234, 74, 0.16);
   }
@@ -85,8 +84,12 @@ export const Button: React.FC<Interface> = ({
   }
 
   return (
-    <Wrapper as="button" onClick={onClick} className={classNames.join(' ')}>
-      {to ? (
+    <Wrapper
+      as="button"
+      onClick={disable ? undefined : onClick}
+      className={classNames.join(' ')}
+    >
+      {!disable && to ? (
         <Link to={to}>
           <ButtonInner>{children}</ButtonInner>
         </Link>
