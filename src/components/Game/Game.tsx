@@ -7,6 +7,7 @@ import { useGameState } from '../../hooks/useGameState';
 import { towns } from '../../store/world';
 import { Town } from '../Town';
 import { Adventure } from '../Adventure';
+import { useGameProvider } from '../../hooks/useGameProvider';
 
 export const path = {
   character: 'character',
@@ -23,9 +24,14 @@ export const Game = (props: RouteComponentProps<{ gameName: string }>) => {
       params: { gameName }
     }
   } = props;
-  const gameState = useGameState();
+  const { setSelectedGame, state } = useGameProvider();
 
-  return gameState.ids.includes(gameName) ? (
+  if (!state.ids.includes(gameName)) {
+    return <Redirect to={'/'} />;
+  }
+
+  setSelectedGame(gameName);
+  return (
     <Switch>
       <Route exact path={`${path}/:townId`} component={Town} />
       <Route exact path={`${path}/adventure/:id`} component={Adventure} />
@@ -36,7 +42,5 @@ export const Game = (props: RouteComponentProps<{ gameName: string }>) => {
       />
       <Redirect to={`/${gameName}/${towns[0].id}`} />
     </Switch>
-  ) : (
-    <Redirect to={'/'} />
   );
 };

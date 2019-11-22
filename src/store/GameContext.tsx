@@ -23,6 +23,7 @@ export class Game {
   public exp: number = 1;
   public expMax: number = 100;
   public damage: number = 6;
+  public clickCount: number = 0;
 
   constructor(public name: string) {
     this.lastUpdate = Date.now();
@@ -37,6 +38,7 @@ export interface IGameState {
     [key: string]: Game;
   };
   ids: string[];
+  selectedGame: string;
 }
 
 const appName = 'game-app';
@@ -52,7 +54,8 @@ const readGameState = (): IGameState => {
     localStorage.getItem(appName) ||
       writeGameState({
         game: {},
-        ids: []
+        ids: [],
+        selectedGame: ''
       })
   );
 };

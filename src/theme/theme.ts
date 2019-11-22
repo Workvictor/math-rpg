@@ -24,7 +24,7 @@ const shadows = {
 
 const colors = {
   blueAccent: '#1270a0',
-  colden: '#c0aa29',
+  colden: '#daa520',
   grey: '#242424'
 };
 

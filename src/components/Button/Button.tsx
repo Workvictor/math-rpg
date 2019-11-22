@@ -1,8 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Howl } from 'howler';
 
 import { Border } from '../layout';
+import { useGameProvider } from '../../hooks/useGameProvider';
+
+const clickSound = new Howl({
+  src: ['sfx/bookOpen.ogg'],
+  volume: 0.5
+});
+
+const clickNavigation = new Howl({
+  src: ['sfx/bookPlace1.ogg'],
+  volume: 0.15
+});
+
+const healing = new Howl({
+  src: ['sfx/healingFull.wav'],
+  volume: 0.15
+});
+
+type ISoundType = 'click' | 'navigation' | 'healing';
+
+const sound: { [key in ISoundType]: Howl } = {
+  click: clickSound,
+  navigation: clickNavigation,
+  healing: healing
+};
 
 export const ButtonInner = styled.span`
   border-radius: 2px;
@@ -59,6 +84,7 @@ const Wrapper = styled(Border)`
 
 export interface Interface {
   className?: string;
+  soundType?: ISoundType;
   to?: string;
   navigation?: boolean;
   disable?: boolean;
@@ -71,11 +97,22 @@ export const Button: React.FC<Interface> = ({
   onClick,
   className,
   navigation,
-  disable
+  disable,
+  soundType = 'click'
 }) => {
   const classNames = [className];
 
-  if (window.location.pathname === to && navigation) {
+  const { updateGame } = useGameProvider();
+
+  const active = window.location.pathname === to && navigation;
+
+  const playSound = () => {
+    if (!active && !disable) {
+      sound[soundType].play();
+    }
+  };
+
+  if (active) {
     classNames.push('active');
   }
 
@@ -83,10 +120,18 @@ export const Button: React.FC<Interface> = ({
     classNames.push('disable');
   }
 
+  const onBtnClick = () => {
+    onClick && onClick();
+    updateGame('', prev => ({
+      clickCount: prev.clickCount + 1
+    }));
+    playSound();
+  };
+
   return (
     <Wrapper
       as="button"
-      onClick={disable ? undefined : onClick}
+      onClick={disable ? undefined : onBtnClick}
       className={classNames.join(' ')}
     >
       {!disable && to ? (

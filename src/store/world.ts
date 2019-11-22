@@ -1,33 +1,33 @@
 import { TIcon } from '../components/icons/TIcon';
 
 export type Towns = 't1' | 't2';
-export type LocationIds = 't1-1' | 't1-2' | 't1-3' | 't2-1';
 
 export interface Location {
-  id: LocationIds;
+  id: string;
   name: string;
   icon: TIcon;
   locked: boolean;
   level: number[];
-  unlockLocations?: LocationIds[];
+  unlockLocations?: string[];
   unlockTown?: Towns;
-}
-
-export interface ICreature {
-  id: string;
-  name: string;
-  hp: number;
-  dmg: number;
 }
 
 export interface ITown {
   id: Towns;
   name: string;
-  locationIds: LocationIds[];
-  availableLocations: LocationIds[];
+  locationIds: string[];
+  availableLocations: string[];
 }
 
 export const locations: Location[] = [
+  {
+    id: 't1-0',
+    level: [1, 1],
+    name: 'Тренировочный лагерь',
+    icon: 'wheat',
+    locked: true,
+    unlockLocations: ['t1-1']
+  },
   {
     id: 't1-1',
     level: [1, 4],

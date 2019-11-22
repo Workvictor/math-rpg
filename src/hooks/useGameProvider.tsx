@@ -21,15 +21,16 @@ export const useGameProvider = () => {
 
   const updateGame = useCallback(
     (name: string, callback: (game: Game) => Partial<Game>) => {
-      setState(setGame(name, callback));
+      setState(setGame(name || state.selectedGame, callback));
     },
-    [setState]
+    [setState, state]
   );
 
   const startNewGame = (name: string) => {
     setState(prevState => ({
       ...setGame(name, () => new Game(name))(prevState),
-      ids: [...prevState.ids, name]
+      ids: [...prevState.ids, name],
+      selectedGame: name
     }));
   };
 
@@ -55,11 +56,21 @@ export const useGameProvider = () => {
     [setState]
   );
 
+  const setSelectedGame = (gameName: string) => {
+    if (state.selectedGame !== gameName) {
+      setState(prevState => ({
+        ...prevState,
+        selectedGame: gameName
+      }));
+    }
+  };
+
   return {
     state,
     setState,
     addQuest,
     startNewGame,
+    setSelectedGame,
     updateGame,
     removeQuest
   };

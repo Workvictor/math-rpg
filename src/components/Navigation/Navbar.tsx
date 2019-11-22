@@ -26,30 +26,45 @@ export const Navbar = ({
   return (
     <Wrapper>
       <Group visible={url === home}>
-        <IconButton to={'/'} type={'quit'} />
+        <IconButton soundType={'navigation'} to={'/'} type={'quit'} />
       </Group>
       <Group visible={isGameEnable}>
-        <IconButton navigation to={`${home}`} type={'house'} />
         <IconButton
+          soundType={'navigation'}
+          navigation
+          to={`${home}`}
+          type={'house'}
+        />
+        <IconButton
+          soundType={'navigation'}
           disable
           navigation
           to={`${home}/character`}
           type={'player'}
         />
         <IconButton
+          soundType={'navigation'}
           disable
           navigation
           to={`${home}/backpack`}
           type={'backpack'}
         />
-        <IconButton disable navigation to={`${home}/map`} type={'compass'} />
         <IconButton
+          soundType={'navigation'}
+          disable
+          navigation
+          to={`${home}/map`}
+          type={'compass'}
+        />
+        <IconButton
+          soundType={'navigation'}
           disable
           navigation
           to={`${home}/questbook`}
           type={'questbook'}
         />
         <IconButton
+          soundType={'navigation'}
           disable
           navigation
           to={`${home}/adventure`}
