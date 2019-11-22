@@ -102,7 +102,7 @@ export const Button: React.FC<Interface> = ({
 }) => {
   const classNames = [className];
 
-  const { updateGame, state } = useGameProvider();
+  const { updateGame, state, incrementClickCount } = useGameProvider();
 
   const active = window.location.pathname === to && navigation;
 
@@ -122,11 +122,7 @@ export const Button: React.FC<Interface> = ({
 
   const onBtnClick = () => {
     onClick && onClick();
-    if (state.selectedGame) {
-      updateGame(state.selectedGame, prev => ({
-        clickCount: prev.clickCount + 1
-      }));
-    }
+    incrementClickCount();
     playSound();
   };
 

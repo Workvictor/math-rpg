@@ -26,6 +26,21 @@ export const useGameProvider = () => {
     [setState, state]
   );
 
+  const incrementClickCount = () => {
+    if (state.selectedGame) {
+      setState(prevState => ({
+        ...prevState,
+        game: {
+          ...prevState.game,
+          [prevState.selectedGame]: {
+            ...prevState.game[prevState.selectedGame],
+            clickCount: prevState.game[prevState.selectedGame].clickCount + 1
+          } as Game
+        }
+      }));
+    }
+  };
+
   const startNewGame = (name: string) => {
     setState(prevState => ({
       ...setGame(name, () => new Game(name))(prevState),
@@ -71,6 +86,7 @@ export const useGameProvider = () => {
     addQuest,
     startNewGame,
     setSelectedGame,
+    incrementClickCount,
     updateGame,
     removeQuest
   };
