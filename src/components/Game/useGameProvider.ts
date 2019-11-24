@@ -1,13 +1,16 @@
 import { useCallback, useContext } from 'react';
 
-import { Game, GameContext, IGameState } from './GameContext';
+import { GameContext } from './GameContext';
+import { PlayerModel } from './PlayerModel';
+import { GameModel } from './GameModel';
 
 export const useGameProvider = () => {
   const { setState, state } = useContext(GameContext);
 
-  const setGame = (name: string, callback: (game: Game) => Partial<Game>) => (
-    prevState: IGameState
-  ) => ({
+  const setGame = (
+    name: string,
+    callback: (game: PlayerModel) => Partial<PlayerModel>
+  ) => (prevState: GameModel) => ({
     ...prevState,
     game: {
       ...prevState.game,
@@ -15,12 +18,12 @@ export const useGameProvider = () => {
         ...prevState.game[name],
         ...callback(prevState.game[name]),
         lastUpdate: Date.now()
-      } as Game
+      } as PlayerModel
     }
   });
 
   const updateGame = useCallback(
-    (name: string, callback: (game: Game) => Partial<Game>) => {
+    (name: string, callback: (game: PlayerModel) => Partial<PlayerModel>) => {
       setState(setGame(name || state.selectedGame, callback));
     },
     [setState, state]
@@ -35,7 +38,7 @@ export const useGameProvider = () => {
           [prevState.selectedGame]: {
             ...prevState.game[prevState.selectedGame],
             clickCount: prevState.game[prevState.selectedGame].clickCount + 1
-          } as Game
+          } as PlayerModel
         }
       }));
     }
@@ -43,7 +46,7 @@ export const useGameProvider = () => {
 
   const startNewGame = (name: string) => {
     setState(prevState => ({
-      ...setGame(name, () => new Game(name))(prevState),
+      ...setGame(name, () => new PlayerModel(name))(prevState),
       ids: [...prevState.ids, name],
       selectedGame: name
     }));

@@ -7,68 +7,32 @@ import React, {
   useState
 } from 'react';
 
-import { towns } from './world';
+import { GameModel } from './GameModel';
 
-export class Game {
-  public lastUpdate: number;
-  public level: number;
-  public questbook: string[];
-  public location: string;
+const readGameState = () => {
+  const newGame = new GameModel();
+  const savedGame = localStorage.getItem(GameModel.appName);
 
-  public healthPoints: number = 100;
-  public healthPointsMax: number = 100;
-  public healthPointsPerSecond: number = 1;
-  public skillPoints: number = 0;
-  public healValue: number = 25;
-  public exp: number = 1;
-  public expMax: number = 100;
-  public damage: number = 6;
-  public clickCount: number = 0;
-
-  constructor(public name: string) {
-    this.lastUpdate = Date.now();
-    this.level = 1;
-    this.questbook = [];
-    this.location = towns[0].id;
+  if (!savedGame) {
+    localStorage.setItem(GameModel.appName, JSON.stringify(newGame));
+    return newGame;
   }
-}
 
-export interface IGameState {
-  game: {
-    [key: string]: Game;
-  };
-  ids: string[];
-  selectedGame: string;
-  settings: {
-    fullscreen: boolean;
-  };
-}
+  const currentGame: GameModel = JSON.parse(savedGame);
 
-const appName = 'game-app';
+  if (
+    currentGame.appVersion !== newGame.appVersion ||
+    currentGame! instanceof GameModel
+  ) {
+    return newGame;
+  }
 
-const writeGameState = (data: IGameState) => {
-  const value = JSON.stringify(data);
-  localStorage.setItem(appName, value);
-  return value;
-};
-
-const readGameState = (): IGameState => {
-  return JSON.parse(
-    localStorage.getItem(appName) ||
-      writeGameState({
-        game: {},
-        ids: [],
-        selectedGame: '',
-        settings: {
-          fullscreen: true
-        }
-      })
-  );
+  return currentGame;
 };
 
 interface IGameContext {
-  state: IGameState;
-  setState: Dispatch<SetStateAction<IGameState>>;
+  state: GameModel;
+  setState: Dispatch<SetStateAction<GameModel>>;
 }
 
 const initialGameStore = {
@@ -82,8 +46,7 @@ export const GameProvider: FC = ({ children }) => {
   const [state, setState] = useState(initialGameStore.state);
 
   useEffect(() => {
-    writeGameState(state);
-    // TODO bubblesUp game id in ids on change
+    localStorage.setItem(GameModel.appName, JSON.stringify(state));
   }, [state]);
 
   return (
