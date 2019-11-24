@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { Padbox, FlexColumnWide } from '../layout';
 import { useGameProvider } from '../../hooks/useGameProvider';
+import { Navbar } from '../Navigation/Navbar';
+import { Route } from 'react-router';
 
 const Wrapper = styled(Padbox)`
   height: 100vh;
@@ -24,15 +26,10 @@ const Inner = styled(FlexColumnWide)`
   height: 100%;
 `;
 
-interface IAppFrame {
-  header: React.ReactNode;
-}
-
-export const AppFrame: React.FC<IAppFrame> = ({ children, header }) => {
-  const { state } = useGameProvider();
+export const AppFrame: React.FC = ({ children }) => {
   return (
     <Wrapper>
-      {header}
+      <Route path={'/:gameName?/:location?'} component={Navbar} />
       <Inner>{children}</Inner>
     </Wrapper>
   );

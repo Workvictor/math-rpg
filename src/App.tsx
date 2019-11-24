@@ -16,11 +16,7 @@ export const App: React.FC = () => {
       <GameProvider>
         <AppGlobalStyle />
         <ThemeProvider theme={theme}>
-          <AppFrame
-            header={
-              <Route path={'/:gameName?/:location?'} component={Navbar} />
-            }
-          >
+          <AppFrame>
             <Switch>
               <Route exact path={'/'} component={Home} />
               <Route path={'/newgame'} component={NewGame} />
