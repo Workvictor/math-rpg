@@ -39,6 +39,9 @@ export interface IGameState {
   };
   ids: string[];
   selectedGame: string;
+  settings: {
+    fullscreen: boolean;
+  };
 }
 
 const appName = 'game-app';
@@ -55,7 +58,10 @@ const readGameState = (): IGameState => {
       writeGameState({
         game: {},
         ids: [],
-        selectedGame: ''
+        selectedGame: '',
+        settings: {
+          fullscreen: true
+        }
       })
   );
 };

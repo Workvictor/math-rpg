@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Padbox, FlexColumnWide } from '../layout';
+import { useGameProvider } from '../../hooks/useGameProvider';
 
 const Wrapper = styled(Padbox)`
   height: 100vh;
@@ -28,6 +29,7 @@ interface IAppFrame {
 }
 
 export const AppFrame: React.FC<IAppFrame> = ({ children, header }) => {
+  const { state } = useGameProvider();
   return (
     <Wrapper>
       {header}

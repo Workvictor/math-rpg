@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, RouteComponentProps } from 'react-router';
 
 import { Location } from '../Location';

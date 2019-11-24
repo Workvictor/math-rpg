@@ -67,9 +67,9 @@ export const Home = () => {
           <StyledButton disable>Авторы</StyledButton>
         </Menu>
         <Divider />
-        <Rythm r={2}>Недавние игры:</Rythm>
+        {state.ids.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
         {state.ids.map(gameName => (
-          <Rythm r={2}>
+          <Rythm r={2} key={gameName}>
             <UIBlockInner>
               {gameName}
               <div>уровень - {state.game[gameName].level}</div>
