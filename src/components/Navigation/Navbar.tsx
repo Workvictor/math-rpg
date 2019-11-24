@@ -13,7 +13,6 @@ const Wrapper = styled(FlexBetween)`
 `;
 
 export const Navbar = ({
-  location: { pathname },
   match: {
     url,
     params: { gameName = '', location }
@@ -24,7 +23,7 @@ export const Navbar = ({
   const home = `/${gameName}/${location}`;
 
   return (
-    <Wrapper>
+    <Wrapper as={'nav'}>
       <Group visible={url === home}>
         <IconButton soundType={'navigation'} to={'/'} type={'quit'} />
       </Group>

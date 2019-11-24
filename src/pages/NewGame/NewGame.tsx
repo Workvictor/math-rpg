@@ -19,12 +19,12 @@ import { Typography } from '../../components/layout/Typography';
 import { useGameProvider } from '../../components/Game';
 import { Divider } from '../../components/layout/Divider';
 
-const Header = styled(Border.withComponent(FullWidth).withComponent(Rythm))`
+const Header = styled(Border)`
   height: 250px;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  box-shadow: inset 0 0 30px #000, inset 0 0 10px #000, inset 0 0 20px #000;
+  ${props => props.theme.shadows.header}
 `;
 
 export const newGamePath = 'newgame';

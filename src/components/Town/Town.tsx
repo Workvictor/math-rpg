@@ -20,6 +20,7 @@ import { Button } from '../Button';
 import styled from 'styled-components';
 import { SvgIcon } from '../icons';
 import { HealButton } from '../HealButton';
+import { ButtonGroup } from '../Button/ButtonGroup';
 
 const sounds = [
   new Howl({
@@ -33,13 +34,14 @@ const sounds = [
 ];
 
 const LocWrapper = styled(UIBlockInner)`
-  color: #22485d;
+  color: ${props => props.theme.colors.blueDark};
 `;
 
-const Avatar = styled(FlexWide.withComponent(Border))`
+const Avatar = styled(Border)`
   font-size: 32px;
-  color: #2e2e2e;
   flex-shrink: 0;
+  display: flex;
+  color: ${props => props.theme.colors.grey60};
 `;
 
 export const Town = (
@@ -64,12 +66,12 @@ export const Town = (
 
         <Character name={gameName} />
         <Padbox>
-          Действия:
-          <Flex>
+          <div>Действия:</div>
+          <ButtonGroup>
             <HealButton gameName={gameName} />
             <Button disable>чинить(300)</Button>
             <Button disable>отдых(1000)</Button>
-          </Flex>
+          </ButtonGroup>
         </Padbox>
       </BorderInner>
       <Divider />

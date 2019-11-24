@@ -8,16 +8,16 @@ export const ScrollArea = styled(BorderInner)`
   height: 100%;
   &::-webkit-scrollbar-track {
     border-radius: 2px;
-    background-color: #080808;
-    border: 2px solid #000000;
+    background-color: ${props => props.theme.colors.grey10};
+    border: 2px solid ${props => props.theme.colors.grey0};
   }
   &::-webkit-scrollbar {
     width: 8px;
-    background-color: #080808;
+    background-color: ${props => props.theme.colors.grey10};
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 2px;
     background-color: #142a35;
-    border: 2px solid #080808;
+    border: 2px solid ${props => props.theme.colors.grey10};
   }
 `;

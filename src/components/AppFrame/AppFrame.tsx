@@ -27,7 +27,7 @@ const Inner = styled(FlexColumnWide)`
 
 export const AppFrame: React.FC = ({ children }) => {
   return (
-    <Wrapper>
+    <Wrapper as={'main'}>
       <Route path={'/:gameName?/:location?'} component={Navbar} />
       <Inner>{children}</Inner>
     </Wrapper>

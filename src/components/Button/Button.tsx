@@ -41,37 +41,45 @@ export const ButtonInner = styled.span`
   padding: 1px 8px 3px;
   color: inherit;
   text-shadow: inherit;
-  background-color: darkred;
-  box-shadow: inset 0 0 4px #0c1919, inset 0 0 1px #0c1919,
-    inset 0 2px 0 #bf0707, inset 0 -2px 0 #650303;
+  background-color: ${props => props.theme.colors.darkred100};
+  box-shadow: inset 0 0 4px ${props => props.theme.colors.greenDark},
+    inset 0 0 1px ${props => props.theme.colors.greenDark},
+    inset 0 2px 0 ${props => props.theme.colors.darkred200},
+    inset 0 -2px 0 ${props => props.theme.colors.darkred};
 `;
 
 const Wrapper = styled(Border)`
+  box-shadow: inset 0 0 0 0 ${props => props.theme.colors.grey20},
+    inset 0 0 0 1px ${props => props.theme.colors.grey15},
+    inset 0 0 0 2px ${props => props.theme.colors.grey0},
+    0 0 0 1px ${props => props.theme.colors.grey0};
   position: relative;
-  color: goldenrod;
+  color: ${props => props.theme.colors.goldenrod};
   outline: none;
   cursor: unset;
   font-size: 14px;
-  text-shadow: 0 1px 1px #080808;
+  text-shadow: 0 1px 1px ${props => props.theme.colors.grey10};
   :after {
-    top: 0;
-    left: 0;
+    top: 2px;
+    left: 2px;
     position: absolute;
-    border-radius: inherit;
+    border-radius: 2px;
     pointer-events: none;
     content: '';
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 0 0 5px #0c1919, inset 0 0 2px #0c1919;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    box-shadow: inset 0 0 5px ${props => props.theme.colors.greenDark},
+      inset 0 0 2px ${props => props.theme.colors.greenDark};
   }
   :hover:after {
-    box-shadow: inset 0 -6px 6px 0px rgba(255, 234, 74, 0.16);
+    box-shadow: inset 0 -6px 6px 0px ${props => props.theme.colors.goldenrod};
+    opacity: 0.3;
   }
   :active,
   &.active {
-    color: goldenrod;
+    color: ${props => props.theme.colors.goldenrod};
     :after {
-      box-shadow: inset 0 0 4px 3px #000000;
+      box-shadow: inset 0 0 4px 3px ${props => props.theme.colors.grey0};
     }
     ${ButtonInner} {
       transform: scale(0.98) translate(1px, 1px);
@@ -102,7 +110,7 @@ export const Button: React.FC<Interface> = ({
 }) => {
   const classNames = [className];
 
-  const { updateGame, state, incrementClickCount } = useGameProvider();
+  const { incrementClickCount } = useGameProvider();
 
   const active = window.location.pathname === to && navigation;
 

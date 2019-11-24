@@ -1,48 +1,17 @@
 import 'styled-components';
-import { DefaultTheme, createGlobalStyle, css } from 'styled-components';
+import { DefaultTheme } from 'styled-components';
 
-import marble from './img/UI-Background-Marble.png';
-import rock from './img/UI-Background-Rock.png';
-import guard from './img/guard.png';
-import pointer from './img/Point.png';
-
-const images = {
-  marble,
-  guard,
-  rock
-};
-
-const shadows = {
-  blueGlow: '0 0 100px #1270a0, 1px 0 0px #2a556f, -1px 0 0px #2a556f',
-  bodyGlow: 'inset 0 0 50px rgba(13, 109, 160, 0.3)',
-  textCommon: '0 1px 1px #000',
-  cssBlueGlow: css`
-    box-shadow: 0 0 100px #1270a0, 1px 0 0 #2a556f, -1px 0 0 #2a556f,
-      0 1px 0 #2a556f, 0 -1px 0 #2a556f;
-  `
-};
-
-const colors = {
-  blueAccent: '#1270a0',
-  colden: '#daa520',
-  grey: '#242424'
-};
-
-const bg = {
-  cssMarble: css`
-    background: ${colors.grey} url(${images.marble});
-  `,
-  cssRock: css`
-    background: ${colors.grey} url(${images.rock});
-  `
-};
+import { colors } from './colors';
+import { images } from './images';
+import { shadows } from './shadows';
+import { cssBackground } from './cssBackground';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: typeof colors;
     shadows: typeof shadows;
     images: typeof images;
-    bg: typeof bg;
+    bg: typeof cssBackground;
   }
 }
 
@@ -50,13 +19,5 @@ export const theme: DefaultTheme = {
   colors,
   shadows,
   images,
-  bg
+  bg: cssBackground
 };
-
-export const AppGlobalStyle = createGlobalStyle`
-  body {
-    cursor: url(${pointer}) 0 0, auto;
-    box-shadow: ${shadows.bodyGlow};
-    font-size: 14px;
-  }
-`;

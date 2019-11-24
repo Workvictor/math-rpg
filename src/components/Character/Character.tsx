@@ -16,8 +16,9 @@ const Wrapper = styled(Border)`
 
 const Inner = styled(BorderInner)`
   display: flex;
-  border: 1px solid #101110;
-  box-shadow: inset 0 1px 14px #151515, 0 0 0 1px #000000;
+  border: 1px solid ${props => props.theme.colors.grey15};
+  box-shadow: inset 0 1px 14px ${props => props.theme.colors.grey20},
+    0 0 0 1px ${props => props.theme.colors.grey0};
 `;
 
 const Content = styled.div`
@@ -30,9 +31,10 @@ const Stats = styled(FlexWide)`
   justify-content: space-between;
 `;
 
-const Avatar = styled(Border.withComponent(FlexColumn))`
+const Avatar = styled(Border)`
   font-size: 64px;
-  color: #3a3a3a;
+  display: flex;
+  color: ${props => props.theme.colors.grey65};
 `;
 
 export interface IPlayer {
