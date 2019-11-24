@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { Howl } from 'howler';
 
 import { TabLabel } from '../TabLabel';
-import { locations, Towns, towns } from '../../store/world';
+import { locations, Towns, towns } from '../Game/world';
 import {
   UIBlockInner,
   Padbox,

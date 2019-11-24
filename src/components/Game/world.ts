@@ -1,4 +1,4 @@
-import { TIcon } from '../components/icons/TIcon';
+import { TIcon } from '../icons/TIcon';
 
 export type Towns = 't1' | 't2';
 

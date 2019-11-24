@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Padbox, FlexColumnWide } from '../layout';
-import { useGameProvider } from '../../hooks/useGameProvider';
 import { Navbar } from '../Navigation/Navbar';
 import { Route } from 'react-router';
 

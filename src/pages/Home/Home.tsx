@@ -15,9 +15,8 @@ import {
 
 import bg1 from './img/bg1.jpg';
 import { Button } from '../../components/Button';
-import { useGameState } from '../../hooks/useGameState';
 import { Divider } from '../../components/layout/Divider';
-import { useGameProvider } from '../../hooks/useGameProvider';
+import { useGameProvider } from '../../components/Game';
 
 const Header = styled(Border.withComponent(FullWidth).withComponent(Rythm))`
   height: 250px;

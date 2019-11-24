@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 
-import { Border, FlexColumn, FlexWide, UIBlockInner } from '../layout';
-import { locations, towns } from '../../store/world';
+import { Border, FlexWide, UIBlockInner } from '../layout';
 import styled from 'styled-components';
 import { mobTypes } from './mobTypes';
 import { SvgIcon } from '../icons';

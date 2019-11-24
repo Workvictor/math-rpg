@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Border, BorderInner, FlexColumn, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { SvgIcon } from '../icons';
-import { useGameProvider } from '../../hooks/useGameProvider';
+import { useGameProvider } from '../Game';
 import { TextSize } from '../layout/TextSize';
 
 const Wrapper = styled(Border)`

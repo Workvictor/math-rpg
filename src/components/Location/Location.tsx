@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 
-import { Towns, towns } from '../../store/world';
+import { Towns, towns } from '../Game/world';
 import { Questbook } from '../Quests';
 import { UnderConstruction } from '../UnderConstruction';
 

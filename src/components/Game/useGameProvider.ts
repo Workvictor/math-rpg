@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 
-import { Game, GameContext, IGameState } from '../store/GameContext';
+import { Game, GameContext, IGameState } from './GameContext';
 
 export const useGameProvider = () => {
   const { setState, state } = useContext(GameContext);
