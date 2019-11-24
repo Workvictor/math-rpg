@@ -1,13 +1,12 @@
 import React, { FC, useState } from 'react';
 
-import { Border, FlexWide, UIBlockInner } from '../layout';
+import { Border, FlexBetween, FlexWide, UIBlockInner } from '../layout';
 import styled from 'styled-components';
 import { mobTypes } from './mobTypes';
 import { SvgIcon } from '../icons';
 
-const Stats = styled(FlexWide)`
+const Stats = styled(FlexBetween)`
   padding: 2px;
-  justify-content: space-between;
 `;
 
 const StatsWrapper = styled.div`
@@ -15,21 +14,19 @@ const StatsWrapper = styled.div`
   width: 100%;
 `;
 
-const Avatar = styled(FlexWide.withComponent(Border))`
+const Avatar = styled(Border)`
   font-size: 32px;
-  color: #2e2e2e;
+  display: flex;
+  color: ${props => props.theme.colors.grey60};
   flex-shrink: 0;
 `;
 
 const Wrapper = styled(UIBlockInner)`
   opacity: 0.45;
-  color: #484848;
+  color: ${props => props.theme.colors.grey70};
   &.active {
     opacity: 1;
     color: inherit;
-    &:hover {
-      outline: 1px solid goldenrod;
-    }
   }
 `;
 

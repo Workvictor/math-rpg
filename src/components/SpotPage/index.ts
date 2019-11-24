@@ -1,1 +1,0 @@
-export { SpotPage } from './SpotPage';

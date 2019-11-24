@@ -3,8 +3,9 @@ import { Frame } from './Frame';
 
 export const Border = styled(Frame)`
   padding: 2px;
-  border: 1px solid #171717;
-  border-top-color: #2b2b2b;
-  box-shadow: inset 0 0 0 0 #131313, inset 0 0 0 1px #0c0c0c,
-    inset 0 0 0 2px #000000;
+  border: 1px solid ${props => props.theme.colors.grey30};
+  border-top-color: ${props => props.theme.colors.grey40};
+  box-shadow: inset 0 0 0 0 ${props => props.theme.colors.grey20},
+    inset 0 0 0 1px ${props => props.theme.colors.grey15},
+    inset 0 0 0 2px ${props => props.theme.colors.grey0};
 `;
