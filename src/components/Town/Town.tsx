@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
+import { Howl } from 'howler';
 
 import { TabLabel } from '../TabLabel';
-import { locations, Towns, towns } from '../../store/world';
+import { locations, Towns, towns } from '../Game/world';
 import {
   UIBlockInner,
   Padbox,
@@ -19,6 +20,17 @@ import { Button } from '../Button';
 import styled from 'styled-components';
 import { SvgIcon } from '../icons';
 import { HealButton } from '../HealButton';
+
+const sounds = [
+  new Howl({
+    src: ['music/Path to Lake Land.mp3'],
+    volume: 0.05
+  }),
+  new Howl({
+    src: ['music/Dark_Rainy_Night(ambience).ogg'],
+    volume: 0.25
+  })
+];
 
 const LocWrapper = styled(UIBlockInner)`
   color: #22485d;

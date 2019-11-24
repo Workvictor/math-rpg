@@ -10,17 +10,18 @@ import {
   ScrollArea,
   UIBlockInner
 } from '../layout';
-import { locations, towns } from '../../store/world';
+import { locations, towns } from '../Game/world';
 import { Character } from '../Character';
 import { MobView } from '../Mob';
 import { IMobAttack } from '../Mob/MobView';
-import { useGameProvider } from '../../hooks/useGameProvider';
+import { useGameProvider } from '../Game';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 
-export const Adventure: FC<
-  RouteComponentProps<{ id: string; gameName: string }>
-> = props => {
+export const Adventure: FC<RouteComponentProps<{
+  id: string;
+  gameName: string;
+}>> = props => {
   const {
     match: {
       params: { id, gameName }

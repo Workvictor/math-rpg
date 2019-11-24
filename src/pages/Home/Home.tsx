@@ -15,9 +15,8 @@ import {
 
 import bg1 from './img/bg1.jpg';
 import { Button } from '../../components/Button';
-import { useGameState } from '../../hooks/useGameState';
 import { Divider } from '../../components/layout/Divider';
-import { useGameProvider } from '../../hooks/useGameProvider';
+import { useGameProvider } from '../../components/Game';
 
 const Header = styled(Border.withComponent(FullWidth).withComponent(Rythm))`
   height: 250px;
@@ -67,9 +66,9 @@ export const Home = () => {
           <StyledButton disable>Авторы</StyledButton>
         </Menu>
         <Divider />
-        <Rythm r={2}>Недавние игры:</Rythm>
+        {state.ids.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
         {state.ids.map(gameName => (
-          <Rythm r={2}>
+          <Rythm r={2} key={gameName}>
             <UIBlockInner>
               {gameName}
               <div>уровень - {state.game[gameName].level}</div>

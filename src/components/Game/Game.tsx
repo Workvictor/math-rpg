@@ -3,11 +3,10 @@ import { Redirect, Route, Switch, RouteComponentProps } from 'react-router';
 
 import { Location } from '../Location';
 import { Quest } from '../../pages/Quest';
-import { useGameState } from '../../hooks/useGameState';
-import { towns } from '../../store/world';
+import { towns } from './world';
 import { Town } from '../Town';
 import { Adventure } from '../Adventure';
-import { useGameProvider } from '../../hooks/useGameProvider';
+import { useGameProvider } from './useGameProvider';
 
 export const path = {
   character: 'character',

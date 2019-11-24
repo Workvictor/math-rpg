@@ -3,11 +3,10 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import { theme, AppGlobalStyle } from './theme';
-import { Navbar } from './components/Navigation/Navbar';
 import { Game } from './components/Game';
 import { Home } from './pages/Home';
 import { NewGame } from './pages/NewGame';
-import { GameProvider } from './store/GameContext';
+import { GameProvider } from './components/Game/GameContext';
 import { AppFrame } from './components/AppFrame';
 
 export const App: React.FC = () => {
@@ -16,11 +15,7 @@ export const App: React.FC = () => {
       <GameProvider>
         <AppGlobalStyle />
         <ThemeProvider theme={theme}>
-          <AppFrame
-            header={
-              <Route path={'/:gameName?/:location?'} component={Navbar} />
-            }
-          >
+          <AppFrame>
             <Switch>
               <Route exact path={'/'} component={Home} />
               <Route path={'/newgame'} component={NewGame} />

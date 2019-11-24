@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
-
-import { useGameProvider } from '../../hooks/useGameProvider';
-import { Button } from '../Button';
 import styled from 'styled-components';
+
+import { useGameProvider } from '../Game';
+import { Button } from '../Button';
 
 const StyledButton = styled(Button)`
   width: 90px;
