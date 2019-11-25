@@ -17,6 +17,7 @@ export class PlayerModel {
   public clickCount: number = 0;
   public attackDelay: number = 1000;
   public targetId: number | null = null;
+  public nextAttackTime: number = Date.now();
 
   constructor(public name: string) {
     this.lastUpdate = Date.now();

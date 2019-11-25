@@ -35,10 +35,10 @@ interface IMobView {
 
 export const MobView: FC<IMobView> = props => {
   const state = useGameContext();
-  const { dispatch } = useGameDispatcher();
+  const { dispatch: gameDispatch } = useGameDispatcher();
   const { updateGame } = useGameProvider();
   const { levelRange, index, onDeath } = props;
-  const attackDelay = 500;
+  const attackDelay = 1000;
   const [attackTime, setAttackTime] = useState(Date.now());
   const [aggressive, setAggressive] = useState(false);
   const [level] = useState(
@@ -58,7 +58,7 @@ export const MobView: FC<IMobView> = props => {
       setAggressive(true);
     }
     if (state.game[state.selectedGame].targetId !== index) {
-      dispatch({
+      gameDispatch({
         type: 'setTarget',
         payload: {
           targetId: index
@@ -67,7 +67,7 @@ export const MobView: FC<IMobView> = props => {
     }
   };
   useEffect(() => {
-    if (state.game[state.selectedGame].targetId === index) {
+    if (state.game[state.selectedGame].targetId === index && healthPoints > 0) {
       const tid = setTimeout(() => {
         setHealthPoints(prev => prev - state.game[state.selectedGame].damage);
       }, state.game[state.selectedGame].attackDelay);
@@ -75,30 +75,33 @@ export const MobView: FC<IMobView> = props => {
         clearTimeout(tid);
       };
     }
-  }, [index, state.game, state.selectedGame]);
+  }, [healthPoints, index, state.game, state.selectedGame]);
   useEffect(() => {
     if (healthPoints <= 0) {
       onDeath(index);
-      dispatch({
+      gameDispatch({
         type: 'setTarget',
         payload: {
           targetId: null
         }
       });
-      dispatch({
+      gameDispatch({
         type: 'addExp',
         payload: {
           expReward: expRewardForKill
         }
       });
     }
-  }, [dispatch, expRewardForKill, healthPoints, index, onDeath]);
+  }, [gameDispatch, expRewardForKill, healthPoints, index, onDeath]);
   useEffect(() => {
-    if (aggressive) {
+    if (aggressive && state.game[state.selectedGame].healthPoints > 0) {
       const tid = setTimeout(() => {
-        updateGame(state.selectedGame, prevGameState => ({
-          healthPoints: prevGameState.healthPoints - damage
-        }));
+        gameDispatch({
+          type: 'takeDamage',
+          payload: {
+            damage
+          }
+        });
       }, attackDelay);
       return () => {
         clearTimeout(tid);
@@ -121,7 +124,9 @@ export const MobView: FC<IMobView> = props => {
             <div>Здоровье: {healthPoints}</div>
           </Stats>
         </StatsWrapper>
-        <IconButton type={'crossSwords'} onClick={onMobClick} />
+        {state.game[state.selectedGame].targetId !== index && (
+          <IconButton type={'crossSwords'} onClick={onMobClick} />
+        )}
       </FlexWide>
     </UIBlockInner>
   );

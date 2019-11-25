@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { Border, BorderInner, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { SvgIcon } from '../icons';
-import { useGameProvider } from '../Game';
 import { TextSize } from '../layout/TextSize';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 
 const Wrapper = styled(Border)`
   width: 100%;
@@ -38,7 +38,8 @@ const Avatar = styled(Border)`
 `;
 
 export const Character: FC = () => {
-  const { state, updateGame } = useGameProvider();
+  const state = useGameContext();
+  const { dispatch: gameDispatch } = useGameDispatcher();
 
   const {
     healthPoints,
@@ -46,30 +47,31 @@ export const Character: FC = () => {
     level,
     exp,
     expMax,
-    damage
+    damage,
+    targetId
   } = state.game[state.selectedGame];
 
   useEffect(() => {
-    updateGame(state.selectedGame, () => ({
-      targetId: null
-    }));
-  }, []);
+    gameDispatch({
+      type: 'setTarget',
+      payload: {
+        targetId: null
+      }
+    });
+  }, [gameDispatch]);
 
   useEffect(() => {
-    if (healthPoints < healthPointsMax) {
+    if (healthPoints < healthPointsMax && targetId === null) {
       const tid = setTimeout(() => {
-        updateGame(state.selectedGame, prev => ({
-          healthPoints: Math.min(
-            healthPointsMax,
-            prev.healthPoints + prev.healthPointsPerSecond
-          )
-        }));
+        gameDispatch({
+          type: 'restoreHealth'
+        });
       }, 1000);
       return () => {
         clearTimeout(tid);
       };
     }
-  }, [healthPoints, healthPointsMax, state.selectedGame, updateGame]);
+  }, [healthPoints, healthPointsMax, state.selectedGame, gameDispatch]);
 
   return (
     <Wrapper>
