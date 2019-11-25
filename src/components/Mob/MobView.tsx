@@ -78,7 +78,6 @@ export const MobView: FC<IMobView> = props => {
   }, [healthPoints, index, state.game, state.selectedGame]);
   useEffect(() => {
     if (healthPoints <= 0) {
-      onDeath(index);
       gameDispatch({
         type: 'setTarget',
         payload: {
@@ -91,6 +90,7 @@ export const MobView: FC<IMobView> = props => {
           expReward: expRewardForKill
         }
       });
+      onDeath(index);
     }
   }, [gameDispatch, expRewardForKill, healthPoints, index, onDeath]);
   useEffect(() => {
@@ -107,7 +107,14 @@ export const MobView: FC<IMobView> = props => {
         clearTimeout(tid);
       };
     }
-  }, [aggressive, damage, state.selectedGame, updateGame]);
+  }, [
+    aggressive,
+    damage,
+    gameDispatch,
+    state.game,
+    state.selectedGame,
+    updateGame
+  ]);
   return (
     <UIBlockInner>
       <FlexWide>

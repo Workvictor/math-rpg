@@ -29,6 +29,50 @@ export type GameActions =
   | TRestoreHealth
   | THeal;
 
+const getNextExpMax = (index: number) => {
+  const initial = [40, 80];
+  for (let i = 2; i < index; i++) {
+    initial.push(initial[i - 1] + initial[i - 2]);
+  }
+  return initial[Math.max(0, index - 1)];
+};
+
+const setExp = (state: GameModel, expReward: number) => {
+  const player = state.game[state.selectedGame];
+  const exp = expReward + player.exp;
+  if (exp >= player.expMax) {
+    // levelUp
+    const nextHpMax = player.healthPointsMax + 12;
+    const nextLevel = player.level + 1;
+    return {
+      ...state,
+      game: {
+        ...state.game,
+        [state.selectedGame]: {
+          ...state.game[state.selectedGame],
+          exp: expReward + state.game[state.selectedGame].exp,
+          level: nextLevel,
+          skillPoints: player.skillPoints + 1,
+          healthPointsMax: nextHpMax,
+          healthPoints: nextHpMax,
+          expMax: getNextExpMax(nextLevel),
+          damage: Math.floor(player.damage + nextLevel * 1.2)
+        }
+      }
+    };
+  }
+  return {
+    ...state,
+    game: {
+      ...state.game,
+      [state.selectedGame]: {
+        ...state.game[state.selectedGame],
+        exp: expReward + state.game[state.selectedGame].exp
+      }
+    }
+  };
+};
+
 export const gameReducer = (state: GameModel, action: GameActions) => {
   switch (action.type) {
     case 'updatePlayer':
@@ -107,16 +151,7 @@ export const gameReducer = (state: GameModel, action: GameActions) => {
         }
       };
     case 'addExp':
-      return {
-        ...state,
-        game: {
-          ...state.game,
-          [state.selectedGame]: {
-            ...state.game[state.selectedGame],
-            exp: action.payload.expReward
-          }
-        }
-      };
+      return setExp(state, action.payload.expReward);
     case 'takeDamage':
       return {
         ...state,
