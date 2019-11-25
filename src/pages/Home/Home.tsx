@@ -4,19 +4,17 @@ import styled from 'styled-components';
 import {
   Border,
   Rythm,
-  FullWidth,
   UIBlockInner,
   BorderInner,
   ScrollArea,
   FlexColumnWide,
-  Padbox,
-  Flex
+  Padbox
 } from '../../components/layout';
 
 import bg1 from './img/bg1.jpg';
 import { Button } from '../../components/Button';
 import { Divider } from '../../components/layout/Divider';
-import { useGameProvider } from '../../components/Game';
+import { useGameContext } from '../../components/Game/GameContext';
 
 const Header = styled(Border)`
   height: 250px;
@@ -47,7 +45,7 @@ const Menu = styled(FlexColumnWide)`
 `;
 
 export const Home = () => {
-  const { state } = useGameProvider();
+  const { ids, game } = useGameContext();
   return (
     <Wrapper>
       <BorderInner>
@@ -59,21 +57,21 @@ export const Home = () => {
       <Divider />
       <ScrollArea>
         <Menu>
-          {state.ids.length < 3 && (
+          {ids.length < 3 && (
             <StyledButton to={'/newgame'}>Новая игра</StyledButton>
           )}
           <StyledButton disable>Помощь</StyledButton>
           <StyledButton disable>Авторы</StyledButton>
         </Menu>
         <Divider />
-        {state.ids.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
-        {state.ids.map(gameName => (
+        {ids.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
+        {ids.map(gameName => (
           <Rythm r={2} key={gameName}>
             <UIBlockInner>
               {gameName}
-              <div>уровень - {state.game[gameName].level}</div>
+              <div>уровень - {game[gameName].level}</div>
               <Menu>
-                <StyledButton to={`/${state.ids[0]}`}>Продолжить</StyledButton>
+                <StyledButton to={`/${ids[0]}`}>Продолжить</StyledButton>
               </Menu>
             </UIBlockInner>
           </Rythm>

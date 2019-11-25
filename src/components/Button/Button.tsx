@@ -130,7 +130,7 @@ export const Button: React.FC<Interface> = ({
 
   const onBtnClick = () => {
     onClick && onClick();
-    incrementClickCount();
+    // incrementClickCount();
     playSound();
   };
 

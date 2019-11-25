@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Border, BorderInner, FlexColumn, FlexWide } from '../layout';
+import { Border, BorderInner, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { SvgIcon } from '../icons';
 import { useGameProvider } from '../Game';
@@ -37,12 +37,8 @@ const Avatar = styled(Border)`
   color: ${props => props.theme.colors.grey65};
 `;
 
-export interface IPlayer {
-  name: string;
-}
-
-export const Character: FC<IPlayer> = ({ name }) => {
-  const { state } = useGameProvider();
+export const Character: FC = () => {
+  const { state, updateGame } = useGameProvider();
 
   const {
     healthPoints,
@@ -51,7 +47,29 @@ export const Character: FC<IPlayer> = ({ name }) => {
     exp,
     expMax,
     damage
-  } = state.game[name];
+  } = state.game[state.selectedGame];
+
+  useEffect(() => {
+    updateGame(state.selectedGame, () => ({
+      targetId: null
+    }));
+  }, []);
+
+  useEffect(() => {
+    if (healthPoints < healthPointsMax) {
+      const tid = setTimeout(() => {
+        updateGame(state.selectedGame, prev => ({
+          healthPoints: Math.min(
+            healthPointsMax,
+            prev.healthPoints + prev.healthPointsPerSecond
+          )
+        }));
+      }, 1000);
+      return () => {
+        clearTimeout(tid);
+      };
+    }
+  }, [healthPoints, healthPointsMax, state.selectedGame, updateGame]);
 
   return (
     <Wrapper>
@@ -61,7 +79,7 @@ export const Character: FC<IPlayer> = ({ name }) => {
         </Avatar>
         <Content>
           <Stats>
-            <div>{name}</div>
+            <div>{state.selectedGame}</div>
             <div>
               Здоровье: {healthPoints}/{healthPointsMax}
             </div>

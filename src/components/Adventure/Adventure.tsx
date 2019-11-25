@@ -1,6 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
-import styled from 'styled-components';
 
 import {
   BorderInner,
@@ -13,8 +12,6 @@ import {
 import { locations, towns } from '../Game/world';
 import { Character } from '../Character';
 import { MobView } from '../Mob';
-import { IMobAttack } from '../Mob/MobView';
-import { useGameProvider } from '../Game';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 
@@ -28,39 +25,12 @@ export const Adventure: FC<RouteComponentProps<{
     }
   } = props;
 
-  const { updateGame, state } = useGameProvider();
-
-  const player = state.game[gameName];
-
   const loc = locations.find(item => item.id === id);
 
   const [mobIds, setMobIds] = useState(new Array(10).fill(0).map((_, i) => i));
 
-  // levelUp
-  useEffect(() => {
-    if (player.exp >= player.expMax) {
-      updateGame(gameName, prevGameState => {
-        const nextHpMax = prevGameState.healthPointsMax + 12;
-        const nextLevel = prevGameState.level + 1;
-        return {
-          level: nextLevel,
-          skillPoints: prevGameState.skillPoints + 1,
-          healthPointsMax: nextHpMax,
-          healthPoints: nextHpMax,
-          expMax: prevGameState.expMax + nextLevel * 100,
-          damage: Math.floor(prevGameState.damage + nextLevel * 1.2)
-        };
-      });
-    }
-  }, [gameName, player.exp, player.expMax, player.level, updateGame]);
-
-  const onAttack = (attack: IMobAttack) => {
-    const { damage, expRewardForKill, index = 0 } = attack;
-    setMobIds(prev => prev.filter(item => item !== index));
-    updateGame(gameName, prevGameState => ({
-      healthPoints: prevGameState.healthPoints + damage,
-      exp: prevGameState.exp + expRewardForKill
-    }));
+  const onMobDeath = (mobId: number) => {
+    setMobIds(prev => prev.filter(item => item !== mobId));
   };
 
   return loc ? (
@@ -73,7 +43,7 @@ export const Adventure: FC<RouteComponentProps<{
             <div>Уровень монстров: {loc.level.join(' - ')}</div>
           </Padbox>
         </UIBlockInner>
-        <Character name={gameName} />
+        <Character />
         <Padbox>
           Действия:
           <Divider />
@@ -89,11 +59,9 @@ export const Adventure: FC<RouteComponentProps<{
           return (
             <Rythm key={key}>
               <MobView
+                onDeath={onMobDeath}
                 levelRange={loc.level}
-                onAttack={onAttack}
                 index={key}
-                playerHp={player.healthPoints}
-                playerDmg={player.damage}
               />
             </Rythm>
           );

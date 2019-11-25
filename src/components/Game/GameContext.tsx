@@ -1,57 +1,43 @@
 import React, {
   FC,
   Dispatch,
-  SetStateAction,
   createContext,
   useEffect,
-  useState
+  useReducer,
+  useContext
 } from 'react';
 
 import { GameModel } from './GameModel';
+import { GameActions, gameReducer } from './gameReducer';
+import { readGameState } from './readGameState';
 
-const readGameState = () => {
-  const newGame = new GameModel();
-  const savedGame = localStorage.getItem(GameModel.appName);
-
-  if (!savedGame) {
-    localStorage.setItem(GameModel.appName, JSON.stringify(newGame));
-    return newGame;
-  }
-
-  const currentGame: GameModel = JSON.parse(savedGame);
-
-  if (
-    currentGame.appVersion !== newGame.appVersion ||
-    currentGame! instanceof GameModel
-  ) {
-    return newGame;
-  }
-
-  return currentGame;
-};
-
-interface IGameContext {
-  state: GameModel;
-  setState: Dispatch<SetStateAction<GameModel>>;
+class GameContextModel {
+  state: GameModel = readGameState();
 }
-
-const initialGameStore = {
-  state: readGameState(),
-  setState: () => {}
+class GameDispatcherModel {
+  dispatch: Dispatch<GameActions> = () => {};
+}
+const context = new GameContextModel();
+const GameContext = createContext<GameContextModel>(context);
+const contextDispatcher = new GameDispatcherModel();
+const GameDispatcher = createContext<GameDispatcherModel>(contextDispatcher);
+export const useGameContext = () => {
+  return useContext(GameContext).state;
 };
-
-export const GameContext = createContext<IGameContext>(initialGameStore);
-
+export const useGameDispatcher = () => {
+  return useContext(GameDispatcher);
+};
 export const GameProvider: FC = ({ children }) => {
-  const [state, setState] = useState(initialGameStore.state);
+  // const [state, setState] = useState(initialGameStore.state);
+  const [state, dispatch] = useReducer(gameReducer, context.state);
 
   useEffect(() => {
     localStorage.setItem(GameModel.appName, JSON.stringify(state));
   }, [state]);
 
   return (
-    <GameContext.Provider value={{ state, setState }}>
-      {children}
-    </GameContext.Provider>
+    <GameDispatcher.Provider value={{ dispatch }}>
+      <GameContext.Provider value={{ state }}>{children}</GameContext.Provider>
+    </GameDispatcher.Provider>
   );
 };

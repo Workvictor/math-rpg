@@ -15,6 +15,8 @@ export class PlayerModel {
   public expMax: number = 100;
   public damage: number = 6;
   public clickCount: number = 0;
+  public attackDelay: number = 1000;
+  public targetId: number | null = null;
 
   constructor(public name: string) {
     this.lastUpdate = Date.now();
