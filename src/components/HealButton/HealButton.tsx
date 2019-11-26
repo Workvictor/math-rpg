@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { useGameProvider } from '../Game';
 import { Button } from '../Button';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 
 const StyledButton = styled(Button)`
   width: 90px;
@@ -12,7 +13,8 @@ export const HealButton: FC<{
   gameName: string;
 }> = props => {
   const { gameName } = props;
-  const { updateGame, state } = useGameProvider();
+  const state = useGameContext();
+  const { dispatch: gameDispatch } = useGameDispatcher();
 
   const player = state.game[gameName];
 
@@ -22,12 +24,9 @@ export const HealButton: FC<{
 
   const onHeal = () => {
     if (healRefresh === 0) {
-      updateGame(gameName, prev => ({
-        healthPoints: Math.min(
-          prev.healthPointsMax,
-          prev.healthPoints + player.healValue
-        )
-      }));
+      gameDispatch({
+        type: 'heal'
+      });
       setHealRefresh(healRefreshTimeout);
     }
   };

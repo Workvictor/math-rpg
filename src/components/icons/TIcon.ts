@@ -18,4 +18,5 @@ export type TIcon =
   | 'windmill'
   | 'wheat'
   | 'forest'
+  | 'crossSwords'
   | 'barbarian';

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Border, BorderInner, FlexColumn, FlexWide } from '../layout';
+import { Border, BorderInner, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { SvgIcon } from '../icons';
-import { useGameProvider } from '../Game';
 import { TextSize } from '../layout/TextSize';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 
 const Wrapper = styled(Border)`
   width: 100%;
@@ -37,12 +37,9 @@ const Avatar = styled(Border)`
   color: ${props => props.theme.colors.grey65};
 `;
 
-export interface IPlayer {
-  name: string;
-}
-
-export const Character: FC<IPlayer> = ({ name }) => {
-  const { state } = useGameProvider();
+export const Character: FC = () => {
+  const state = useGameContext();
+  const { dispatch: gameDispatch } = useGameDispatcher();
 
   const {
     healthPoints,
@@ -50,8 +47,31 @@ export const Character: FC<IPlayer> = ({ name }) => {
     level,
     exp,
     expMax,
-    damage
-  } = state.game[name];
+    damage,
+    targetId
+  } = state.game[state.selectedGame];
+
+  useEffect(() => {
+    gameDispatch({
+      type: 'setTarget',
+      payload: {
+        targetId: null
+      }
+    });
+  }, [gameDispatch]);
+
+  useEffect(() => {
+    if (healthPoints < healthPointsMax && targetId === null) {
+      const tid = setTimeout(() => {
+        gameDispatch({
+          type: 'restoreHealth'
+        });
+      }, 1000);
+      return () => {
+        clearTimeout(tid);
+      };
+    }
+  }, [healthPoints, healthPointsMax, state.selectedGame, gameDispatch]);
 
   return (
     <Wrapper>
@@ -61,7 +81,7 @@ export const Character: FC<IPlayer> = ({ name }) => {
         </Avatar>
         <Content>
           <Stats>
-            <div>{name}</div>
+            <div>{state.selectedGame}</div>
             <div>
               Здоровье: {healthPoints}/{healthPointsMax}
             </div>

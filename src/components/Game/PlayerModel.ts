@@ -12,9 +12,12 @@ export class PlayerModel {
   public skillPoints: number = 0;
   public healValue: number = 25;
   public exp: number = 1;
-  public expMax: number = 100;
+  public expMax: number = 40;
   public damage: number = 6;
   public clickCount: number = 0;
+  public attackDelay: number = 1000;
+  public targetId: number | null = null;
+  public nextAttackTime: number = Date.now();
 
   constructor(public name: string) {
     this.lastUpdate = Date.now();

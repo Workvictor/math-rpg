@@ -64,7 +64,7 @@ export const Town = (
       <BorderInner>
         <TabLabel label={town.name} />
 
-        <Character name={gameName} />
+        <Character />
         <Padbox>
           <div>Действия:</div>
           <ButtonGroup>

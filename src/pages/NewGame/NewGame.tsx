@@ -18,6 +18,10 @@ import { Button } from '../../components/Button';
 import { Typography } from '../../components/layout/Typography';
 import { useGameProvider } from '../../components/Game';
 import { Divider } from '../../components/layout/Divider';
+import {
+  useGameContext,
+  useGameDispatcher
+} from '../../components/Game/GameContext';
 
 const Header = styled(Border)`
   height: 250px;
@@ -30,16 +34,22 @@ const Header = styled(Border)`
 export const newGamePath = 'newgame';
 
 export const NewGame = () => {
-  const { startNewGame, state } = useGameProvider();
+  const { ids } = useGameContext();
+  const { dispatch } = useGameDispatcher();
   const [name, setName] = React.useState<string>('');
 
   const onStartNewGame = () => {
-    startNewGame(name);
+    dispatch({
+      type: 'startNewGame',
+      payload: {
+        name
+      }
+    });
   };
 
-  const validName = name.length >= 3 && !state.ids.includes(name);
+  const validName = name.length >= 3 && !ids.includes(name);
 
-  return state.ids.length < 3 ? (
+  return ids.length < 3 ? (
     <>
       <BorderInner>
         <Header />
@@ -61,8 +71,8 @@ export const NewGame = () => {
             </label>
             <Button
               disable={!validName}
-              to={validName ? `/${name}/quest/1` : undefined}
-              onClick={validName ? onStartNewGame : undefined}
+              to={`/${name}/quest/1`}
+              onClick={onStartNewGame}
             >
               Далее
             </Button>
