@@ -110,7 +110,7 @@ export const Button: React.FC<Interface> = ({
 }) => {
   const classNames = [className];
 
-  const { incrementClickCount } = useGameProvider();
+  const { addClickCount } = useGameProvider();
 
   const active = window.location.pathname === to && navigation;
 

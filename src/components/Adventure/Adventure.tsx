@@ -9,7 +9,7 @@ import {
   ScrollArea,
   UIBlockInner
 } from '../layout';
-import { locations, towns } from '../Game/world';
+import { rooms, locations } from '../Game/world';
 import { Character } from '../Character';
 import { MobView } from '../Mob';
 import { Divider } from '../layout/Divider';
@@ -25,7 +25,7 @@ export const Adventure: FC<RouteComponentProps<{
     }
   } = props;
 
-  const loc = locations.find(item => item.id === id);
+  const loc = rooms.find(item => item.id === id);
 
   const [mobIds, setMobIds] = useState(new Array(10).fill(0).map((_, i) => i));
 
@@ -69,6 +69,6 @@ export const Adventure: FC<RouteComponentProps<{
       </ScrollArea>
     </>
   ) : (
-    <Redirect to={`/${gameName}/${towns[0].id}`} />
+    <Redirect to={`/${gameName}/${locations[0].id}`} />
   );
 };

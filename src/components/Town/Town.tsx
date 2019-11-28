@@ -3,7 +3,7 @@ import { Redirect, RouteComponentProps } from 'react-router';
 import { Howl } from 'howler';
 
 import { TabLabel } from '../TabLabel';
-import { locations, Towns, towns } from '../Game/world';
+import { rooms, ETowns, locations } from '../Game/world';
 import {
   UIBlockInner,
   Padbox,
@@ -47,7 +47,7 @@ const Avatar = styled(Border)`
 export const Town = (
   props: RouteComponentProps<{
     gameName: string;
-    townId: Towns;
+    townId: ETowns;
     tab: string;
   }>
 ) => {
@@ -57,7 +57,7 @@ export const Town = (
     }
   } = props;
 
-  const town = towns.find(({ id }) => id === townId);
+  const town = locations.find(({ id }) => id === townId);
 
   return town ? (
     <>
@@ -77,8 +77,8 @@ export const Town = (
       <Divider />
       <ScrollArea>
         <Padbox>Локации:</Padbox>
-        {town.locationIds.map(locationId => {
-          const loc = locations.find(item => item.id === locationId);
+        {town.roomIds.map(locationId => {
+          const loc = rooms.find(item => item.id === locationId);
           return loc ? (
             <Rythm r={2} key={locationId}>
               <LocWrapper>
@@ -102,6 +102,6 @@ export const Town = (
       </ScrollArea>
     </>
   ) : (
-    <Redirect to={`/${gameName}/${towns[0].id}`} />
+    <Redirect to={`/${gameName}/${locations[0].id}`} />
   );
 };

@@ -1,25 +1,27 @@
 import { TIcon } from '../icons/TIcon';
 
-export type Towns = 't1' | 't2';
+export enum ETowns {
+  t1 = 't1',
+  t2 = 't2'
+}
 
-export interface Location {
+export interface IRoom {
   id: string;
   name: string;
   icon: TIcon;
   locked: boolean;
   level: number[];
   unlockLocations?: string[];
-  unlockTown?: Towns;
+  unlockTown?: ETowns;
 }
 
-export interface ITown {
-  id: Towns;
+export interface ILocation {
+  id: ETowns;
   name: string;
-  locationIds: string[];
-  availableLocations: string[];
+  roomIds: string[];
 }
 
-export const locations: Location[] = [
+export const rooms: IRoom[] = [
   {
     id: 't1-0',
     level: [1, 1],
@@ -50,21 +52,24 @@ export const locations: Location[] = [
     name: 'Тёмный лес',
     icon: 'forest',
     locked: true,
-    unlockTown: 't2'
+    unlockTown: ETowns.t2
   }
 ];
 
-export const towns: ITown[] = [
+export const locations: ILocation[] = [
   {
-    id: 't1',
-    name: 'village',
-    locationIds: ['t1-1', 't1-2', 't1-3'],
-    availableLocations: ['t1-1']
+    name: 'Тренировочный лагерь',
+    id: ETowns.t1,
+    roomIds: rooms.slice(0, 4).map(({ id }) => id)
   },
   {
-    id: 't2',
-    name: 'town',
-    locationIds: [],
-    availableLocations: []
+    name: 'Деревня',
+    id: ETowns.t1,
+    roomIds: rooms.slice(0, 4).map(({ id }) => id)
+  },
+  {
+    name: 'Город',
+    id: ETowns.t2,
+    roomIds: []
   }
 ];
