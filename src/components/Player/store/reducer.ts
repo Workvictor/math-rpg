@@ -3,7 +3,7 @@ import { Dispatch } from 'react';
 import { playerAddExp, PlayerModel } from '../PlayerModel';
 
 type TUpdate = { type: 'update'; payload: Partial<PlayerModel> };
-type TSetTarget = { type: 'setTarget'; targetId: number };
+type TSetTarget = { type: 'setTarget'; targetId: number | null };
 type TAddExp = { type: 'addExp'; expReward: number };
 type TAddQuest = { type: 'addQuest'; questId: string };
 type TRemoveQuest = { type: 'removeQuest'; questId: string };
@@ -48,7 +48,7 @@ export const reducer = (state: PlayerModel, action: TActions) => {
     case 'removeQuest':
       return {
         ...state,
-        questbook: state.questbook.filter(i => i === action.questId)
+        questbook: state.questbook.filter(i => i !== action.questId)
       };
     case 'takeDamage':
       return {

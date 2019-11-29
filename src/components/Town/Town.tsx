@@ -1,6 +1,6 @@
 import React from 'react';
-import { Redirect, RouteComponentProps } from 'react-router';
-import { Howl } from 'howler';
+import { Redirect, RouteComponentProps, useRouteMatch } from 'react-router';
+// import { Howl } from 'howler';
 
 import { TabLabel } from '../TabLabel';
 import { rooms, ETowns, locations } from '../Game/world';
@@ -11,7 +11,6 @@ import {
   ScrollArea,
   BorderInner,
   Rythm,
-  FlexWide,
   Border
 } from '../layout';
 import { Character } from '../Character';
@@ -22,16 +21,16 @@ import { SvgIcon } from '../icons';
 import { HealButton } from '../HealButton';
 import { ButtonGroup } from '../Button/ButtonGroup';
 
-const sounds = [
-  new Howl({
-    src: ['music/Path to Lake Land.mp3'],
-    volume: 0.05
-  }),
-  new Howl({
-    src: ['music/Dark_Rainy_Night(ambience).ogg'],
-    volume: 0.25
-  })
-];
+// const sounds = [
+//   new Howl({
+//     src: ['music/Path to Lake Land.mp3'],
+//     volume: 0.05
+//   }),
+//   new Howl({
+//     src: ['music/Dark_Rainy_Night(ambience).ogg'],
+//     volume: 0.25
+//   })
+// ];
 
 const LocWrapper = styled(UIBlockInner)`
   color: ${props => props.theme.colors.blueDark};
@@ -44,18 +43,14 @@ const Avatar = styled(Border)`
   color: ${props => props.theme.colors.grey60};
 `;
 
-export const Town = (
-  props: RouteComponentProps<{
+export const Town = () => {
+  const {
+    params: { townId, gameName }
+  } = useRouteMatch<{
     gameName: string;
     townId: ETowns;
     tab: string;
-  }>
-) => {
-  const {
-    match: {
-      params: { townId, gameName }
-    }
-  } = props;
+  }>();
 
   const town = locations.find(({ id }) => id === townId);
 
@@ -68,7 +63,7 @@ export const Town = (
         <Padbox>
           <div>Действия:</div>
           <ButtonGroup>
-            <HealButton gameName={gameName} />
+            <HealButton />
             <Button disable>чинить(300)</Button>
             <Button disable>отдых(1000)</Button>
           </ButtonGroup>

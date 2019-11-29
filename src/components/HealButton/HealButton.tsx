@@ -1,22 +1,17 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { useGameProvider } from '../Game';
 import { Button } from '../Button';
-import { useGameContext, useGameDispatcher } from '../Game/GameContext';
+import { usePlayerContext } from '../Player/PlayerContext';
 
 const StyledButton = styled(Button)`
   width: 90px;
 `;
 
-export const HealButton: FC<{
-  gameName: string;
-}> = props => {
-  const { gameName } = props;
-  const state = useGameContext();
-  const { dispatch: gameDispatch } = useGameDispatcher();
+export const HealButton: FC = () => {
+  const { state: playerState, dispatch: playerDispatch } = usePlayerContext();
 
-  const player = state.game[gameName];
+  const player = playerState;
 
   const healRefreshTimeout = 5000;
 
@@ -24,8 +19,8 @@ export const HealButton: FC<{
 
   const onHeal = () => {
     if (healRefresh === 0) {
-      gameDispatch({
-        type: 'heal'
+      playerDispatch({
+        type: 'healSelf'
       });
       setHealRefresh(healRefreshTimeout);
     }

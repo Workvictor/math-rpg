@@ -32,7 +32,7 @@ export const reducer = (state: GameModel, action: GameActions) => {
         ...state,
         players: [
           action.player,
-          ...state.players.filter(i => i.name === action.player.name)
+          ...state.players.filter(i => i.name !== action.player.name)
         ]
       };
     default:

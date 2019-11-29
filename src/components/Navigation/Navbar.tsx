@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import { FlexBetween } from '../layout';
 import { IconButton } from '../Button';
 import { Group } from './Group';
-import { useGameProvider } from '../Game';
+import { useGameContext } from '../Game/GameContext';
 
 const Wrapper = styled(FlexBetween)`
   width: 100%;
@@ -18,8 +18,8 @@ export const Navbar = ({
     params: { gameName = '', location }
   }
 }: RouteComponentProps<{ gameName?: string; location?: string }>) => {
-  const { state } = useGameProvider();
-  const isGameEnable = state.ids.includes(gameName);
+  const { state } = useGameContext();
+  const isGameEnable = Boolean(state.players.find(i => i.name === gameName));
   const home = `/${gameName}/${location}`;
 
   return (

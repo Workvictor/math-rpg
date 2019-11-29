@@ -12,9 +12,9 @@ import {
 
 import { Typer } from '../../components/Typer';
 import { Button } from '../../components/Button';
-import { useGameProvider } from '../../components/Game';
 import { getQuestById } from '../../components/Quests/quests';
 import { Divider } from '../../components/layout/Divider';
+import { usePlayerContext } from '../../components/Player/PlayerContext';
 
 const Wrapper = styled(FlexColumnWide)`
   align-items: stretch;
@@ -35,14 +35,20 @@ export const Quest: React.FC<RouteComponentProps<{
     params: { id, gameName }
   }
 }) => {
-  const { addQuest, removeQuest, state } = useGameProvider();
+  const { dispatch, state } = usePlayerContext();
 
   const onSubmitQuest = () => {
-    addQuest(gameName, id);
+    dispatch({
+      type: 'addQuest',
+      questId: id
+    });
   };
 
   const onCancelQuest = () => {
-    removeQuest(gameName, id);
+    dispatch({
+      type: 'removeQuest',
+      questId: id
+    });
   };
 
   const quest = getQuestById(id);
@@ -58,7 +64,7 @@ export const Quest: React.FC<RouteComponentProps<{
         <Divider />
         <BorderInner>
           <ControlsWrapper>
-            {state.game[gameName].questbook.includes(id) ? (
+            {state.questbook.includes(id) ? (
               <>
                 <Button to={`/${gameName}`} onClick={onCancelQuest}>
                   Отменить
