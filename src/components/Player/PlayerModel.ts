@@ -20,10 +20,11 @@ export class PlayerModel {
   //utils
   targetId: number | null = null;
   nextAttackTime: number = Date.now();
-  questbook: string[] = [];
+  questbook: number[] = [];
   clickCount: number = 0;
   lastUpdate = Date.now();
   location = locations[0].id;
+  unlockedLocations = [0];
   constructor(public name: string) {}
 }
 

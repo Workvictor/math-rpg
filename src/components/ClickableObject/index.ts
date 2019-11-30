@@ -1,0 +1,1 @@
+export { ClickableObject } from './ClickableObject';

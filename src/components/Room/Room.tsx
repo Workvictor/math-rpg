@@ -1,49 +1,70 @@
-import React from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
+import React, { FC, useState } from 'react';
+import { Redirect, useRouteMatch } from 'react-router';
 
-import { ETowns, locations } from '../Game/world';
-import { UnderConstruction } from '../UnderConstruction';
+import { BorderInner, Padbox, Rythm, ScrollArea } from '../layout';
+import { rooms, locations } from '../Game/world';
+import { Character } from '../Character';
+import { ClickableObject } from '../ClickableObject';
+import { Divider } from '../layout/Divider';
+import { IconButton } from '../Button';
+import { TabLabel } from '../TabLabel';
 
-export const Room = () => {
+export const Room: FC = () => {
   const {
-    path,
-    params: { townId, gameName }
+    params: { roomName, gameName, locationName }
   } = useRouteMatch<{
+    locationName: string;
+    roomName: string;
     gameName: string;
-    townId: ETowns;
   }>();
-  const town = locations.find(({ id }) => id === townId);
-  const pathTab = path
-    .split('/')
-    .slice(0, -1)
-    .join('/');
 
-  return town ? (
+  const room = rooms.find(item => item.name === roomName);
+  const count = room ? room.objectCount : 0;
+
+  const [mobIds, setMobIds] = useState(
+    new Array(count).fill(0).map((_, i) => i)
+  );
+
+  const onMobDeath = (mobId: number) => {
+    setMobIds(prev => prev.filter(item => item !== mobId));
+  };
+
+  return room ? (
     <>
-      <Switch>
-        <Route
-          exact
-          path={`${pathTab}/character`}
-          component={UnderConstruction}
+      <TabLabel
+        label={
+          <>
+            {room.name} [{room.level.join('-')}]
+          </>
+        }
+      >
+        <IconButton type={'compass'} to={`/${gameName}/locations`} />
+        <IconButton
+          type={'house'}
+          to={`/${gameName}/locations/${locationName}`}
         />
-        <Route
-          exact
-          path={`${pathTab}/questbook`}
-          component={UnderConstruction}
-        />
-        <Route
-          exact
-          path={`${pathTab}/adventure`}
-          component={UnderConstruction}
-        />
-        <Route
-          exact
-          path={`${pathTab}/backpack`}
-          component={UnderConstruction}
-        />
-        <Route exact path={`${pathTab}/map`} component={UnderConstruction} />
-        <Redirect to={`/${gameName}/${townId}`} />
-      </Switch>
+      </TabLabel>
+      <BorderInner>
+        <Character />
+        <Padbox>
+          <Divider />
+        </Padbox>
+      </BorderInner>
+      <Divider />
+
+      <ScrollArea>
+        {mobIds.map(key => {
+          return (
+            <Rythm key={key}>
+              <ClickableObject
+                onDeath={onMobDeath}
+                levelRange={room.level}
+                index={key}
+              />
+            </Rythm>
+          );
+        })}
+      </ScrollArea>
     </>
   ) : (
     <Redirect to={`/${gameName}/${locations[0].id}`} />

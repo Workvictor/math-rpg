@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
-import { Room } from '../Room';
-import { Quest } from '../../pages/Quest';
-import { locations } from './world';
+import { GameTabs } from './GameTabs';
+import { Quest } from '../Quests/Quest';
 import { Location } from '../Location';
-import { Adventure } from '../Adventure';
+import { Room } from '../Room';
 import { PlayerProvider } from '../Player/PlayerContext';
+import { Locations } from '../Location/Locations';
 
 export const path = {
   character: 'character',
@@ -25,21 +25,24 @@ export const Game: FC = () => {
   return (
     <PlayerProvider gameName={gameName}>
       <Switch>
-        <Route exact path={`${path}/:locationId`}>
+        <Route exact path={`${path}/locations`}>
+          <Locations />
+        </Route>
+        <Route exact path={`${path}/locations/:locationName`}>
           <Location />
         </Route>
-        <Route exact path={`${path}/adventure/:id`}>
-          <Adventure />
+        <Route exact path={`${path}/locations/:locationName/:roomName`}>
+          <Room />
         </Route>
-        <Route path={`${path}/quest/:id`}>
+        <Route path={`${path}/quests/:questId`}>
           <Quest />
         </Route>
         <Route
-          path={`${path}/:townId/:tab(character|questbook|adventure|backpack|map)`}
+          path={`${path}/:locationName/:tab(player|quests|locations|backpack)`}
         >
-          <Room />
+          <GameTabs />
         </Route>
-        <Redirect to={`/${gameName}/${locations[0].id}`} />
+        <Redirect to={`/${gameName}/locations`} />
       </Switch>
     </PlayerProvider>
   );

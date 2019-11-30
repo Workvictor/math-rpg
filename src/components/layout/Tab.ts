@@ -1,17 +1,15 @@
 import styled from 'styled-components';
 
 import { Frame } from './Frame';
-import { Padbox } from './Padbox';
-import { Border } from './Border';
+import { BorderInner } from './BorderInner';
 
-export const Tab = styled(Padbox.withComponent(Frame).withComponent(Border))`
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+export const Tab = styled(Frame.withComponent(BorderInner))`
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   display: inline-block;
+  padding: 4px 4px 0 4px;
+  left: 6px;
   position: relative;
-  top: -3px;
-  border-top: none;
+  border-bottom: none;
   text-transform: capitalize;
-  margin-bottom: 16px;
-  ${props => props.theme.bg.cssMarble}
 `;

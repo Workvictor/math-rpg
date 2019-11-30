@@ -8,13 +8,14 @@ import {
   FlexWide,
   ScrollArea,
   FlexColumnWide
-} from '../../components/layout';
+} from '../layout';
 
-import { Typer } from '../../components/Typer';
-import { Button } from '../../components/Button';
-import { getQuestById } from '../../components/Quests/quests';
-import { Divider } from '../../components/layout/Divider';
-import { usePlayerContext } from '../../components/Player/PlayerContext';
+import { Typer } from '../Typer';
+import { Button } from '../Button';
+import { Divider } from '../layout/Divider';
+import { usePlayerContext } from '../Player/PlayerContext';
+import { getQuestById } from './quests';
+import { locations } from '../Game/world';
 
 const Wrapper = styled(FlexColumnWide)`
   align-items: stretch;
@@ -28,31 +29,34 @@ const ControlsWrapper = styled(FlexWide)`
 `;
 
 export const Quest: FC = () => {
-  const {
-    params: { id, gameName }
-  } = useRouteMatch<{
-    id: string;
-    gameName: string;
+  const { params } = useRouteMatch<{
+    questId: string;
   }>();
   const { dispatch, state } = usePlayerContext();
+  const questId = parseInt(params.questId);
 
   const onSubmitQuest = () => {
     dispatch({
       type: 'addQuest',
-      questId: id
+      questId
     });
   };
 
   const onCancelQuest = () => {
     dispatch({
       type: 'removeQuest',
-      questId: id
+      questId
     });
   };
 
-  const quest = getQuestById(id);
+  const quest = getQuestById(questId);
+  const playerLocation = locations[state.location];
 
-  return id && quest ? (
+  const locationLink = playerLocation
+    ? `/${state.name}/locations/${playerLocation.name}`
+    : `/${state.name}/locations`;
+
+  return questId && quest ? (
     <Wrapper>
       <ScrollArea>
         <Padbox>
@@ -63,16 +67,16 @@ export const Quest: FC = () => {
         <Divider />
         <BorderInner>
           <ControlsWrapper>
-            {state.questbook.includes(id) ? (
+            {state.questbook.includes(questId) ? (
               <>
-                <Button to={`/${gameName}`} onClick={onCancelQuest}>
+                <Button to={locationLink} onClick={onCancelQuest}>
                   Отменить
                 </Button>
               </>
             ) : (
               <>
-                <Button to={`/${gameName}`}>Отказаться</Button>
-                <Button to={`/${gameName}`} onClick={onSubmitQuest}>
+                <Button to={locationLink}>Отказаться</Button>
+                <Button to={locationLink} onClick={onSubmitQuest}>
                   Принять
                 </Button>
               </>
@@ -82,6 +86,6 @@ export const Quest: FC = () => {
       </div>
     </Wrapper>
   ) : (
-    <Redirect to={`/${gameName}`} />
+    <Redirect to={locationLink} />
   );
 };

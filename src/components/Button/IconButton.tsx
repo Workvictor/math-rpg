@@ -6,10 +6,7 @@ import { TIcon } from '../Icon/TIcon';
 import { Icon } from '../Icon';
 
 export const StyledButton = styled(Button)`
-  margin: 1px;
-  width: 32px;
-  height: 32px;
-  font-size: 22px;
+  font-size: inherit;
   color: ${({ theme }) => theme.colors.darkred300};
   &:hover {
     color: ${({ theme }) => theme.colors.goldenrod};

@@ -16,6 +16,7 @@ export const FlexWide = styled(Flex)`
 
 export const FlexEnd = styled(Flex)`
   justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 export const FlexColumn = styled(Flex)`

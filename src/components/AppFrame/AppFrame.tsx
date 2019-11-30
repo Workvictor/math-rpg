@@ -29,14 +29,14 @@ export const AppFrame: React.FC = ({ children }) => {
   return (
     <Wrapper as={'main'}>
       <Suspense fallback={null}>
-        <Switch>
-          <Route path={'/newgame'}>
-            <Navbar />
-          </Route>
-          <Route path={'/:gameName/:location?'}>
-            <Navbar />
-          </Route>
-        </Switch>
+        {/*<Switch>*/}
+        {/*  <Route path={'/newgame'}>*/}
+        {/*    <Navbar />*/}
+        {/*  </Route>*/}
+        {/*  <Route path={'/:gameName/:location?'}>*/}
+        {/*    <Navbar />*/}
+        {/*  </Route>*/}
+        {/*</Switch>*/}
       </Suspense>
       <Inner>{children}</Inner>
     </Wrapper>

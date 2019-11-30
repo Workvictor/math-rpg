@@ -16,7 +16,7 @@ export const useRaf = (
     setIsRunning(callback(timeElapsed, timeFromStart));
   }, [callback]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (isRunning) {
       frameTime.current = Date.now();
       startTime.current = Date.now();

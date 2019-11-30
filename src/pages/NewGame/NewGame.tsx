@@ -9,7 +9,6 @@ import {
   BorderInner,
   Padbox
 } from '../../components/layout';
-
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Typography } from '../../components/layout/Typography';
@@ -40,7 +39,10 @@ export const NewGame = () => {
     });
   };
 
-  const validName = name.length >= 3 && !players.find(i => i.name === name);
+  const validName =
+    name !== 'newgame' &&
+    name.length >= 3 &&
+    !players.find(i => i.name === name);
 
   return players.length < 3 ? (
     <>
@@ -64,7 +66,7 @@ export const NewGame = () => {
             </label>
             <Button
               disable={!validName}
-              to={`/${name}/quest/1`}
+              to={`/${name}/quests/1`}
               onClick={onStartNewGame}
             >
               Далее

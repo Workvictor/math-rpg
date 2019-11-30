@@ -16,6 +16,8 @@ export const readGameState = () => {
   return {
     ...newGame,
     ...currentGame,
-    players: currentGame.players.map(enrichPlayerData)
+    players: currentGame.players
+      ? currentGame.players.map(enrichPlayerData)
+      : []
   };
 };
