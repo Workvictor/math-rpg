@@ -2,18 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router';
 
-import {
-  Border,
-  Flex,
-  ScrollArea,
-  BorderInner,
-  Padbox
-} from '../../components/layout';
-import { Input } from '../../components/Input';
-import { Button } from '../../components/Button';
-import { Typography } from '../../components/layout/Typography';
-import { Divider } from '../../components/layout/Divider';
-import { useGameContext } from '../../components/Game/GameContext';
+import { Border, Flex, ScrollArea, BorderInner, Padbox } from '../layout';
+import { Input } from '../Input';
+import { Button } from '../Button';
+import { Typography } from '../layout/Typography';
+import { Divider } from '../layout/Divider';
+import { useGameContext } from '../Game/GameContext';
 
 const Header = styled(Border)`
   height: 250px;

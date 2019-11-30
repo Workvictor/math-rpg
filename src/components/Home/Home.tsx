@@ -9,12 +9,12 @@ import {
   ScrollArea,
   FlexColumnWide,
   Padbox
-} from '../../components/layout';
+} from '../layout';
 
 import bg1 from './img/bg1.jpg';
-import { Button } from '../../components/Button';
-import { Divider } from '../../components/layout/Divider';
-import { useGameContext } from '../../components/Game/GameContext';
+import { Button } from '../Button';
+import { Divider } from '../layout/Divider';
+import { useGameContext } from '../Game/GameContext';
 
 const Header = styled(Border)`
   height: 250px;
