@@ -2,14 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { useRouteMatch } from 'react-router';
 
-import { FlexBetween } from '../layout';
+import { BorderInner, Flex } from '../layout';
 import { IconButton } from '../Button';
-import { Group } from './Group';
 import { useGameContext } from '../Game/GameContext';
 
-const Wrapper = styled(FlexBetween)`
-  width: 100%;
-  padding: 6px 0;
+const Wrapper = styled(Flex.withComponent(BorderInner))`
+  border-bottom: none;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 18px;
+  z-index: 1;
+  padding: 4px 0 0 4px;
+  justify-content: flex-end;
 `;
 
 export const Navbar = () => {
@@ -22,52 +26,37 @@ export const Navbar = () => {
 
   return (
     <Wrapper as={'nav'}>
-      <Group>
-        <IconButton soundType={'navigation'} to={'/'} type={'quit'} />
-      </Group>
-      <Group visible={isGameEnable}>
-        <IconButton
-          soundType={'navigation'}
-          navigation
-          to={`${home}`}
-          type={'house'}
-        />
-        <IconButton
-          soundType={'navigation'}
-          disable
-          navigation
-          to={`${home}/character`}
-          type={'cementShoes'}
-        />
-        <IconButton
-          soundType={'navigation'}
-          disable
-          navigation
-          to={`${home}/backpack`}
-          type={'backpack'}
-        />
-        <IconButton
-          soundType={'navigation'}
-          disable
-          navigation
-          to={`${home}/map`}
-          type={'compass'}
-        />
-        <IconButton
-          soundType={'navigation'}
-          disable
-          navigation
-          to={`${home}/questbook`}
-          type={'bookmark'}
-        />
-        <IconButton
-          soundType={'navigation'}
-          disable
-          navigation
-          to={`${home}/adventure`}
-          type={'slalom'}
-        />
-      </Group>
+      <IconButton soundType={'navigation'} to={'/'} type={'hamburgerMenu'} />
+      {/*<Group visible={isGameEnable}>*/}
+      {/*  <IconButton*/}
+      {/*    soundType={'navigation'}*/}
+      {/*    disable*/}
+      {/*    navigation*/}
+      {/*    to={`${home}/player`}*/}
+      {/*    type={'cementShoes'}*/}
+      {/*  />*/}
+      {/*  <IconButton*/}
+      {/*    soundType={'navigation'}*/}
+      {/*    disable*/}
+      {/*    navigation*/}
+      {/*    to={`${home}/locations`}*/}
+      {/*    type={'compass'}*/}
+      {/*  />*/}
+      {/*  <IconButton*/}
+      {/*    soundType={'navigation'}*/}
+      {/*    disable*/}
+      {/*    navigation*/}
+      {/*    to={`${home}/quests`}*/}
+      {/*    type={'bookmark'}*/}
+      {/*  />*/}
+      {/*  <IconButton*/}
+      {/*    soundType={'navigation'}*/}
+      {/*    disable*/}
+      {/*    navigation*/}
+      {/*    to={`${home}/adventure`}*/}
+      {/*    type={'slalom'}*/}
+      {/*  />*/}
+      {/*</Group>*/}
     </Wrapper>
   );
 };

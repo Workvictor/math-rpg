@@ -1,27 +1,45 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, lazy, ReactNode, Suspense } from 'react';
 import styled from 'styled-components';
 
-import { IconButton } from '../Button';
-import { FlexStart, Tab } from '../layout';
+import { FlexStart, FlexEnd, Tab } from '../layout';
+import { Route, Switch } from 'react-router';
+const Navbar = lazy(() => import('../Navigation'));
 
-const StyledIconButton = styled(IconButton)`
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
+const Wrapper = styled(FlexStart)`
+  height: 42px;
+  overflow: hidden;
+  position: relative;
+  bottom: -1px;
+  font-size: 18px;
+  align-items: flex-end;
+  justify-content: space-between;
 `;
 
 interface ITabLabel {
   label: ReactNode;
-  fromUrl?: string;
 }
 
 export const TabLabel: FC<ITabLabel> = props => {
-  const { label, fromUrl } = props;
+  const { label, children } = props;
 
-  return label ? (
-    <FlexStart>
-      <Tab>{label}</Tab>
-      {fromUrl && <StyledIconButton to={fromUrl} type={'cancel'} />}
-    </FlexStart>
-  ) : null;
+  return (
+    <Wrapper>
+      <Tab>
+        <FlexEnd>
+          <div>{children}</div>
+          <div>{label}</div>
+        </FlexEnd>
+      </Tab>
+      <Suspense fallback={null}>
+        <Switch>
+          <Route path={'/newgame'}>
+            <Navbar />
+          </Route>
+          <Route path={'/:gameName/:location?'}>
+            <Navbar />
+          </Route>
+        </Switch>
+      </Suspense>
+    </Wrapper>
+  );
 };

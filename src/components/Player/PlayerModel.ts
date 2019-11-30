@@ -24,6 +24,7 @@ export class PlayerModel {
   clickCount: number = 0;
   lastUpdate = Date.now();
   location = locations[0].id;
+  unlockedLocations = [0];
   constructor(public name: string) {}
 }
 

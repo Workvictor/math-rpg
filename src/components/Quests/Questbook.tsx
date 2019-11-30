@@ -8,12 +8,8 @@ import { TabLabel } from '../TabLabel';
 import { usePlayerContext } from '../Player/PlayerContext';
 
 export const Questbook = () => {
-  const {
-    url,
-    params: { gameName, location }
-  } = useRouteMatch<{ gameName: string; location: string }>();
+  const { url } = useRouteMatch<{ gameName: string; locationName: string }>();
   const { state } = usePlayerContext();
-  const fromUrl = ['', gameName, location].join('/');
 
   const to = url
     .split('/')
@@ -22,7 +18,7 @@ export const Questbook = () => {
 
   return (
     <>
-      <TabLabel label={'Questbook'} fromUrl={fromUrl} />
+      <TabLabel label={'Questbook'} />
 
       <div>
         {state.questbook.map((questId, index) => {

@@ -1,6 +1,8 @@
 export type TIcon =
   | 'compass'
   | 'cementShoes'
+  | 'village'
+  | 'castle'
   | 'skeleton'
   | 'backpack'
   | 'walk'

@@ -9,11 +9,12 @@ import {
   ScrollArea,
   BorderInner,
   Rythm,
-  FlexStart
+  FlexStart,
+  Flex
 } from '../layout';
 import { Character } from '../Character';
 import { Divider } from '../layout/Divider';
-import { Button } from '../Button';
+import { Button, IconButton } from '../Button';
 import styled from 'styled-components';
 import { HealButton } from '../HealButton';
 import { ButtonGroup } from '../Button/ButtonGroup';
@@ -33,16 +34,16 @@ export const Location = () => {
   } = useRouteMatch<{
     gameName: string;
     locationName: string;
-    tab: string;
   }>();
 
   const location = locations.find(location => location.name === locationName);
 
   return location ? (
     <>
+      <TabLabel label={location.name}>
+        <IconButton type={'compass'} to={`/${gameName}/locations`} />
+      </TabLabel>
       <BorderInner>
-        <TabLabel label={location.name} />
-
         <Character />
         <Padbox>
           <div>Действия:</div>
@@ -63,7 +64,10 @@ export const Location = () => {
                 <FlexStart>
                   <StyledBorderIcon type={room.icon} />
                   <div>
-                    {room.name} [{room.level.join('-')}]
+                    <div>
+                      {room.name} [{room.level.join('-')}]
+                    </div>
+                    {room.description}
                   </div>
                 </FlexStart>
                 <Divider />
@@ -71,7 +75,7 @@ export const Location = () => {
                   disable={room.locked}
                   to={`${location.name}/${room.name}`}
                 >
-                  перейти
+                  войти
                 </Button>
               </RoomWrapper>
             </Rythm>

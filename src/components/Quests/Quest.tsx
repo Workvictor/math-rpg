@@ -8,13 +8,14 @@ import {
   FlexWide,
   ScrollArea,
   FlexColumnWide
-} from '../../components/layout';
+} from '../layout';
 
-import { Typer } from '../../components/Typer';
-import { Button } from '../../components/Button';
-import { getQuestById } from '../../components/Quests/quests';
-import { Divider } from '../../components/layout/Divider';
-import { usePlayerContext } from '../../components/Player/PlayerContext';
+import { Typer } from '../Typer';
+import { Button } from '../Button';
+import { Divider } from '../layout/Divider';
+import { usePlayerContext } from '../Player/PlayerContext';
+import { getQuestById } from './quests';
+import { locations } from '../Game/world';
 
 const Wrapper = styled(FlexColumnWide)`
   align-items: stretch;
@@ -49,6 +50,11 @@ export const Quest: FC = () => {
   };
 
   const quest = getQuestById(questId);
+  const playerLocation = locations[state.location];
+
+  const locationLink = playerLocation
+    ? `/${state.name}/locations/${playerLocation.name}`
+    : `/${state.name}/locations`;
 
   return questId && quest ? (
     <Wrapper>
@@ -63,14 +69,14 @@ export const Quest: FC = () => {
           <ControlsWrapper>
             {state.questbook.includes(questId) ? (
               <>
-                <Button to={`/${state.name}`} onClick={onCancelQuest}>
+                <Button to={locationLink} onClick={onCancelQuest}>
                   Отменить
                 </Button>
               </>
             ) : (
               <>
-                <Button to={`/${state.name}`}>Отказаться</Button>
-                <Button to={`/${state.name}`} onClick={onSubmitQuest}>
+                <Button to={locationLink}>Отказаться</Button>
+                <Button to={locationLink} onClick={onSubmitQuest}>
                   Принять
                 </Button>
               </>
@@ -80,6 +86,6 @@ export const Quest: FC = () => {
       </div>
     </Wrapper>
   ) : (
-    <Redirect to={`/${state.name}`} />
+    <Redirect to={locationLink} />
   );
 };

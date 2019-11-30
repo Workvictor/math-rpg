@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
 import { Redirect, useRouteMatch } from 'react-router';
 
-import { BorderInner, Flex, Padbox, Rythm, ScrollArea } from '../layout';
+import { BorderInner, Padbox, Rythm, ScrollArea } from '../layout';
 import { rooms, locations } from '../Game/world';
 import { Character } from '../Character';
-import { MobView } from '../Mob';
+import { ClickableObject } from '../ClickableObject';
 import { Divider } from '../layout/Divider';
-import { Button } from '../Button';
+import { IconButton } from '../Button';
 import { TabLabel } from '../TabLabel';
 
 export const Room: FC = () => {
@@ -19,8 +19,11 @@ export const Room: FC = () => {
   }>();
 
   const room = rooms.find(item => item.name === roomName);
+  const count = room ? room.objectCount : 0;
 
-  const [mobIds, setMobIds] = useState(new Array(10).fill(0).map((_, i) => i));
+  const [mobIds, setMobIds] = useState(
+    new Array(count).fill(0).map((_, i) => i)
+  );
 
   const onMobDeath = (mobId: number) => {
     setMobIds(prev => prev.filter(item => item !== mobId));
@@ -28,21 +31,20 @@ export const Room: FC = () => {
 
   return room ? (
     <>
-      <BorderInner>
-        <TabLabel
-          label={
-            <>
-              <Flex>
-                <Button to={`/${gameName}/location/${locationName}`}>
-                  вернуться
-                </Button>
-                <div>
-                  {room.name} [${room.level.join('-')}]
-                </div>
-              </Flex>
-            </>
-          }
+      <TabLabel
+        label={
+          <>
+            {room.name} [{room.level.join('-')}]
+          </>
+        }
+      >
+        <IconButton type={'compass'} to={`/${gameName}/locations`} />
+        <IconButton
+          type={'house'}
+          to={`/${gameName}/locations/${locationName}`}
         />
+      </TabLabel>
+      <BorderInner>
         <Character />
         <Padbox>
           <Divider />
@@ -54,7 +56,7 @@ export const Room: FC = () => {
         {mobIds.map(key => {
           return (
             <Rythm key={key}>
-              <MobView
+              <ClickableObject
                 onDeath={onMobDeath}
                 levelRange={room.level}
                 index={key}

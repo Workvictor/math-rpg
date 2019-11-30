@@ -2,12 +2,11 @@ import React, { FC } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
 import { GameTabs } from './GameTabs';
-import { Quest } from '../../pages/Quest';
-import { locations } from './world';
+import { Quest } from '../Quests/Quest';
 import { Location } from '../Location';
 import { Room } from '../Room';
 import { PlayerProvider } from '../Player/PlayerContext';
-import { UnderConstruction } from '../UnderConstruction';
+import { Locations } from '../Location/Locations';
 
 export const path = {
   character: 'character',
@@ -27,7 +26,7 @@ export const Game: FC = () => {
     <PlayerProvider gameName={gameName}>
       <Switch>
         <Route exact path={`${path}/locations`}>
-          <UnderConstruction />
+          <Locations />
         </Route>
         <Route exact path={`${path}/locations/:locationName`}>
           <Location />
@@ -43,7 +42,7 @@ export const Game: FC = () => {
         >
           <GameTabs />
         </Route>
-        <Redirect to={`/${gameName}/locations/${locations[0].name}`} />
+        <Redirect to={`/${gameName}/locations`} />
       </Switch>
     </PlayerProvider>
   );
