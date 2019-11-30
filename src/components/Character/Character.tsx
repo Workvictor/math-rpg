@@ -1,10 +1,9 @@
 import React, { FC, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Border, BorderInner, FlexWide } from '../layout';
+import { Border, BorderInner, FlexWide, TextSize } from '../layout';
 import { StatusBar } from '../StatusBar';
 import { Icon } from '../Icon';
-import { TextSize } from '../layout/TextSize';
 import { usePlayerContext } from '../Player/PlayerContext';
 
 const Wrapper = styled(Border)`
