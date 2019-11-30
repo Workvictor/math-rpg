@@ -1,4 +1,5 @@
 import { GameModel } from './GameModel';
+import { enrichPlayerData } from '../Player/PlayerModel';
 
 export const readGameState = () => {
   const newGame = new GameModel();
@@ -11,12 +12,10 @@ export const readGameState = () => {
 
   const currentGame: GameModel = JSON.parse(savedGame);
 
-  if (
-    currentGame.appVersion !== newGame.appVersion ||
-    currentGame! instanceof GameModel
-  ) {
-    return newGame;
-  }
-
-  return currentGame;
+  //enrich game data
+  return {
+    ...newGame,
+    ...currentGame,
+    players: currentGame.players.map(enrichPlayerData)
+  };
 };

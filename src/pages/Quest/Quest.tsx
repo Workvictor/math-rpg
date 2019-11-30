@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { Redirect, useRouteMatch } from 'react-router';
 
 import {
   Padbox,
@@ -12,9 +12,9 @@ import {
 
 import { Typer } from '../../components/Typer';
 import { Button } from '../../components/Button';
-import { useGameProvider } from '../../components/Game';
 import { getQuestById } from '../../components/Quests/quests';
 import { Divider } from '../../components/layout/Divider';
+import { usePlayerContext } from '../../components/Player/PlayerContext';
 
 const Wrapper = styled(FlexColumnWide)`
   align-items: stretch;
@@ -27,22 +27,27 @@ const ControlsWrapper = styled(FlexWide)`
   justify-content: space-between;
 `;
 
-export const Quest: React.FC<RouteComponentProps<{
-  id: string;
-  gameName: string;
-}>> = ({
-  match: {
+export const Quest: FC = () => {
+  const {
     params: { id, gameName }
-  }
-}) => {
-  const { addQuest, removeQuest, state } = useGameProvider();
+  } = useRouteMatch<{
+    id: string;
+    gameName: string;
+  }>();
+  const { dispatch, state } = usePlayerContext();
 
   const onSubmitQuest = () => {
-    addQuest(gameName, id);
+    dispatch({
+      type: 'addQuest',
+      questId: id
+    });
   };
 
   const onCancelQuest = () => {
-    removeQuest(gameName, id);
+    dispatch({
+      type: 'removeQuest',
+      questId: id
+    });
   };
 
   const quest = getQuestById(id);
@@ -58,7 +63,7 @@ export const Quest: React.FC<RouteComponentProps<{
         <Divider />
         <BorderInner>
           <ControlsWrapper>
-            {state.game[gameName].questbook.includes(id) ? (
+            {state.questbook.includes(id) ? (
               <>
                 <Button to={`/${gameName}`} onClick={onCancelQuest}>
                   Отменить

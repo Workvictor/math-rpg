@@ -1,22 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router';
+import { useRouteMatch } from 'react-router';
 
 import { getQuestById } from './quests';
 import { UIBlockInner } from '../layout';
 import { TabLabel } from '../TabLabel';
-import { useGameProvider } from '../Game';
+import { usePlayerContext } from '../Player/PlayerContext';
 
-export const Questbook = (
-  props: RouteComponentProps<{ gameName: string; location: string }>
-) => {
+export const Questbook = () => {
   const {
-    match: {
-      url,
-      params: { gameName, location }
-    }
-  } = props;
-  const { state } = useGameProvider();
+    url,
+    params: { gameName, location }
+  } = useRouteMatch<{ gameName: string; location: string }>();
+  const { state } = usePlayerContext();
   const fromUrl = ['', gameName, location].join('/');
 
   const to = url
@@ -29,7 +25,7 @@ export const Questbook = (
       <TabLabel label={'Questbook'} fromUrl={fromUrl} />
 
       <div>
-        {state.game[gameName].questbook.map((questId, index) => {
+        {state.questbook.map((questId, index) => {
           const quest = getQuestById(questId);
 
           return quest ? (

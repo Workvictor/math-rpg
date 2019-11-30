@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 import { Border, BorderInner, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
-import { SvgIcon } from '../icons';
+import { Icon } from '../Icon';
 import { TextSize } from '../layout/TextSize';
-import { useGameContext, useGameDispatcher } from '../Game/GameContext';
+import { usePlayerContext } from '../Player/PlayerContext';
 
 const Wrapper = styled(Border)`
   width: 100%;
@@ -38,8 +38,7 @@ const Avatar = styled(Border)`
 `;
 
 export const Character: FC = () => {
-  const state = useGameContext();
-  const { dispatch: gameDispatch } = useGameDispatcher();
+  const { state: playerState, dispatch: playerDispatch } = usePlayerContext();
 
   const {
     healthPoints,
@@ -48,22 +47,20 @@ export const Character: FC = () => {
     exp,
     expMax,
     damage,
-    targetId
-  } = state.game[state.selectedGame];
+    name
+  } = playerState;
 
   useEffect(() => {
-    gameDispatch({
+    playerDispatch({
       type: 'setTarget',
-      payload: {
-        targetId: null
-      }
+      targetId: null
     });
-  }, [gameDispatch]);
+  }, [playerDispatch]);
 
   useEffect(() => {
-    if (healthPoints < healthPointsMax && targetId === null) {
+    if (healthPoints < healthPointsMax) {
       const tid = setTimeout(() => {
-        gameDispatch({
+        playerDispatch({
           type: 'restoreHealth'
         });
       }, 1000);
@@ -71,17 +68,17 @@ export const Character: FC = () => {
         clearTimeout(tid);
       };
     }
-  }, [healthPoints, healthPointsMax, state.selectedGame, gameDispatch]);
+  }, [healthPoints, healthPointsMax, playerDispatch]);
 
   return (
     <Wrapper>
       <Inner>
         <Avatar>
-          <SvgIcon type={'player'} />
+          <Icon type={'cementShoes'} />
         </Avatar>
         <Content>
           <Stats>
-            <div>{state.selectedGame}</div>
+            <div>{name}</div>
             <div>
               Здоровье: {healthPoints}/{healthPointsMax}
             </div>

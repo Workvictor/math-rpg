@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Howl } from 'howler';
 
 import { Border } from '../layout';
-import { useGameProvider } from '../Game';
+import { useGameContext } from '../Game/GameContext';
 
 const clickSound = new Howl({
   src: ['sfx/bookOpen.ogg'],
@@ -110,7 +110,7 @@ export const Button: React.FC<Interface> = ({
 }) => {
   const classNames = [className];
 
-  const { incrementClickCount } = useGameProvider();
+  const { dispatch } = useGameContext();
 
   const active = window.location.pathname === to && navigation;
 
@@ -130,7 +130,9 @@ export const Button: React.FC<Interface> = ({
 
   const onBtnClick = () => {
     onClick && onClick();
-    // incrementClickCount();
+    dispatch({
+      type: 'addClickCount'
+    });
     playSound();
   };
 

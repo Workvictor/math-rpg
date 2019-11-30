@@ -1,12 +1,12 @@
-import React from 'react';
-import { Redirect, Route, Switch, RouteComponentProps } from 'react-router';
+import React, { FC } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
-import { Location } from '../Location';
+import { Room } from '../Room';
 import { Quest } from '../../pages/Quest';
-import { towns } from './world';
-import { Town } from '../Town';
+import { locations } from './world';
+import { Location } from '../Location';
 import { Adventure } from '../Adventure';
-import { useGameProvider } from './useGameProvider';
+import { PlayerProvider } from '../Player/PlayerContext';
 
 export const path = {
   character: 'character',
@@ -16,30 +16,31 @@ export const path = {
   quest: 'quest'
 };
 
-export const Game = (props: RouteComponentProps<{ gameName: string }>) => {
+export const Game: FC = () => {
   const {
-    match: {
-      path,
-      params: { gameName }
-    }
-  } = props;
-  const { setSelectedGame, state } = useGameProvider();
+    params: { gameName },
+    path
+  } = useRouteMatch<{ gameName: string }>();
 
-  if (!state.ids.includes(gameName)) {
-    return <Redirect to={'/'} />;
-  }
-
-  setSelectedGame(gameName);
   return (
-    <Switch>
-      <Route exact path={`${path}/:townId`} component={Town} />
-      <Route exact path={`${path}/adventure/:id`} component={Adventure} />
-      <Route path={`${path}/quest/:id`} component={Quest} />
-      <Route
-        path={`${path}/:townId/:tab(character|questbook|adventure|backpack|map)`}
-        component={Location}
-      />
-      <Redirect to={`/${gameName}/${towns[0].id}`} />
-    </Switch>
+    <PlayerProvider gameName={gameName}>
+      <Switch>
+        <Route exact path={`${path}/:locationId`}>
+          <Location />
+        </Route>
+        <Route exact path={`${path}/adventure/:id`}>
+          <Adventure />
+        </Route>
+        <Route path={`${path}/quest/:id`}>
+          <Quest />
+        </Route>
+        <Route
+          path={`${path}/:townId/:tab(character|questbook|adventure|backpack|map)`}
+        >
+          <Room />
+        </Route>
+        <Redirect to={`/${gameName}/${locations[0].id}`} />
+      </Switch>
+    </PlayerProvider>
   );
 };

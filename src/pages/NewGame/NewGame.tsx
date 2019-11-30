@@ -4,9 +4,6 @@ import { Redirect } from 'react-router';
 
 import {
   Border,
-  Rythm,
-  FullWidth,
-  UIBlockInner,
   Flex,
   ScrollArea,
   BorderInner,
@@ -16,12 +13,8 @@ import {
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Typography } from '../../components/layout/Typography';
-import { useGameProvider } from '../../components/Game';
 import { Divider } from '../../components/layout/Divider';
-import {
-  useGameContext,
-  useGameDispatcher
-} from '../../components/Game/GameContext';
+import { useGameContext } from '../../components/Game/GameContext';
 
 const Header = styled(Border)`
   height: 250px;
@@ -34,22 +27,22 @@ const Header = styled(Border)`
 export const newGamePath = 'newgame';
 
 export const NewGame = () => {
-  const { ids } = useGameContext();
-  const { dispatch } = useGameDispatcher();
-  const [name, setName] = React.useState<string>('');
+  const {
+    state: { players },
+    dispatch
+  } = useGameContext();
+  const [name, setName] = React.useState('');
 
   const onStartNewGame = () => {
     dispatch({
       type: 'startNewGame',
-      payload: {
-        name
-      }
+      name
     });
   };
 
-  const validName = name.length >= 3 && !ids.includes(name);
+  const validName = name.length >= 3 && !players.find(i => i.name === name);
 
-  return ids.length < 3 ? (
+  return players.length < 3 ? (
     <>
       <BorderInner>
         <Header />

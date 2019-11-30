@@ -8,8 +8,8 @@ const Wrapper = styled(BorderInner)`
 `;
 
 interface IGroup {
-  visible: boolean;
+  visible?: boolean;
 }
 
-export const Group: FC<IGroup> = ({ children, visible }) =>
+export const Group: FC<IGroup> = ({ children, visible = true }) =>
   visible ? <Wrapper>{children}</Wrapper> : null;

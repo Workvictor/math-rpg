@@ -1,30 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
-import { RouteComponentProps } from 'react-router';
+import { useRouteMatch } from 'react-router';
 
 import { FlexBetween } from '../layout';
 import { IconButton } from '../Button';
 import { Group } from './Group';
-import { useGameProvider } from '../Game';
+import { useGameContext } from '../Game/GameContext';
 
 const Wrapper = styled(FlexBetween)`
   width: 100%;
   padding: 6px 0;
 `;
 
-export const Navbar = ({
-  match: {
-    url,
+export const Navbar = () => {
+  const {
     params: { gameName = '', location }
-  }
-}: RouteComponentProps<{ gameName?: string; location?: string }>) => {
-  const { state } = useGameProvider();
-  const isGameEnable = state.ids.includes(gameName);
+  } = useRouteMatch<{ gameName: string; location?: string }>();
+  const { state } = useGameContext();
+  const isGameEnable = Boolean(state.players.find(i => i.name === gameName));
   const home = `/${gameName}/${location}`;
 
   return (
     <Wrapper as={'nav'}>
-      <Group visible={url === home}>
+      <Group>
         <IconButton soundType={'navigation'} to={'/'} type={'quit'} />
       </Group>
       <Group visible={isGameEnable}>
@@ -39,7 +37,7 @@ export const Navbar = ({
           disable
           navigation
           to={`${home}/character`}
-          type={'player'}
+          type={'cementShoes'}
         />
         <IconButton
           soundType={'navigation'}
@@ -60,14 +58,14 @@ export const Navbar = ({
           disable
           navigation
           to={`${home}/questbook`}
-          type={'questbook'}
+          type={'bookmark'}
         />
         <IconButton
           soundType={'navigation'}
           disable
           navigation
           to={`${home}/adventure`}
-          type={'adventure'}
+          type={'slalom'}
         />
       </Group>
     </Wrapper>

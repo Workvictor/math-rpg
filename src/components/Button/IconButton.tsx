@@ -2,17 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Button, ButtonInner, Interface as ButtonInterface } from './Button';
-import { SvgIcon } from '../icons';
-import { TIcon } from '../icons/TIcon';
+import { TIcon } from '../Icon/TIcon';
+import { Icon } from '../Icon';
 
 export const StyledButton = styled(Button)`
   margin: 1px;
   width: 32px;
   height: 32px;
   font-size: 22px;
-  color: #310000;
+  color: ${({ theme }) => theme.colors.darkred300};
   &:hover {
-    color: goldenrod;
+    color: ${({ theme }) => theme.colors.goldenrod};
   }
   & ${ButtonInner} {
     padding: 2px;
@@ -25,6 +25,6 @@ interface IIconButton extends ButtonInterface {
 
 export const IconButton = ({ type, ...buttonProps }: IIconButton) => (
   <StyledButton {...buttonProps}>
-    <SvgIcon type={type} />
+    <Icon type={type} />
   </StyledButton>
 );

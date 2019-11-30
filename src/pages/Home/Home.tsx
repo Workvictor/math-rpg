@@ -45,7 +45,9 @@ const Menu = styled(FlexColumnWide)`
 `;
 
 export const Home = () => {
-  const { ids, game } = useGameContext();
+  const {
+    state: { players }
+  } = useGameContext();
   return (
     <Wrapper>
       <BorderInner>
@@ -57,21 +59,21 @@ export const Home = () => {
       <Divider />
       <ScrollArea>
         <Menu>
-          {ids.length < 3 && (
+          {players.length < 3 && (
             <StyledButton to={'/newgame'}>Новая игра</StyledButton>
           )}
           <StyledButton disable>Помощь</StyledButton>
           <StyledButton disable>Авторы</StyledButton>
         </Menu>
         <Divider />
-        {ids.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
-        {ids.map(gameName => (
-          <Rythm r={2} key={gameName}>
+        {players.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
+        {players.map(({ name, level }) => (
+          <Rythm r={2} key={name}>
             <UIBlockInner>
-              {gameName}
-              <div>уровень - {game[gameName].level}</div>
+              {name}
+              <div>уровень - {level}</div>
               <Menu>
-                <StyledButton to={`/${ids[0]}`}>Продолжить</StyledButton>
+                <StyledButton to={`/${name}`}>Продолжить</StyledButton>
               </Menu>
             </UIBlockInner>
           </Rythm>

@@ -1,4 +1,4 @@
-import { TIcon } from '../icons/TIcon';
+import { TIcon } from '../Icon/TIcon';
 
 interface IMobType {
   level: number[];
