@@ -1,4 +1,4 @@
-import { TIcon } from '../icons/TIcon';
+import { TIcon } from '../Icon/TIcon';
 
 export enum ETowns {
   t1 = 't1',
@@ -25,9 +25,9 @@ export const rooms: IRoom[] = [
   {
     id: 't1-0',
     level: [1, 1],
-    name: 'Тренировочный лагерь',
+    name: 'Убежище',
     icon: 'wheat',
-    locked: true,
+    locked: false,
     unlockLocations: ['t1-1']
   },
   {
@@ -35,7 +35,7 @@ export const rooms: IRoom[] = [
     level: [1, 4],
     name: 'Посевные поля',
     icon: 'wheat',
-    locked: false,
+    locked: true,
     unlockLocations: ['t1-2']
   },
   {

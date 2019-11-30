@@ -18,6 +18,12 @@ export const GameProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, context.state);
 
   useEffect(() => {
+    window.addEventListener('storage', () => {
+      dispatch({ type: 'reloadGame' });
+    });
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem(GameModel.appName, JSON.stringify(state));
   }, [state]);
 

@@ -2,7 +2,6 @@ import { PlayerModel } from '../Player/PlayerModel';
 
 export class GameModel {
   static appName = 'game-app';
-  appVersion = '0.1.2';
   players: PlayerModel[] = [];
   settings = {
     fullscreen: true,

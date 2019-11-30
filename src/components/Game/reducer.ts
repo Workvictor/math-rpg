@@ -4,11 +4,16 @@ import { GameModel } from './GameModel';
 import { PlayerModel } from '../Player/PlayerModel';
 import { readGameState } from './readGameState';
 
+type TReloadGame = { type: 'reloadGame' };
 type TStartNewGame = { type: 'startNewGame'; name: string };
 type TAddClickCount = { type: 'addClickCount' };
 type TOnPlayerUpdate = { type: 'onPlayerUpdate'; player: PlayerModel };
 
-export type GameActions = TStartNewGame | TAddClickCount | TOnPlayerUpdate;
+export type GameActions =
+  | TStartNewGame
+  | TAddClickCount
+  | TOnPlayerUpdate
+  | TReloadGame;
 
 export class GameContextModel {
   state: GameModel = readGameState();
@@ -17,6 +22,8 @@ export class GameContextModel {
 
 export const reducer = (state: GameModel, action: GameActions) => {
   switch (action.type) {
+    case 'reloadGame':
+      return new GameModel();
     case 'startNewGame':
       return {
         ...state,

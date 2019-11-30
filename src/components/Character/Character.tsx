@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Border, BorderInner, FlexWide } from '../layout';
 import { StatusBar } from '../StatusBar';
-import { SvgIcon } from '../icons';
+import { Icon } from '../Icon';
 import { TextSize } from '../layout/TextSize';
 import { usePlayerContext } from '../Player/PlayerContext';
 
@@ -74,7 +74,7 @@ export const Character: FC = () => {
     <Wrapper>
       <Inner>
         <Avatar>
-          <SvgIcon type={'player'} />
+          <Icon type={'cementShoes'} />
         </Avatar>
         <Content>
           <Stats>

@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { Redirect, useRouteMatch } from 'react-router';
 
 import {
   BorderInner,
@@ -15,15 +15,13 @@ import { MobView } from '../Mob';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 
-export const Adventure: FC<RouteComponentProps<{
-  id: string;
-  gameName: string;
-}>> = props => {
+export const Adventure: FC = () => {
   const {
-    match: {
-      params: { id, gameName }
-    }
-  } = props;
+    params: { id, gameName }
+  } = useRouteMatch<{
+    id: string;
+    gameName: string;
+  }>();
 
   const loc = rooms.find(item => item.id === id);
 

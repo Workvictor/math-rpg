@@ -7,6 +7,7 @@ export const colors = {
   darkred: '#650303',
   darkred100: '#8B0000',
   darkred200: '#bf0707',
+  darkred300: '#310000',
 
   greenDark: '#0c1919',
 

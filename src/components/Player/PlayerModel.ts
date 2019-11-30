@@ -1,7 +1,7 @@
 import { locations } from '../Game/world';
 
 export class PlayerModel {
-  static ExperienceProgressionBase = [40, 80];
+  static ExperienceProgressionBase = [25, 60];
   //attributes
   level = 1;
   strength = 10;
@@ -26,6 +26,13 @@ export class PlayerModel {
   location = locations[0].id;
   constructor(public name: string) {}
 }
+
+export const enrichPlayerData = (player: PlayerModel) => {
+  return {
+    ...new PlayerModel(player.name),
+    ...player
+  };
+};
 
 export const getExpByLevel = (level: number) => {
   const initial = PlayerModel.ExperienceProgressionBase.slice(0);

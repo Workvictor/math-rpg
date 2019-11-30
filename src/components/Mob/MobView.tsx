@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Border, FlexBetween, FlexWide, UIBlockInner } from '../layout';
 import styled from 'styled-components';
 import { mobTypes } from './mobTypes';
-import { SvgIcon } from '../icons';
+import { Icon } from '../Icon';
 import { IconButton } from '../Button';
 import { usePlayerContext } from '../Player/PlayerContext';
 
@@ -108,7 +108,7 @@ export const MobView: FC<IMobView> = props => {
     <UIBlockInner>
       <FlexWide>
         <Avatar className={aggressive ? 'aggressive' : ''}>
-          <SvgIcon type={mob.icon} />
+          <Icon type={mob.icon} />
         </Avatar>
         <StatsWrapper>
           <Stats>

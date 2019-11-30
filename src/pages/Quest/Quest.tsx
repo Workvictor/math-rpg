@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { Redirect, useRouteMatch } from 'react-router';
 
 import {
   Padbox,
@@ -27,14 +27,13 @@ const ControlsWrapper = styled(FlexWide)`
   justify-content: space-between;
 `;
 
-export const Quest: React.FC<RouteComponentProps<{
-  id: string;
-  gameName: string;
-}>> = ({
-  match: {
+export const Quest: FC = () => {
+  const {
     params: { id, gameName }
-  }
-}) => {
+  } = useRouteMatch<{
+    id: string;
+    gameName: string;
+  }>();
   const { dispatch, state } = usePlayerContext();
 
   const onSubmitQuest = () => {

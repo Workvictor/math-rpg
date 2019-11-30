@@ -1,21 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router';
+import { useRouteMatch } from 'react-router';
 
 import { getQuestById } from './quests';
 import { UIBlockInner } from '../layout';
 import { TabLabel } from '../TabLabel';
 import { usePlayerContext } from '../Player/PlayerContext';
 
-export const Questbook = (
-  props: RouteComponentProps<{ gameName: string; location: string }>
-) => {
+export const Questbook = () => {
   const {
-    match: {
-      url,
-      params: { gameName, location }
-    }
-  } = props;
+    url,
+    params: { gameName, location }
+  } = useRouteMatch<{ gameName: string; location: string }>();
   const { state } = usePlayerContext();
   const fromUrl = ['', gameName, location].join('/');
 
