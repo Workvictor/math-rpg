@@ -4,7 +4,7 @@ interface IObjective {
 }
 
 interface IQuest {
-  id: string;
+  id: number;
   text: string;
   name: string;
   objectives: IObjective;
@@ -12,7 +12,6 @@ interface IQuest {
 
 export const quests: IQuest[] = [
   {
-    id: '1',
     name: 'Призыв к оружию',
     text:
       'Приветствую тебя, странник! Надеюсь, ты готов к подвигам, поскольку для тебя есть дело. И я имею в виду не мирные заботы. Наше ополчение с трудом поддерживает мир здесь, слишком многие из нас находятся в дальних краях, а тревожных вестей меньше не становится. И потому мы надеемся на помощь всех, кто готов защитить свой дом. Если ты готов откликнуться на призыв, то помоги нам разобраться со стаей волков, обосновавшихся на посевных полях.',
@@ -21,8 +20,8 @@ export const quests: IQuest[] = [
       count: 10
     }
   }
-];
+].map((i, id) => ({ ...i, id: id + 1 }));
 
-export const getQuestById = (id: string): IQuest | undefined => {
+export const getQuestById = (id: number): IQuest | undefined => {
   return quests.find(item => item.id === id);
 };

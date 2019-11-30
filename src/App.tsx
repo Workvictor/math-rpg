@@ -18,7 +18,7 @@ export const App: React.FC = () => {
           <AppFrame>
             <Switch>
               <Route exact path={'/'} component={Home} />
-              <Route path={'/newgame'} component={NewGame} />
+              <Route exact path={'/newgame'} component={NewGame} />
               <Route path={'/:gameName'} component={Game} />
               <Redirect to={'/'} />
             </Switch>

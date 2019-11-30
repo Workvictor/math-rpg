@@ -2,50 +2,46 @@ import React from 'react';
 import { Redirect, useRouteMatch } from 'react-router';
 
 import { TabLabel } from '../TabLabel';
-import { rooms, ETowns, locations } from '../Game/world';
+import { rooms, locations } from '../Game/world';
 import {
   UIBlockInner,
   Padbox,
-  Flex,
   ScrollArea,
   BorderInner,
   Rythm,
-  Border
+  FlexStart
 } from '../layout';
 import { Character } from '../Character';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 import styled from 'styled-components';
-import { Icon } from '../Icon';
 import { HealButton } from '../HealButton';
 import { ButtonGroup } from '../Button/ButtonGroup';
+import { BorderIcon } from '../Icon/BorderIcon';
 
 const RoomWrapper = styled(UIBlockInner)`
   color: ${props => props.theme.colors.blueDark};
 `;
 
-const Avatar = styled(Border)`
-  font-size: 32px;
-  flex-shrink: 0;
-  display: flex;
-  color: ${props => props.theme.colors.grey60};
+const StyledBorderIcon = styled(BorderIcon)`
+  margin-right: 8px;
 `;
 
 export const Location = () => {
   const {
-    params: { locationId, gameName }
+    params: { locationName, gameName }
   } = useRouteMatch<{
     gameName: string;
-    locationId: ETowns;
+    locationName: string;
     tab: string;
   }>();
 
-  const town = locations.find(({ id }) => id === locationId);
+  const location = locations.find(location => location.name === locationName);
 
-  return town ? (
+  return location ? (
     <>
       <BorderInner>
-        <TabLabel label={town.name} />
+        <TabLabel label={location.name} />
 
         <Character />
         <Padbox>
@@ -59,23 +55,22 @@ export const Location = () => {
       </BorderInner>
       <Divider />
       <ScrollArea>
-        <Padbox>Локации:</Padbox>
-        {town.roomIds.map(roomId => {
+        {location.roomIds.map(roomId => {
           const room = rooms.find(item => item.id === roomId);
           return room ? (
             <Rythm r={2} key={roomId}>
               <RoomWrapper>
-                <Flex>
-                  <Avatar>
-                    <Icon type={room.icon} />
-                  </Avatar>
-                  <Padbox>
-                    <div>{room.name}</div>
-                    Уровень мостров: {room.level.join(' - ')}
-                  </Padbox>
-                </Flex>
+                <FlexStart>
+                  <StyledBorderIcon type={room.icon} />
+                  <div>
+                    {room.name} [{room.level.join('-')}]
+                  </div>
+                </FlexStart>
                 <Divider />
-                <Button disable={room.locked} to={`adventure/${room.id}`}>
+                <Button
+                  disable={room.locked}
+                  to={`${location.name}/${room.name}`}
+                >
                   перейти
                 </Button>
               </RoomWrapper>
@@ -85,6 +80,6 @@ export const Location = () => {
       </ScrollArea>
     </>
   ) : (
-    <Redirect to={`/${gameName}/${locations[0].id}`} />
+    <Redirect to={`/${gameName}/${locations[0].name}`} />
   );
 };

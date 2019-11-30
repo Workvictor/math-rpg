@@ -28,31 +28,29 @@ const ControlsWrapper = styled(FlexWide)`
 `;
 
 export const Quest: FC = () => {
-  const {
-    params: { id, gameName }
-  } = useRouteMatch<{
-    id: string;
-    gameName: string;
+  const { params } = useRouteMatch<{
+    questId: string;
   }>();
   const { dispatch, state } = usePlayerContext();
+  const questId = parseInt(params.questId);
 
   const onSubmitQuest = () => {
     dispatch({
       type: 'addQuest',
-      questId: id
+      questId
     });
   };
 
   const onCancelQuest = () => {
     dispatch({
       type: 'removeQuest',
-      questId: id
+      questId
     });
   };
 
-  const quest = getQuestById(id);
+  const quest = getQuestById(questId);
 
-  return id && quest ? (
+  return questId && quest ? (
     <Wrapper>
       <ScrollArea>
         <Padbox>
@@ -63,16 +61,16 @@ export const Quest: FC = () => {
         <Divider />
         <BorderInner>
           <ControlsWrapper>
-            {state.questbook.includes(id) ? (
+            {state.questbook.includes(questId) ? (
               <>
-                <Button to={`/${gameName}`} onClick={onCancelQuest}>
+                <Button to={`/${state.name}`} onClick={onCancelQuest}>
                   Отменить
                 </Button>
               </>
             ) : (
               <>
-                <Button to={`/${gameName}`}>Отказаться</Button>
-                <Button to={`/${gameName}`} onClick={onSubmitQuest}>
+                <Button to={`/${state.name}`}>Отказаться</Button>
+                <Button to={`/${state.name}`} onClick={onSubmitQuest}>
                   Принять
                 </Button>
               </>
@@ -82,6 +80,6 @@ export const Quest: FC = () => {
       </div>
     </Wrapper>
   ) : (
-    <Redirect to={`/${gameName}`} />
+    <Redirect to={`/${state.name}`} />
   );
 };

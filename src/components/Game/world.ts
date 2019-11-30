@@ -25,8 +25,8 @@ export const rooms: IRoom[] = [
   {
     id: 't1-0',
     level: [1, 1],
-    name: 'Убежище',
-    icon: 'wheat',
+    name: 'Соседняя комната',
+    icon: 'hideout',
     locked: false,
     unlockLocations: ['t1-1']
   },
@@ -58,14 +58,14 @@ export const rooms: IRoom[] = [
 
 export const locations: ILocation[] = [
   {
-    name: 'Тренировочный лагерь',
+    name: 'Убежище',
     id: ETowns.t1,
-    roomIds: rooms.slice(0, 4).map(({ id }) => id)
+    roomIds: rooms.slice(0, 1).map(({ id }) => id)
   },
   {
     name: 'Деревня',
     id: ETowns.t1,
-    roomIds: rooms.slice(0, 4).map(({ id }) => id)
+    roomIds: rooms.slice(1, 4).map(({ id }) => id)
   },
   {
     name: 'Город',

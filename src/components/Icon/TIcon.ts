@@ -1,7 +1,9 @@
 export type TIcon =
   | 'compass'
   | 'cementShoes'
+  | 'skeleton'
   | 'backpack'
+  | 'walk'
   | 'bookmark'
   | 'hamburgerMenu'
   | 'settings'

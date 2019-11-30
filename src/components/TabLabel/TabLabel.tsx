@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 import { IconButton } from '../Button';
@@ -11,7 +11,7 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 interface ITabLabel {
-  label: string;
+  label: ReactNode;
   fromUrl?: string;
 }
 
