@@ -4,6 +4,7 @@ import { BorderInner } from '../layout';
 
 export const ScrollArea = styled(BorderInner)`
   overflow-y: auto;
+  overflow-x: hidden;
   width: 100%;
   height: 100%;
   &::-webkit-scrollbar-track {

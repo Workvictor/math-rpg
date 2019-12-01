@@ -9,6 +9,10 @@ export interface IRoom {
   id: string;
   objectCount: number;
   description: string;
+  specialLoot?: {
+    chance: number;
+    name: string;
+  };
   name: string;
   icon: TIcon;
   locked: boolean;
@@ -35,6 +39,10 @@ export const rooms: IRoom[] = [
     id: 't1-0',
     level: [1, 1],
     objectCount: 3,
+    specialLoot: {
+      chance: 1,
+      name: 'Тренировочный меч'
+    },
     name: 'Соседняя комната',
     description: 'Войдите и разбейте все двери',
     icon: 'hideout',
@@ -48,7 +56,7 @@ export const rooms: IRoom[] = [
     name: 'Посевные поля',
     description: '',
     icon: 'wheat',
-    locked: true,
+    locked: false,
     unlockLocations: ['t1-2']
   },
   {

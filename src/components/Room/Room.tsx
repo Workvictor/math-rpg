@@ -8,6 +8,24 @@ import { ClickableObject } from '../ClickableObject';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 import { TabLabel } from '../TabLabel';
+import { HitArea } from '../HitArea';
+import { HitContextProvider } from '../HitArea/Context';
+import { usePlayerContext } from '../Player/PlayerContext';
+
+const Rew: FC<{ to: string }> = ({ to }) => {
+  const { dispatch } = usePlayerContext();
+  const onPickSpecialLoot = () => {
+    dispatch({
+      type: 'addUnlockedLocation',
+      locationId: 1
+    });
+  };
+  return (
+    <Button to={to} onClick={onPickSpecialLoot}>
+      собрать
+    </Button>
+  );
+};
 
 export const Room: FC = () => {
   const {
@@ -31,36 +49,52 @@ export const Room: FC = () => {
 
   return room ? (
     <>
-      <TabLabel
-        label={
-          <>
-            {room.name} [{room.level.join('-')}]
-          </>
-        }
-      >
-        <Button to={`/${gameName}/locations/${locationName}`}>выход</Button>
-      </TabLabel>
-      <BorderInner>
-        <Character />
-        <Padbox>
-          <Divider />
-        </Padbox>
-      </BorderInner>
-      <Divider />
+      <HitContextProvider>
+        <TabLabel
+          label={
+            <>
+              {room.name} [{room.level.join('-')}]
+            </>
+          }
+        >
+          <Button to={`/${gameName}/locations/${locationName}`}>выход</Button>
+        </TabLabel>
+        <BorderInner>
+          <Character />
+          <Padbox>
+            <Divider />
+          </Padbox>
+        </BorderInner>
+        <Divider />
 
-      <ScrollArea>
-        {mobIds.map(key => {
-          return (
-            <Rythm key={key}>
-              <ClickableObject
-                onDeath={onMobDeath}
-                levelRange={room.level}
-                index={key}
-              />
-            </Rythm>
-          );
-        })}
-      </ScrollArea>
+        <ScrollArea>
+          {mobIds.map(key => {
+            return (
+              <Rythm key={key}>
+                <ClickableObject
+                  onDeath={onMobDeath}
+                  levelRange={room.level}
+                  index={key}
+                />
+              </Rythm>
+            );
+          })}
+          {mobIds.length === 0 && (
+            <div>
+              молодец, всех победил!{' '}
+              {room.specialLoot && (
+                <div>
+                  можешь забрать [{room.specialLoot.name}]
+                  <div>
+                    <Rew to={`/${gameName}/locations`} />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </ScrollArea>
+        <HitArea />
+      </HitContextProvider>
     </>
   ) : (
     <Redirect to={`/${gameName}/${locations[0].id}`} />

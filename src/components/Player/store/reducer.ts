@@ -10,6 +10,8 @@ type TRemoveQuest = { type: 'removeQuest'; questId: number };
 type TTakeDamage = { type: 'takeDamage'; damage: number };
 type TRestoreHealth = { type: 'restoreHealth' };
 type THealSelf = { type: 'healSelf' };
+type TAddUnlockedLocation = { type: 'addUnlockedLocation'; locationId: number };
+type TChangeLocation = { type: 'changeLocation'; locationId: number };
 
 type TActions =
   | TUpdate
@@ -19,6 +21,8 @@ type TActions =
   | TRemoveQuest
   | TTakeDamage
   | TRestoreHealth
+  | TAddUnlockedLocation
+  | TChangeLocation
   | THealSelf;
 
 export class ContextModel {
@@ -32,6 +36,16 @@ export const reducer = (state: PlayerModel, action: TActions) => {
       return {
         ...state,
         ...action.payload
+      };
+    case 'addUnlockedLocation':
+      return {
+        ...state,
+        unlockedLocations: [...state.unlockedLocations, action.locationId]
+      };
+    case 'changeLocation':
+      return {
+        ...state,
+        location: action.locationId
       };
     case 'addExp':
       return playerAddExp(state, action.expReward);
