@@ -26,9 +26,17 @@ interface IProps {
 
 export const LocationListItem: FC<IProps> = ({ location }) => {
   const { id, icon, level, name } = location;
-  const { state } = usePlayerContext();
+  const { state, dispatch } = usePlayerContext();
   const isUnlocked = state.unlockedLocations.includes(id);
   const locationIsTheSame = state.location === id;
+  const onChangeLocation = () => {
+    dispatch({
+      type: 'changeLocation',
+      locationId: id
+    });
+    if (!locationIsTheSame) {
+    }
+  };
   return (
     <Rythm r={2}>
       <RoomWrapper>
@@ -41,7 +49,7 @@ export const LocationListItem: FC<IProps> = ({ location }) => {
         </FlexStart>
         <Divider />
         {isUnlocked ? (
-          <Button to={`locations/${location.name}`}>
+          <Button to={`locations/${location.name}`} onClick={onChangeLocation}>
             {locationIsTheSame ? 'продолжить' : 'войти'}
           </Button>
         ) : (

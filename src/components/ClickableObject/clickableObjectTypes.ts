@@ -6,6 +6,11 @@ interface IType {
   damageValue: number;
   damageReturnValue: number;
   healthPointValue: number;
+  expValue?: number;
+  specialLoot?: {
+    chance: number;
+    name: string;
+  }[];
   icon: TIcon;
 }
 
@@ -14,8 +19,10 @@ export const clickableObjectTypes: IType[] = [
     level: [1],
     name: 'дверь',
     damageValue: 0,
+    specialLoot: [{ name: 'щепки', chance: 1 }],
     damageReturnValue: 1,
-    healthPointValue: 1.2,
+    healthPointValue: 1.9,
+    expValue: 0.3,
     icon: 'woodenDoor'
   },
   {
