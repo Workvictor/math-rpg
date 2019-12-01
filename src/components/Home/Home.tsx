@@ -62,8 +62,10 @@ export const Home = () => {
           {players.length < 3 && (
             <StyledButton to={'/newgame'}>Новая игра</StyledButton>
           )}
-          <StyledButton disable>Помощь</StyledButton>
-          <StyledButton disable>Авторы</StyledButton>
+          <StyledButton disable to={'/help'}>
+            Помощь
+          </StyledButton>
+          <StyledButton to={'/credits'}>Авторы</StyledButton>
         </Menu>
         <Divider />
         {players.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}

@@ -9,12 +9,11 @@ import {
   ScrollArea,
   BorderInner,
   Rythm,
-  FlexStart,
-  Flex
+  FlexStart
 } from '../layout';
 import { Character } from '../Character';
 import { Divider } from '../layout/Divider';
-import { Button, IconButton } from '../Button';
+import { Button } from '../Button';
 import styled from 'styled-components';
 import { HealButton } from '../HealButton';
 import { ButtonGroup } from '../Button/ButtonGroup';
@@ -41,7 +40,7 @@ export const Location = () => {
   return location ? (
     <>
       <TabLabel label={location.name}>
-        <IconButton type={'compass'} to={`/${gameName}/locations`} />
+        <Button to={`/${gameName}/locations`}>на карту</Button>
       </TabLabel>
       <BorderInner>
         <Character />

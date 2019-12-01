@@ -1,9 +1,7 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { Padbox, FlexColumnWide } from '../layout';
-import { Route, Switch } from 'react-router';
-const Navbar = lazy(() => import('../Navigation'));
 
 const Wrapper = styled(Padbox)`
   height: 100vh;
@@ -16,6 +14,9 @@ const Wrapper = styled(Padbox)`
   margin: 0 auto;
   ${props => props.theme.shadows.cssBlueGlow};
   ${props => props.theme.bg.cssMarble};
+  & a.link {
+    text-decoration: underline;
+  }
 `;
 
 const Inner = styled(FlexColumnWide)`
@@ -28,16 +29,6 @@ const Inner = styled(FlexColumnWide)`
 export const AppFrame: React.FC = ({ children }) => {
   return (
     <Wrapper as={'main'}>
-      <Suspense fallback={null}>
-        {/*<Switch>*/}
-        {/*  <Route path={'/newgame'}>*/}
-        {/*    <Navbar />*/}
-        {/*  </Route>*/}
-        {/*  <Route path={'/:gameName/:location?'}>*/}
-        {/*    <Navbar />*/}
-        {/*  </Route>*/}
-        {/*</Switch>*/}
-      </Suspense>
       <Inner>{children}</Inner>
     </Wrapper>
   );

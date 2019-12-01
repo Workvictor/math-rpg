@@ -6,7 +6,7 @@ import { rooms, locations } from '../Game/world';
 import { Character } from '../Character';
 import { ClickableObject } from '../ClickableObject';
 import { Divider } from '../layout/Divider';
-import { IconButton } from '../Button';
+import { Button } from '../Button';
 import { TabLabel } from '../TabLabel';
 
 export const Room: FC = () => {
@@ -38,11 +38,7 @@ export const Room: FC = () => {
           </>
         }
       >
-        <IconButton type={'compass'} to={`/${gameName}/locations`} />
-        <IconButton
-          type={'house'}
-          to={`/${gameName}/locations/${locationName}`}
-        />
+        <Button to={`/${gameName}/locations/${locationName}`}>выход</Button>
       </TabLabel>
       <BorderInner>
         <Character />

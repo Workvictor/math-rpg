@@ -1,7 +1,7 @@
 import React, { FC, lazy, ReactNode, Suspense } from 'react';
 import styled from 'styled-components';
 
-import { FlexStart, FlexEnd, Tab } from '../layout';
+import { FlexStart, Tab, Flex } from '../layout';
 import { Route, Switch } from 'react-router';
 const Navbar = lazy(() => import('../Navigation'));
 
@@ -10,9 +10,12 @@ const Wrapper = styled(FlexStart)`
   overflow: hidden;
   position: relative;
   bottom: -1px;
-  font-size: 18px;
+  font-size: 16px;
   align-items: flex-end;
   justify-content: space-between;
+`;
+const ChildWrapper = styled.div`
+  margin-right: 4px;
 `;
 
 interface ITabLabel {
@@ -25,10 +28,10 @@ export const TabLabel: FC<ITabLabel> = props => {
   return (
     <Wrapper>
       <Tab>
-        <FlexEnd>
-          <div>{children}</div>
+        <Flex>
+          {children && <ChildWrapper>{children}</ChildWrapper>}
           <div>{label}</div>
-        </FlexEnd>
+        </Flex>
       </Tab>
       <Suspense fallback={null}>
         <Switch>
