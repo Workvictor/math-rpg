@@ -65,6 +65,12 @@ export const ClickableObject: FC<IClickableObject> = props => {
         targetId: index
       });
     }
+    if (mob.damageReturnValue > 0) {
+      playerDispatch({
+        type: 'takeDamage',
+        damage: mob.damageReturnValue
+      });
+    }
   };
 
   useEffect(() => {
@@ -82,7 +88,7 @@ export const ClickableObject: FC<IClickableObject> = props => {
   }, [expRewardForKill, healthPoints, index, onDeath, playerDispatch]);
 
   const attackLoop = React.useCallback(() => {
-    if (aggressive && attackTime <= Date.now()) {
+    if (aggressive && damage > 0 && attackTime <= Date.now()) {
       setAttackTime(Date.now() + attackDelay);
       playerDispatch({
         type: 'takeDamage',
