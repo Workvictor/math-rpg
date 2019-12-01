@@ -38,7 +38,7 @@ export const enrichPlayerData = (player: PlayerModel) => {
 export const getExpByLevel = (level: number) => {
   const initial = PlayerModel.ExperienceProgressionBase.slice(0);
   for (let i = 2; i < level; i++) {
-    initial.push(initial[i - 1] + initial[i - 2]);
+    initial.push((initial[i - 1] + initial[i - 2]) * 1.25);
   }
   return initial[Math.max(0, level - 1)];
 };
