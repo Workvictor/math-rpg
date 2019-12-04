@@ -3,7 +3,7 @@ import React from 'react';
 import { TabLabel } from '../TabLabel';
 import { locations } from '../Game/world';
 import { Padbox, ScrollArea, BorderInner } from '../layout';
-import { Character } from '../Character';
+import { Player } from '../Player';
 import { Divider } from '../layout/Divider';
 import { LocationListItem } from './LocationListItem';
 
@@ -12,7 +12,7 @@ export const Locations = () => {
     <>
       <TabLabel label={'Локации'} />
       <BorderInner>
-        <Character />
+        <Player />
         <Padbox>
           <Divider />
         </Padbox>

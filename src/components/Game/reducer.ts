@@ -3,16 +3,19 @@ import { Dispatch } from 'react';
 import { GameModel } from './GameModel';
 import { PlayerModel } from '../Player/PlayerModel';
 import { readGameState } from './readGameState';
+import { UIModel } from '../UIContext/UIModel';
 
 type TReloadGame = { type: 'reloadGame' };
 type TStartNewGame = { type: 'startNewGame'; name: string };
 type TAddClickCount = { type: 'addClickCount' };
 type TOnPlayerUpdate = { type: 'onPlayerUpdate'; player: PlayerModel };
+type TOnUIModelUpdate = { type: 'onUIUpdate'; state: UIModel };
 
 export type GameActions =
   | TStartNewGame
   | TAddClickCount
   | TOnPlayerUpdate
+  | TOnUIModelUpdate
   | TReloadGame;
 
 export class GameContextModel {
@@ -41,6 +44,14 @@ export const reducer = (state: GameModel, action: GameActions) => {
           action.player,
           ...state.players.filter(i => i.name !== action.player.name)
         ]
+      };
+    case 'onUIUpdate':
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          ...action.state
+        }
       };
     default:
       return state;

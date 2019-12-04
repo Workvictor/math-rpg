@@ -11,7 +11,7 @@ import {
   Rythm,
   FlexStart
 } from '../layout';
-import { Character } from '../Character';
+import { Player } from '../Player';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
 import styled from 'styled-components';
@@ -43,7 +43,7 @@ export const Location = () => {
         <Button to={`/${gameName}/locations`}>на карту</Button>
       </TabLabel>
       <BorderInner>
-        <Character />
+        <Player />
         <Padbox>
           <div>Действия:</div>
           <ButtonGroup>

@@ -66,14 +66,14 @@ const Wrapper = styled(Border)`
     border-radius: 2px;
     pointer-events: none;
     content: '';
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
     box-shadow: inset 0 0 5px ${props => props.theme.colors.greenDark},
       inset 0 0 2px ${props => props.theme.colors.greenDark};
   }
   :hover:after {
     box-shadow: inset 0 -6px 6px 0px ${props => props.theme.colors.goldenrod};
-    opacity: 0.3;
+    opacity: 0.15;
   }
   :active,
   &.active {

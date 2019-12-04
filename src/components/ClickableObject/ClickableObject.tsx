@@ -1,13 +1,13 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { Border, FlexBetween, FlexWide, UIBlockInner } from '../layout';
 import styled, { keyframes } from 'styled-components';
 import { clickableObjectTypes } from './clickableObjectTypes';
 import { Icon } from '../Icon';
 import { usePlayerContext } from '../Player/PlayerContext';
-import { useRaf } from '../RAF';
 import { useHitContext } from '../HitArea/Context';
 import { Button } from '../Button';
+import { useTimeout } from '../utils/useTimeout';
 
 const onDeath = keyframes`
   0% {
@@ -80,20 +80,10 @@ export const ClickableObject: FC<{
 
   const [isAnimated, setAnimated] = useState(false);
 
-  const [attackTime, setAttackTime] = useState(Date.now());
   const [aggressive, setAggressive] = useState(false);
   const [level] = useState(
     Math.floor(levelRange[0] + Math.random() * levelRange[1])
   );
-  // const intelegence = Math.round(level * 1.15 + 1); // as third stat
-  // const agility = Math.round(level * 1.25 + 1); // as secondary stat
-  // const strenght = Math.round(level * 1.6 + 1); // as main stat
-
-  // const mobHp = level * 1.18 + strenght * 4;
-  // const armorValue = (mobStrenght*1.6 + mobAgility*1.3)/2;
-  // const armorCur = (mobStrenght + mobAgility)/2;
-  // const armor = (armorCur/ armorValue);
-  // const mobExpReward = mobHp * 0.6;
 
   const availableMobTypes = clickableObjectTypes.filter(item =>
     item.level.includes(level)
@@ -115,80 +105,69 @@ export const ClickableObject: FC<{
 
   const onMobClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { pageX, pageY } = e;
-    hitDispatch({
-      type: 'addHit',
-      pageX,
-      pageY,
-      value: playerState.damage
-    });
-
-    if (!isAnimated) {
-      setAnimated(true);
-    }
-
-    if (!aggressive) {
-      setAggressive(true);
-    }
-    setHealthPoints(prev => prev - playerState.damage);
-    if (playerState.targetId !== index) {
-      playerDispatch({
-        type: 'setTarget',
-        targetId: index
-      });
-    }
-    if (mob.damageReturnValue > 0) {
-      playerDispatch({
-        type: 'takeDamage',
-        damage: mob.damageReturnValue
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (healthPoints <= 0) {
+    if (healthPoints - playerState.damage <= 0) {
+      const getExpReward = () => {
+        if (level > playerState.level - 2 && level <= playerState.level + 6) {
+          return expRewardForKill;
+        }
+        if (level <= playerState.level - 2) {
+          return Math.floor(expRewardForKill * 0.75);
+        }
+        if (level <= playerState.level - 3 && level >= playerState.level - 4) {
+          return Math.floor(expRewardForKill * 0.5);
+        }
+        return Math.floor(expRewardForKill * 0.2);
+      };
+      setHealthPoints(0);
+      setAggressive(false);
       playerDispatch({
         type: 'setTarget',
         targetId: null
       });
       playerDispatch({
         type: 'addExp',
-        expReward: Math.floor((level / playerState.level) * expRewardForKill)
+        expReward: getExpReward()
       });
-    }
-  }, [
-    expRewardForKill,
-    healthPoints,
-    index,
-    level,
-    onDeath,
-    playerDispatch,
-    playerState.level
-  ]);
+    } else {
+      hitDispatch({
+        type: 'addHit',
+        pageX,
+        pageY,
+        value: playerState.damage
+      });
 
-  const attackLoop = React.useCallback(() => {
-    if (
-      aggressive &&
-      damage > 0 &&
-      healthPoints > 0 &&
-      attackTime <= Date.now()
-    ) {
-      setAttackTime(Date.now() + attackDelay);
+      if (!isAnimated) {
+        setAnimated(true);
+      }
+
+      if (!aggressive && damage > 0) {
+        setAggressive(true);
+      }
+      if (playerState.targetId !== index) {
+        playerDispatch({
+          type: 'setTarget',
+          targetId: index
+        });
+      }
+      playerDispatch({
+        type: 'loseStamina',
+        amount: 5
+      });
+
+      setHealthPoints(prev => prev - playerState.damage);
+    }
+  };
+
+  useTimeout(
+    () => {
       playerDispatch({
         type: 'takeDamage',
         damage
       });
-    }
-    return playerState.healthPoints > 0 && healthPoints > 0;
-  }, [
-    aggressive,
-    attackTime,
-    damage,
-    healthPoints,
-    playerDispatch,
-    playerState.healthPoints
-  ]);
-
-  useRaf(attackLoop);
+    },
+    damage > 0 && aggressive && healthPoints > 0,
+    attackDelay
+  );
 
   const onAnimationEnd = () => {
     setAnimated(false);

@@ -8,6 +8,7 @@ import React, {
 
 import { GameModel } from './GameModel';
 import { GameContextModel, reducer } from './reducer';
+import { UIProvider } from '../UIContext';
 
 const context = new GameContextModel();
 const GameContext = createContext<GameContextModel>(context);
@@ -29,7 +30,7 @@ export const GameProvider: FC = ({ children }) => {
 
   return (
     <GameContext.Provider value={{ state, dispatch }}>
-      {children}
+      <UIProvider>{children}</UIProvider>
     </GameContext.Provider>
   );
 };

@@ -1,4 +1,12 @@
 export const colors = {
+  health: '#476f04',
+  mana: '#345ba0',
+  stamina: '#c3b46e',
+
+  green: '#4b7504',
+  purple: '#480475',
+  purpleLight: '#6e2c9a',
+
   blueDark: '#2a556f',
   blueDark100: '#1270a0',
 

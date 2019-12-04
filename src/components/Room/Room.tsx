@@ -3,7 +3,7 @@ import { Redirect, useRouteMatch } from 'react-router';
 
 import { BorderInner, Padbox, Rythm, ScrollArea } from '../layout';
 import { rooms, locations } from '../Game/world';
-import { Character } from '../Character';
+import { Player } from '../Player';
 import { ClickableObject } from '../ClickableObject';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
@@ -60,7 +60,7 @@ export const Room: FC = () => {
           <Button to={`/${gameName}/locations/${locationName}`}>выход</Button>
         </TabLabel>
         <BorderInner>
-          <Character />
+          <Player />
           <Padbox>
             <Divider />
           </Padbox>

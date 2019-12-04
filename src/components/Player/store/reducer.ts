@@ -9,9 +9,11 @@ type TAddQuest = { type: 'addQuest'; questId: number };
 type TRemoveQuest = { type: 'removeQuest'; questId: number };
 type TTakeDamage = { type: 'takeDamage'; damage: number };
 type TRestoreHealth = { type: 'restoreHealth' };
+type TRestoreStamina = { type: 'restoreStamina' };
 type THealSelf = { type: 'healSelf' };
 type TAddUnlockedLocation = { type: 'addUnlockedLocation'; locationId: number };
 type TChangeLocation = { type: 'changeLocation'; locationId: number };
+type TLoseStamina = { type: 'loseStamina'; amount: number };
 
 type TActions =
   | TUpdate
@@ -21,8 +23,10 @@ type TActions =
   | TRemoveQuest
   | TTakeDamage
   | TRestoreHealth
+  | TRestoreStamina
   | TAddUnlockedLocation
   | TChangeLocation
+  | TLoseStamina
   | THealSelf;
 
 export class ContextModel {
@@ -36,6 +40,11 @@ export const reducer = (state: PlayerModel, action: TActions) => {
       return {
         ...state,
         ...action.payload
+      };
+    case 'loseStamina':
+      return {
+        ...state,
+        stamina: state.stamina - action.amount
       };
     case 'addUnlockedLocation':
       return {
@@ -83,6 +92,14 @@ export const reducer = (state: PlayerModel, action: TActions) => {
         healthPoints: Math.min(
           state.healthPointsMax,
           state.healthPoints + state.healthPointsPerSecond
+        )
+      };
+    case 'restoreStamina':
+      return {
+        ...state,
+        stamina: Math.min(
+          state.staminaMax,
+          state.stamina + state.staminaPerSecond
         )
       };
     default:
