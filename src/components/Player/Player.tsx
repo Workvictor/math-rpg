@@ -10,7 +10,7 @@ import { ManaBar } from '../StatusBar/ManaBar';
 import { HealthBar } from '../StatusBar/HealthBar';
 import { StaminaBar } from '../StatusBar/StaminaBar';
 import { ExperienceBar } from '../StatusBar/ExpirienceBar';
-import { useRaf } from '../RAF';
+import { useRaf } from '../utils/RAF';
 import { useTimer } from '../utils/timer';
 import { useTimeout } from '../utils/useTimeout';
 import { useUIContext } from '../UIContext';

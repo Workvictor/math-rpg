@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, useRouteMatch } from 'react-router';
 
 import { TabLabel } from '../TabLabel';
-import { rooms, locations } from '../Game/world';
+import { rooms, locations } from '../world/world';
 import {
   UIBlockInner,
   Padbox,
@@ -64,7 +64,7 @@ export const Location = () => {
                   <StyledBorderIcon type={room.icon} />
                   <div>
                     <div>
-                      {room.name} [{room.level.join('-')}]
+                      {room.name} [{room.levelRange.join('-')}]
                     </div>
                     {room.description}
                   </div>

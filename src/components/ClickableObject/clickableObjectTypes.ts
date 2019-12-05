@@ -1,44 +1,41 @@
 import { TIcon } from '../Icon/TIcon';
 
-interface IType {
+interface IClob {
   level: number[];
   name: string;
-  damageValue: number;
-  damageReturnValue: number;
-  healthPointValue: number;
-  expValue?: number;
-  specialLoot?: {
-    chance: number;
-    name: string;
-  }[];
   icon: TIcon;
+  damageValue: number;
+  healthPointValue: number;
+  staminaDrainValue: number;
+  expValue: number;
 }
 
-export const clickableObjectTypes: IType[] = [
+export const clickableObjectTypes: IClob[] = [
   {
     level: [1],
     name: 'дверь',
+    icon: 'woodenDoor',
     damageValue: 0,
-    specialLoot: [{ name: 'щепки', chance: 1 }],
-    damageReturnValue: 1,
     healthPointValue: 1.9,
-    expValue: 0.3,
-    icon: 'woodenDoor'
+    staminaDrainValue: 1,
+    expValue: 1
   },
   {
-    level: [2, 3, 4],
+    level: [2, 4],
     name: 'волк',
     damageValue: 1.2,
-    damageReturnValue: 0,
+    staminaDrainValue: 1,
     healthPointValue: 1.2,
+    expValue: 1,
     icon: 'wolf'
   },
   {
-    level: [5, 6, 7, 8, 9, 10],
+    level: [5, 10],
     name: 'медведь',
     damageValue: 1.5,
-    damageReturnValue: 0,
+    staminaDrainValue: 1,
     healthPointValue: 1.8,
+    expValue: 1,
     icon: 'bear'
   }
 ];

@@ -1,4 +1,4 @@
-import { locations } from '../Game/world';
+import { locations } from '../world/world';
 import { HealthModel } from '../Model/HealthModel';
 
 export class PlayerModel {

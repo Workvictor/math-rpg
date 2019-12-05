@@ -1,5 +1,7 @@
 export type TIcon =
   | 'compass'
+  | 'rat'
+  | 'barrel'
   | 'electric'
   | 'heart'
   | 'barrier'

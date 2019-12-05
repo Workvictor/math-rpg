@@ -1,4 +1,6 @@
 import { TIcon } from '../Icon/TIcon';
+import { Clob } from './Clob';
+import { clobs } from './clobs';
 
 export enum ETowns {
   t1 = 't1',
@@ -16,9 +18,10 @@ export interface IRoom {
   name: string;
   icon: TIcon;
   locked: boolean;
-  level: number[];
+  levelRange: number[];
   unlockLocations?: string[];
   unlockTown?: ETowns;
+  clobs: Clob[];
 }
 
 class RoomModel {
@@ -37,7 +40,7 @@ class RoomModel {
 export const rooms: IRoom[] = [
   {
     id: 't1-0',
-    level: [1, 1],
+    levelRange: [1, 1],
     objectCount: 3,
     specialLoot: {
       chance: 1,
@@ -47,37 +50,41 @@ export const rooms: IRoom[] = [
     description: 'Войдите и разбейте все двери',
     icon: 'hideout',
     locked: false,
-    unlockLocations: ['t1-1']
+    unlockLocations: ['t1-1'],
+    clobs: [clobs.woodenDoor]
   },
   {
     id: 't1-1',
-    level: [2, 6],
+    levelRange: [2, 4],
     objectCount: 10,
     name: 'Посевные поля',
     description: '',
     icon: 'wheat',
     locked: false,
-    unlockLocations: ['t1-2']
+    unlockLocations: ['t1-2'],
+    clobs: [clobs.wolf, clobs.bear]
   },
   {
     id: 't1-2',
-    level: [4, 8],
+    levelRange: [3, 6],
     objectCount: 20,
     name: 'Мельница',
     description: '',
     icon: 'windmill',
     locked: true,
-    unlockLocations: ['t1-3']
+    unlockLocations: ['t1-3'],
+    clobs: [clobs.wolf, clobs.bear]
   },
   {
     id: 't1-3',
-    level: [6, 10],
+    levelRange: [4, 8],
     objectCount: 30,
     name: 'Тёмный лес',
     description: '',
     icon: 'forest',
     locked: true,
-    unlockTown: ETowns.t2
+    unlockTown: ETowns.t2,
+    clobs: [clobs.wolf, clobs.bear]
   }
 ];
 

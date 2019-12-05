@@ -1,13 +1,11 @@
 import React, { FC, useState } from 'react';
-import { Redirect, useRouteMatch } from 'react-router';
 
 import { BorderInner, Padbox, Rythm, ScrollArea } from '../layout';
-import { rooms, locations } from '../Game/world';
+import { IRoom } from '../world/world';
 import { Player } from '../Player';
 import { ClickableObject } from '../ClickableObject';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';
-import { TabLabel } from '../TabLabel';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
 import { usePlayerContext } from '../Player/PlayerContext';
@@ -27,38 +25,30 @@ const Rew: FC<{ to: string }> = ({ to }) => {
   );
 };
 
-export const Room: FC = () => {
-  const {
-    params: { roomName, gameName, locationName }
-  } = useRouteMatch<{
-    locationName: string;
-    roomName: string;
-    gameName: string;
-  }>();
-
-  const room = rooms.find(item => item.name === roomName);
-  const count = room ? room.objectCount : 0;
-
-  const [mobIds, setMobIds] = useState(
-    new Array(count).fill(0).map((_, i) => i)
+export const Room: FC<{ room: IRoom }> = ({ room, children }) => {
+  const { objectCount, clobs, levelRange } = room;
+  const countDelta = objectCount * 0.3;
+  const count = Math.round(
+    objectCount - countDelta + Math.random() * (room.objectCount + countDelta)
   );
 
-  const onMobDeath = (mobId: number) => {
-    setMobIds(prev => prev.filter(item => item !== mobId));
+  const [mobIds, setMobIds] = useState(
+    new Array(count).fill(0).map((_, key) => ({
+      key,
+      clob: clobs[
+        Math.max(0, Math.round(Math.random() * clobs.length - 1))
+      ].setLevel(Math.round(levelRange[0] + Math.random() * levelRange[1]))
+    }))
+  );
+
+  const onMobDeath = (index: number) => () => {
+    setMobIds(prev => prev.filter(item => item.key !== index));
   };
 
-  return room ? (
+  return (
     <>
       <HitContextProvider>
-        <TabLabel
-          label={
-            <>
-              {room.name} [{room.level.join('-')}]
-            </>
-          }
-        >
-          <Button to={`/${gameName}/locations/${locationName}`}>выход</Button>
-        </TabLabel>
+        {children}
         <BorderInner>
           <Player />
           <Padbox>
@@ -68,35 +58,33 @@ export const Room: FC = () => {
         <Divider />
 
         <ScrollArea>
-          {mobIds.map(key => {
+          {mobIds.map(i => {
             return (
-              <Rythm key={key}>
+              <Rythm key={i.key}>
                 <ClickableObject
-                  onDeath={onMobDeath}
-                  levelRange={room.level}
-                  index={key}
+                  clob={i.clob}
+                  onDeath={onMobDeath(i.key)}
+                  index={i.key}
                 />
               </Rythm>
             );
           })}
           {mobIds.length === 0 && (
             <div>
-              молодец, всех победил!{' '}
-              {room.specialLoot && (
-                <div>
-                  можешь забрать [{room.specialLoot.name}]
-                  <div>
-                    <Rew to={`/${gameName}/locations`} />
-                  </div>
-                </div>
-              )}
+              молодец, всех победил!
+              {/*{room.specialLoot && (*/}
+              {/*  <div>*/}
+              {/*    можешь забрать [{room.specialLoot.name}]*/}
+              {/*    <div>*/}
+              {/*      <Rew to={`/${gameName}/locations`} />*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*)}*/}
             </div>
           )}
         </ScrollArea>
         <HitArea />
       </HitContextProvider>
     </>
-  ) : (
-    <Redirect to={`/${gameName}/${locations[0].id}`} />
   );
 };

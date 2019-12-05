@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { TabLabel } from '../TabLabel';
-import { locations } from '../Game/world';
+import { locations } from '../world/world';
 import { Padbox, ScrollArea, BorderInner } from '../layout';
 import { Player } from '../Player';
 import { Divider } from '../layout/Divider';

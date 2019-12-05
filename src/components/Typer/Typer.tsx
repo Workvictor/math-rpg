@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useRaf } from '../RAF';
+import { useRaf } from '../utils/RAF';
 
 interface ITyper {
   children: string | string[];

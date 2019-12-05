@@ -15,7 +15,7 @@ import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
 import { usePlayerContext } from '../Player/PlayerContext';
 import { getQuestById } from './quests';
-import { locations } from '../Game/world';
+import { locations } from '../world/world';
 
 const Wrapper = styled(FlexColumnWide)`
   align-items: stretch;

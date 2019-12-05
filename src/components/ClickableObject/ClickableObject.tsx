@@ -8,6 +8,7 @@ import { usePlayerContext } from '../Player/PlayerContext';
 import { useHitContext } from '../HitArea/Context';
 import { Button } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
+import { Clob } from '../world/Clob';
 
 const onDeath = keyframes`
   0% {
@@ -69,55 +70,27 @@ const Avatar = styled(Border)`
 `;
 
 export const ClickableObject: FC<{
+  clob: Clob;
   index: number;
-  levelRange: number[];
-  onDeath: (id: number) => void;
+  onDeath: () => void;
 }> = props => {
   const { state: playerState, dispatch: playerDispatch } = usePlayerContext();
+  const { dispatch: hitDispatch } = useHitContext();
 
-  const { levelRange, index, onDeath } = props;
-  const attackDelay = 1000;
+  const { clob, index, onDeath } = props;
+  const { level, label, attackTimeout, damage, icon } = clob;
 
   const [isAnimated, setAnimated] = useState(false);
 
   const [aggressive, setAggressive] = useState(false);
-  const [level] = useState(
-    Math.floor(levelRange[0] + Math.random() * levelRange[1])
-  );
 
-  const availableMobTypes = clickableObjectTypes.filter(item =>
-    item.level.includes(level)
-  );
-  const [mob] = useState(
-    availableMobTypes[Math.floor(Math.random() * availableMobTypes.length)]
-  );
+  const [hpMax] = useState(clob.healthPoints);
 
-  const [hpMax] = useState(
-    Math.floor((20 + (level - 1) * 4) * mob.healthPointValue)
-  );
-  const [healthPoints, setHealthPoints] = useState(hpMax);
-  const [expRewardForKill] = useState(
-    Math.floor(healthPoints * 0.4 * (mob.expValue || 1))
-  );
-  const damage = Math.floor((4 + (level - 1) * 1.2) * mob.damageValue);
-
-  const { dispatch: hitDispatch } = useHitContext();
+  const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
   const onMobClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { pageX, pageY } = e;
     if (healthPoints - playerState.damage <= 0) {
-      const getExpReward = () => {
-        if (level > playerState.level - 2 && level <= playerState.level + 6) {
-          return expRewardForKill;
-        }
-        if (level <= playerState.level - 2) {
-          return Math.floor(expRewardForKill * 0.75);
-        }
-        if (level <= playerState.level - 3 && level >= playerState.level - 4) {
-          return Math.floor(expRewardForKill * 0.5);
-        }
-        return Math.floor(expRewardForKill * 0.2);
-      };
       setHealthPoints(0);
       setAggressive(false);
       playerDispatch({
@@ -126,7 +99,7 @@ export const ClickableObject: FC<{
       });
       playerDispatch({
         type: 'addExp',
-        expReward: getExpReward()
+        expReward: clob.getExpRewardByLevel(playerState.level)
       });
     } else {
       hitDispatch({
@@ -166,7 +139,7 @@ export const ClickableObject: FC<{
       });
     },
     damage > 0 && aggressive && healthPoints > 0,
-    attackDelay
+    attackTimeout
   );
 
   const onAnimationEnd = () => {
@@ -174,7 +147,7 @@ export const ClickableObject: FC<{
   };
 
   const onCollectReward = () => {
-    onDeath(index);
+    onDeath();
   };
 
   return (
@@ -188,12 +161,12 @@ export const ClickableObject: FC<{
           <Avatar
             className={healthPoints > 0 && aggressive ? 'aggressive' : ''}
           >
-            <Icon type={healthPoints > 0 ? mob.icon : 'lootBag'} />
+            <Icon type={healthPoints > 0 ? icon : 'lootBag'} />
           </Avatar>
           {healthPoints > 0 ? (
             <StatsWrapper>
               <Stats>
-                <div>{mob.name}</div>
+                <div>{label}</div>
                 <div>Уровень: {level}</div>
               </Stats>
               <Stats>

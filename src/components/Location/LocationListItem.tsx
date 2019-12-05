@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { ILocation, locations } from '../Game/world';
+import { ILocation, locations } from '../world/world';
 import { UIBlockInner, Rythm, FlexStart } from '../layout';
 import { Divider } from '../layout/Divider';
 import { Button } from '../Button';

@@ -3,10 +3,10 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
 import { Quest } from '../Quests/Quest';
 import { Location } from '../Location';
-import { Room } from '../Room';
 import { PlayerProvider } from '../Player/PlayerContext';
 import { Locations } from '../Location/Locations';
 import { PlayerInfo } from '../PlayerInfo';
+import { RoomCheck } from '../Room/RouteCheck';
 
 export const Game: FC = () => {
   const {
@@ -24,7 +24,7 @@ export const Game: FC = () => {
           <Location />
         </Route>
         <Route exact path={`${path}/locations/:locationName/:roomName`}>
-          <Room />
+          <RoomCheck />
         </Route>
         <Route path={`${path}/info`}>
           <PlayerInfo />
