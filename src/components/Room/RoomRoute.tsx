@@ -6,7 +6,7 @@ import { Room } from './Room';
 import { Button } from '../Button';
 import { TabLabel } from '../TabLabel';
 
-export const RoomCheck: FC = () => {
+export const RoomRoute: FC = () => {
   const {
     params: { roomName, gameName, locationName }
   } = useRouteMatch<{

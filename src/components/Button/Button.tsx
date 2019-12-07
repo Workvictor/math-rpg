@@ -52,6 +52,7 @@ const Wrapper = styled(Border)`
   box-shadow: inset 0 0 0 0 ${props => props.theme.colors.grey20},
     inset 0 0 0 1px ${props => props.theme.colors.grey15},
     inset 0 0 0 2px ${props => props.theme.colors.grey0},
+    inset 0 0 5px ${props => props.theme.colors.grey0},
     0 0 0 1px ${props => props.theme.colors.grey0};
   position: relative;
   color: ${props => props.theme.colors.goldenrod};

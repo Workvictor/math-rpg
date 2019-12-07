@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 
-import { Border, FlexBetween, FlexWide, UIBlockInner } from '../layout';
+import { Border, Flex, FlexBetween, FlexWide, UIBlockInner } from '../layout';
 import styled, { keyframes } from 'styled-components';
 import { clickableObjectTypes } from './clickableObjectTypes';
 import { Icon } from '../Icon';
@@ -9,6 +9,9 @@ import { useHitContext } from '../HitArea/Context';
 import { Button } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
 import { Clob } from '../world/Clob';
+import { IItem } from '../world/items';
+import { randomValueFromRange } from '../utils/randomValueFromRange';
+import { spreadRange } from '../utils/spreadRange';
 
 const onDeath = keyframes`
   0% {
@@ -80,6 +83,10 @@ export const ClickableObject: FC<{
   const { clob, index, onDeath } = props;
   const { level, label, attackTimeout, damage, icon } = clob;
 
+  const [goldAmount, setGoldAmount] = useState<number>();
+
+  const [loot, setLoot] = useState<{ item: IItem; key: number }[]>([]);
+
   const [isAnimated, setAnimated] = useState(false);
 
   const [aggressive, setAggressive] = useState(false);
@@ -92,6 +99,15 @@ export const ClickableObject: FC<{
     const { pageX, pageY } = e;
     if (healthPoints - playerState.damage <= 0) {
       setHealthPoints(0);
+      setLoot(
+        clob.loot
+          .filter(
+            (_, index) =>
+              randomValueFromRange([0, 100]) < clob.lootChance[index] * 100
+          )
+          .map((item, key) => ({ item, key }))
+      );
+      setGoldAmount(spreadRange(clob.goldAmount));
       setAggressive(false);
       playerDispatch({
         type: 'setTarget',
@@ -101,34 +117,35 @@ export const ClickableObject: FC<{
         type: 'addExp',
         expReward: clob.getExpRewardByLevel(playerState.level)
       });
-    } else {
-      hitDispatch({
-        type: 'addHit',
-        pageX,
-        pageY,
-        value: playerState.damage
-      });
-
-      if (!isAnimated) {
-        setAnimated(true);
-      }
-
-      if (!aggressive && damage > 0) {
-        setAggressive(true);
-      }
-      if (playerState.targetId !== index) {
-        playerDispatch({
-          type: 'setTarget',
-          targetId: index
-        });
-      }
-      playerDispatch({
-        type: 'loseStamina',
-        amount: 5
-      });
-
-      setHealthPoints(prev => prev - playerState.damage);
+      return;
     }
+
+    hitDispatch({
+      type: 'addHit',
+      pageX,
+      pageY,
+      value: playerState.damage
+    });
+
+    if (!isAnimated) {
+      setAnimated(true);
+    }
+
+    if (!aggressive && damage > 0) {
+      setAggressive(true);
+    }
+    if (playerState.targetId !== index) {
+      playerDispatch({
+        type: 'setTarget',
+        targetId: index
+      });
+    }
+    playerDispatch({
+      type: 'loseStamina',
+      amount: 5
+    });
+
+    setHealthPoints(prev => prev - playerState.damage);
   };
 
   useTimeout(
@@ -146,8 +163,16 @@ export const ClickableObject: FC<{
     setAnimated(false);
   };
 
-  const onCollectReward = () => {
+  const onCloseLootBox = () => {
     onDeath();
+  };
+
+  const onPickGold = () => {
+    setGoldAmount(0);
+  };
+
+  const onPickItem = (key: number) => () => {
+    setLoot(prev => prev.filter(i => i.key !== key));
   };
 
   return (
@@ -155,7 +180,9 @@ export const ClickableObject: FC<{
       <Wrapper
         onAnimationEnd={onAnimationEnd}
         className={isAnimated ? 'animated' : ''}
-        onClick={healthPoints > 0 ? onMobClick : undefined}
+        onClick={
+          healthPoints > 0 && playerState.stamina >= 5 ? onMobClick : undefined
+        }
       >
         <FlexWide>
           <Avatar
@@ -180,8 +207,17 @@ export const ClickableObject: FC<{
             <>
               <StatsWrapper>
                 <Stats>
-                  <div>{['пусто'].join(', ')}</div>
-                  <Button onClick={onCollectReward}>собрать</Button>
+                  <div>
+                    {Boolean(goldAmount) && (
+                      <div onClick={onPickGold}>{goldAmount} золото</div>
+                    )}
+                    {loot.map((i, key) => (
+                      <div onClick={onPickItem(key)} key={key}>
+                        {i.item.label}
+                      </div>
+                    ))}
+                  </div>
+                  <Button onClick={onCloseLootBox}>закрыть</Button>
                 </Stats>
               </StatsWrapper>
             </>

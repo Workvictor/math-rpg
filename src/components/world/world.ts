@@ -20,6 +20,7 @@ export interface IRoom {
   locked: boolean;
   levelRange: number[];
   unlockLocations?: string[];
+  unlocksLocation?: number;
   unlockTown?: ETowns;
   clobs: Clob[];
 }
@@ -41,16 +42,13 @@ export const rooms: IRoom[] = [
   {
     id: 't1-0',
     levelRange: [1, 1],
-    objectCount: 3,
-    specialLoot: {
-      chance: 1,
-      name: 'Тренировочный меч'
-    },
+    objectCount: 1,
     name: 'Соседняя комната',
     description: 'Войдите и разбейте все двери',
     icon: 'hideout',
     locked: false,
     unlockLocations: ['t1-1'],
+    unlocksLocation: 1,
     clobs: [clobs.woodenDoor]
   },
   {
@@ -62,7 +60,7 @@ export const rooms: IRoom[] = [
     icon: 'wheat',
     locked: false,
     unlockLocations: ['t1-2'],
-    clobs: [clobs.wolf, clobs.bear]
+    clobs: [clobs.fearfulWolf, clobs.barrel, clobs.rat]
   },
   {
     id: 't1-2',
@@ -73,7 +71,7 @@ export const rooms: IRoom[] = [
     icon: 'windmill',
     locked: true,
     unlockLocations: ['t1-3'],
-    clobs: [clobs.wolf, clobs.bear]
+    clobs: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton]
   },
   {
     id: 't1-3',
@@ -98,24 +96,21 @@ export interface ILocation {
 
 export const locations: ILocation[] = [
   {
-    id: 0,
     name: 'Убежище',
     icon: 'house',
     level: [1, 1],
     roomIds: rooms.slice(0, 1).map(({ id }) => id)
   },
   {
-    id: 1,
     name: 'Деревня',
     icon: 'village',
     level: [2, 10],
     roomIds: rooms.slice(1, 4).map(({ id }) => id)
   },
   {
-    id: 2,
     name: 'Город',
     icon: 'castle',
     level: [6, 14],
     roomIds: []
   }
-];
+].map((i, id) => ({ ...i, id } as ILocation));

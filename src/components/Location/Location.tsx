@@ -48,8 +48,8 @@ export const Location = () => {
           <div>Действия:</div>
           <ButtonGroup>
             <HealButton />
-            <Button disable>чинить(300)</Button>
-            <Button disable>отдых(1000)</Button>
+            <Button disable>чинить(скоро)</Button>
+            <Button disable>отдых(скоро)</Button>
           </ButtonGroup>
         </Padbox>
       </BorderInner>

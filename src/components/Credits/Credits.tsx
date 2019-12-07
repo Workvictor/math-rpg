@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { ScrollArea, Padbox, FlexBetween } from '../layout';
 import { Divider } from '../layout/Divider';
-import { icons } from '../Icon/icons';
+import { icons } from '../Icon/icons1';
 import { TIcon } from '../Icon/TIcon';
 import { Icon } from '../Icon';
 import { TabLabel } from '../TabLabel';

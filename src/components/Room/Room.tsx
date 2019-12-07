@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { BorderInner, Padbox, Rythm, ScrollArea } from '../layout';
 import { IRoom } from '../world/world';
@@ -9,6 +9,10 @@ import { Button } from '../Button';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
 import { usePlayerContext } from '../Player/PlayerContext';
+import { randomValueFromRange } from '../utils/randomValueFromRange';
+import { Clob } from '../world/Clob';
+import { spreadRange } from '../utils/spreadRange';
+import { randomElementFrom } from '../utils/randomElementFrom';
 
 const Rew: FC<{ to: string }> = ({ to }) => {
   const { dispatch } = usePlayerContext();
@@ -26,24 +30,35 @@ const Rew: FC<{ to: string }> = ({ to }) => {
 };
 
 export const Room: FC<{ room: IRoom }> = ({ room, children }) => {
-  const { objectCount, clobs, levelRange } = room;
-  const countDelta = objectCount * 0.3;
-  const count = Math.round(
-    objectCount - countDelta + Math.random() * (room.objectCount + countDelta)
-  );
+  const { dispatch } = usePlayerContext();
 
-  const [mobIds, setMobIds] = useState(
-    new Array(count).fill(0).map((_, key) => ({
-      key,
-      clob: clobs[
-        Math.max(0, Math.round(Math.random() * clobs.length - 1))
-      ].setLevel(Math.round(levelRange[0] + Math.random() * levelRange[1]))
-    }))
-  );
+  const { objectCount, clobs, levelRange, unlocksLocation } = room;
+
+  const [objects, setObjects] = useState<{ key: number; clob: Clob }[]>([]);
+
+  useEffect(() => {
+    setObjects(
+      new Array(spreadRange(objectCount, 0.3)).fill(0).map((_, key) => ({
+        key,
+        clob: randomElementFrom(clobs).setLevel(
+          randomValueFromRange(levelRange)
+        )
+      }))
+    );
+  }, [clobs, levelRange, objectCount]);
 
   const onMobDeath = (index: number) => () => {
-    setMobIds(prev => prev.filter(item => item.key !== index));
+    setObjects(prev => prev.filter(item => item.key !== index));
   };
+
+  useEffect(() => {
+    if (objects.length === 0 && unlocksLocation) {
+      dispatch({
+        type: 'addUnlockedLocation',
+        locationId: unlocksLocation
+      });
+    }
+  }, [dispatch, objects, unlocksLocation]);
 
   return (
     <>
@@ -58,7 +73,7 @@ export const Room: FC<{ room: IRoom }> = ({ room, children }) => {
         <Divider />
 
         <ScrollArea>
-          {mobIds.map(i => {
+          {objects.map(i => {
             return (
               <Rythm key={i.key}>
                 <ClickableObject
@@ -69,19 +84,7 @@ export const Room: FC<{ room: IRoom }> = ({ room, children }) => {
               </Rythm>
             );
           })}
-          {mobIds.length === 0 && (
-            <div>
-              молодец, всех победил!
-              {/*{room.specialLoot && (*/}
-              {/*  <div>*/}
-              {/*    можешь забрать [{room.specialLoot.name}]*/}
-              {/*    <div>*/}
-              {/*      <Rew to={`/${gameName}/locations`} />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*)}*/}
-            </div>
-          )}
+          {objects.length === 0 && <div>молодец, всех победил!</div>}
         </ScrollArea>
         <HitArea />
       </HitContextProvider>

@@ -11,6 +11,7 @@ const anim = keyframes`
 `;
 
 const Hit = styled.div`
+  font-size: 18px;
   top: 50%;
   left: 50%;
   position: absolute;

@@ -1,16 +1,20 @@
 import { TIcon } from '../Icon/TIcon';
 import { ClobPrefix } from './clobPrefix';
+import { IItem } from './items';
 
 export class ClobModifiers {
   damageValue = 1;
   healthPointValue = 1;
   attackTimeoutValue = 1;
   expValue = 1;
+  goldAmountValue = 1;
 }
 
 export class Clob extends ClobModifiers {
   tier?: 1 | 2 | 3;
-  loot?: number[];
+  goldAmount = 0;
+  loot: IItem[] = [];
+  lootChance: number[] = [];
 
   label: string;
 
@@ -18,6 +22,7 @@ export class Clob extends ClobModifiers {
   private baseHealthPoints = 20;
   private baseAttackTimeout = 1000;
   private baseExpReward = 5;
+  private baseGoldAmount = 1;
 
   level = 1;
 
@@ -28,6 +33,15 @@ export class Clob extends ClobModifiers {
 
   setLevel = (level: number) => {
     this.level = level;
+    this.goldAmount = Math.floor(
+      (level * 2 + level * this.baseGoldAmount) * this.goldAmountValue
+    );
+    return this;
+  };
+
+  setLoot = (items: IItem[], lootChance: number[]) => {
+    this.loot = items;
+    this.lootChance = lootChance;
     return this;
   };
 
@@ -36,12 +50,14 @@ export class Clob extends ClobModifiers {
       healthPointValue = this.healthPointValue,
       damageValue = this.damageValue,
       attackTimeoutValue = this.attackTimeoutValue,
-      expValue = this.expValue
+      expValue = this.expValue,
+      goldAmountValue = this.goldAmountValue
     } = modifiers;
     this.healthPointValue = healthPointValue;
     this.damageValue = damageValue;
     this.attackTimeoutValue = attackTimeoutValue;
     this.expValue = expValue;
+    this.goldAmountValue = goldAmountValue;
     return this;
   };
 

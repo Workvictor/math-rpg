@@ -5,7 +5,7 @@ import { BorderElevated, BorderInner, FlexStart, Rythm } from '../layout';
 import { usePlayerContext } from './PlayerContext';
 import { Avatar } from '../Avatar';
 import { IconButton } from '../Button';
-import { Route } from 'react-router';
+import { Route, useHistory } from 'react-router';
 import { ManaBar } from '../StatusBar/ManaBar';
 import { HealthBar } from '../StatusBar/HealthBar';
 import { StaminaBar } from '../StatusBar/StaminaBar';
@@ -14,6 +14,7 @@ import { useRaf } from '../utils/RAF';
 import { useTimer } from '../utils/timer';
 import { useTimeout } from '../utils/useTimeout';
 import { useUIContext } from '../UIContext';
+import { locations } from '../world/world';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -68,8 +69,11 @@ export const Player: FC = memo(() => {
     manaMax,
     stamina,
     staminaMax,
-    name
+    name,
+    location
   } = state;
+
+  const history = useHistory();
 
   useTimeout(() => {
     dispatch({
@@ -80,11 +84,16 @@ export const Player: FC = memo(() => {
   const { dispatch: dispatchUI, state: uiState } = useUIContext();
 
   const onToggleShowPlayerHealthText = () => {
-    console.log('onToggleShowPlayerHealthText');
     dispatchUI({
       type: 'toggleShowPlayerHealthText'
     });
   };
+
+  useEffect(() => {
+    if (healthPoints <= 0) {
+      history.push(`/${name}/locations/${locations[location].name}`);
+    }
+  }, [healthPoints, history, location, name]);
 
   return (
     <Wrapper>
