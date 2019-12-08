@@ -1,13 +1,24 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 
-import { Border, FlexBetween, FlexWide, UIBlockInner } from '../layout';
+import {
+  Border,
+  FlexBetween,
+  FlexStart,
+  FlexWide,
+  Rythm,
+  UIBlockInner
+} from '../layout';
 import styled, { keyframes } from 'styled-components';
-import { clickableObjectTypes } from './clickableObjectTypes';
-import { Icon } from '../Icon';
 import { usePlayerContext } from '../Player/PlayerContext';
-import { useRaf } from '../RAF';
 import { useHitContext } from '../HitArea/Context';
 import { Button } from '../Button';
+import { useTimeout } from '../utils/useTimeout';
+import { Clob } from '../world/Clob';
+import { IItem } from '../world/items';
+import { randomValueFromRange } from '../utils/randomValueFromRange';
+import { spreadRange } from '../utils/spreadRange';
+import { LootBag } from '../Icon/LootBag';
+import { Click } from '../Icon/Click';
 
 const onDeath = keyframes`
   0% {
@@ -59,6 +70,8 @@ const StatsWrapper = styled.div`
 `;
 
 const Avatar = styled(Border)`
+  height: 54px;
+  width: 54px;
   font-size: 48px;
   display: flex;
   color: ${props => props.theme.colors.grey60};
@@ -69,52 +82,38 @@ const Avatar = styled(Border)`
 `;
 
 export const ClickableObject: FC<{
+  clob: Clob;
   index: number;
-  levelRange: number[];
-  onDeath: (id: number) => void;
+  onLootBoxClose: (index: number) => void;
+  onKill: (index: number) => void;
 }> = props => {
-  const { state: playerState, dispatch: playerDispatch } = usePlayerContext();
+  const {
+    state: playerState,
+    dispatch: playerDispatch,
+    actions: playerActions
+  } = usePlayerContext();
+  const { dispatch: hitDispatch } = useHitContext();
 
-  const { levelRange, index, onDeath } = props;
-  const attackDelay = 1000;
+  const { clob, index, onLootBoxClose, onKill } = props;
+  const { level, label, attackTimeout, damage, icon } = clob;
+
+  const [goldAmount, setGoldAmount] = useState(0);
+
+  const [loot, setLoot] = useState<{ item: IItem; key: number }[]>([]);
 
   const [isAnimated, setAnimated] = useState(false);
 
-  const [attackTime, setAttackTime] = useState(Date.now());
   const [aggressive, setAggressive] = useState(false);
-  const [level] = useState(
-    Math.floor(levelRange[0] + Math.random() * levelRange[1])
-  );
-  // const intelegence = Math.round(level * 1.15 + 1); // as third stat
-  // const agility = Math.round(level * 1.25 + 1); // as secondary stat
-  // const strenght = Math.round(level * 1.6 + 1); // as main stat
 
-  // const mobHp = level * 1.18 + strenght * 4;
-  // const armorValue = (mobStrenght*1.6 + mobAgility*1.3)/2;
-  // const armorCur = (mobStrenght + mobAgility)/2;
-  // const armor = (armorCur/ armorValue);
-  // const mobExpReward = mobHp * 0.6;
+  const [hpMax] = useState(clob.healthPoints);
 
-  const availableMobTypes = clickableObjectTypes.filter(item =>
-    item.level.includes(level)
-  );
-  const [mob] = useState(
-    availableMobTypes[Math.floor(Math.random() * availableMobTypes.length)]
-  );
-
-  const [hpMax] = useState(
-    Math.floor((20 + (level - 1) * 4) * mob.healthPointValue)
-  );
-  const [healthPoints, setHealthPoints] = useState(hpMax);
-  const [expRewardForKill] = useState(
-    Math.floor(healthPoints * 0.4 * (mob.expValue || 1))
-  );
-  const damage = Math.floor((4 + (level - 1) * 1.2) * mob.damageValue);
-
-  const { dispatch: hitDispatch } = useHitContext();
+  const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
   const onMobClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { pageX, pageY } = e;
+
+    playerDispatch(playerActions.didAttack(index, 5));
+
     hitDispatch({
       type: 'addHit',
       pageX,
@@ -126,95 +125,90 @@ export const ClickableObject: FC<{
       setAnimated(true);
     }
 
-    if (!aggressive) {
+    if (!aggressive && damage > 0) {
       setAggressive(true);
     }
-    setHealthPoints(prev => prev - playerState.damage);
-    if (playerState.targetId !== index) {
-      playerDispatch({
-        type: 'setTarget',
-        targetId: index
-      });
-    }
-    if (mob.damageReturnValue > 0) {
-      playerDispatch({
-        type: 'takeDamage',
-        damage: mob.damageReturnValue
-      });
-    }
-  };
 
-  useEffect(() => {
-    if (healthPoints <= 0) {
+    if (healthPoints - playerState.damage <= 0) {
+      setHealthPoints(0);
+      onKill(index);
+      setLoot(
+        clob.loot
+          .filter(
+            (_, index) =>
+              randomValueFromRange([0, 100]) < clob.lootChance[index] * 100
+          )
+          .map((item, key) => ({ item, key }))
+      );
+      setGoldAmount(spreadRange(clob.goldAmount));
+      setAggressive(false);
       playerDispatch({
         type: 'setTarget',
         targetId: null
       });
       playerDispatch({
         type: 'addExp',
-        expReward: Math.floor((level / playerState.level) * expRewardForKill)
+        expReward: clob.getExpRewardByLevel(playerState.level)
       });
+      return;
     }
-  }, [
-    expRewardForKill,
-    healthPoints,
-    index,
-    level,
-    onDeath,
-    playerDispatch,
-    playerState.level
-  ]);
 
-  const attackLoop = React.useCallback(() => {
-    if (
-      aggressive &&
-      damage > 0 &&
-      healthPoints > 0 &&
-      attackTime <= Date.now()
-    ) {
-      setAttackTime(Date.now() + attackDelay);
+    setHealthPoints(prev => Math.max(0, prev - playerState.damage));
+  };
+
+  useTimeout(
+    () => {
       playerDispatch({
         type: 'takeDamage',
         damage
       });
-    }
-    return playerState.healthPoints > 0 && healthPoints > 0;
-  }, [
-    aggressive,
-    attackTime,
-    damage,
-    healthPoints,
-    playerDispatch,
-    playerState.healthPoints
-  ]);
-
-  useRaf(attackLoop);
+    },
+    damage > 0 && aggressive && healthPoints > 0,
+    attackTimeout
+  );
 
   const onAnimationEnd = () => {
     setAnimated(false);
   };
 
-  const onCollectReward = () => {
-    onDeath(index);
+  const onCloseLootBox = () => {
+    onLootBoxClose(index);
   };
+
+  const onPickGold = () => {
+    playerDispatch({
+      type: 'pickGold',
+      amount: goldAmount
+    });
+    setGoldAmount(0);
+  };
+
+  const onPickItem = (key: number) => () => {
+    setLoot(prev => prev.filter(i => i.key !== key));
+  };
+
+  const playerCanAttack =
+    playerState.nextAttackTime <= Date.now() &&
+    healthPoints > 0 &&
+    playerState.stamina >= 5;
 
   return (
     <>
       <Wrapper
         onAnimationEnd={onAnimationEnd}
         className={isAnimated ? 'animated' : ''}
-        onClick={healthPoints > 0 ? onMobClick : undefined}
+        onClick={playerCanAttack ? onMobClick : undefined}
       >
         <FlexWide>
           <Avatar
             className={healthPoints > 0 && aggressive ? 'aggressive' : ''}
           >
-            <Icon type={healthPoints > 0 ? mob.icon : 'lootBag'} />
+            {healthPoints > 0 ? icon : <LootBag />}
           </Avatar>
           {healthPoints > 0 ? (
             <StatsWrapper>
               <Stats>
-                <div>{mob.name}</div>
+                <div>{label}</div>
                 <div>Уровень: {level}</div>
               </Stats>
               <Stats>
@@ -228,8 +222,19 @@ export const ClickableObject: FC<{
             <>
               <StatsWrapper>
                 <Stats>
-                  <div>{['пусто'].join(', ')}</div>
-                  <Button onClick={onCollectReward}>собрать</Button>
+                  <FlexStart>
+                    {Boolean(goldAmount) && (
+                      <UIBlockInner onClick={onPickGold}>
+                        {goldAmount} золото <Click />
+                      </UIBlockInner>
+                    )}
+                    {/*{loot.map((i, key) => (*/}
+                    {/*  <UIBlockInner key={key} onClick={onPickItem(key)}>*/}
+                    {/*    {i.item.label}*/}
+                    {/*  </UIBlockInner>*/}
+                    {/*))}*/}
+                  </FlexStart>
+                  <Button onClick={onCloseLootBox}>закрыть</Button>
                 </Stats>
               </StatsWrapper>
             </>

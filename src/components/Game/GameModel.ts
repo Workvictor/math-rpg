@@ -9,5 +9,11 @@ export class GameModel {
     masterVolume: 0.5,
     musicVolume: 0.5
   };
+  ui = {
+    showPlayerHealthText: false,
+    showPlayerManaText: false,
+    showPlayerStaminaText: false,
+    showPlayerExperienceText: false
+  };
   clickCount = 0;
 }

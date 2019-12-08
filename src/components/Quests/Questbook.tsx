@@ -8,7 +8,7 @@ import { TabLabel } from '../TabLabel';
 import { usePlayerContext } from '../Player/PlayerContext';
 
 export const Questbook = () => {
-  const { url } = useRouteMatch<{ gameName: string; locationName: string }>();
+  const { url } = useRouteMatch<{ gameName: string; locationId: string }>();
   const { state } = usePlayerContext();
 
   const to = url

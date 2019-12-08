@@ -1,48 +1,61 @@
 import React, { FC } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
-import { GameTabs } from './GameTabs';
 import { Quest } from '../Quests/Quest';
-import { Location } from '../Location';
-import { Room } from '../Room';
 import { PlayerProvider } from '../Player/PlayerContext';
-import { Locations } from '../Location/Locations';
-
-export const path = {
-  character: 'character',
-  map: 'map',
-  backpack: 'backpack',
-  questbook: 'questbook',
-  quest: 'quest'
-};
+import { PlayerInfo } from '../PlayerInfo';
+import { IGameRoute } from './IGameRoute';
+import { GameTabs } from '../GameTabs';
+import { BorderInner, Padbox } from '../layout';
+import { Player } from '../Player';
+import { Divider } from '../layout/Divider';
+import { ButtonGroup } from '../Button/ButtonGroup';
+import { HealButton } from '../HealButton';
+import { Button } from '../Button';
+import { LocationSuspense } from '../LocationSuspense';
+import { RestButton } from '../RestButton';
 
 export const Game: FC = () => {
-  const {
-    params: { gameName },
-    path
-  } = useRouteMatch<{ gameName: string }>();
+  const { params, path } = useRouteMatch<IGameRoute>();
 
   return (
-    <PlayerProvider gameName={gameName}>
+    <PlayerProvider gameName={params.gameName}>
+      <Route path={`${path}`}>
+        <GameTabs />
+        <BorderInner>
+          <Player />
+          <Padbox>
+            <Divider />
+            <Route path={`${path}/locations/:locationId`}>
+              <BorderInner>
+                <Padbox>
+                  <div>Действия:</div>
+                  <ButtonGroup>
+                    <HealButton />
+                    <RestButton />
+                    <Route exact path={`${path}/locations/:locationId`}>
+                      <Button disable>чинить(скоро)</Button>
+                    </Route>
+                  </ButtonGroup>
+                </Padbox>
+              </BorderInner>
+            </Route>
+          </Padbox>
+        </BorderInner>
+        <Divider />
+      </Route>
+
       <Switch>
-        <Route exact path={`${path}/locations`}>
-          <Locations />
+        <Route path={`${path}/locations`}>
+          <LocationSuspense />
         </Route>
-        <Route exact path={`${path}/locations/:locationName`}>
-          <Location />
-        </Route>
-        <Route exact path={`${path}/locations/:locationName/:roomName`}>
-          <Room />
+        <Route path={`${path}/info`}>
+          <PlayerInfo />
         </Route>
         <Route path={`${path}/quests/:questId`}>
           <Quest />
         </Route>
-        <Route
-          path={`${path}/:locationName/:tab(player|quests|locations|backpack)`}
-        >
-          <GameTabs />
-        </Route>
-        <Redirect to={`/${gameName}/locations`} />
+        <Redirect to={`/${params.gameName}/locations`} />
       </Switch>
     </PlayerProvider>
   );

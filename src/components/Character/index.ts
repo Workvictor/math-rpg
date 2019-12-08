@@ -1,1 +1,1 @@
-export { Character } from './Character';
+export { Player } from '../Player/Player';

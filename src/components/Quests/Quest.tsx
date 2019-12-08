@@ -14,8 +14,8 @@ import { Typer } from '../Typer';
 import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
 import { usePlayerContext } from '../Player/PlayerContext';
-import { getQuestById } from './quests';
-import { locations } from '../Game/world';
+import { getQuestById, IQuest } from './quests';
+import { locations } from '../world/world';
 
 const Wrapper = styled(FlexColumnWide)`
   align-items: stretch;
@@ -32,7 +32,7 @@ export const Quest: FC = () => {
   const { params } = useRouteMatch<{
     questId: string;
   }>();
-  const { dispatch, state } = usePlayerContext();
+  const { dispatch, state: player } = usePlayerContext();
   const questId = parseInt(params.questId);
 
   const onSubmitQuest = () => {
@@ -42,49 +42,31 @@ export const Quest: FC = () => {
     });
   };
 
-  const onCancelQuest = () => {
-    dispatch({
-      type: 'removeQuest',
-      questId
-    });
-  };
-
   const quest = getQuestById(questId);
-  const playerLocation = locations[state.location];
 
-  const locationLink = playerLocation
-    ? `/${state.name}/locations/${playerLocation.name}`
-    : `/${state.name}/locations`;
+  const locationLink =
+    player.location >= 0
+      ? `/${player.name}/locations/${player.location}/${
+          locations[player.location].rooms[0].name
+        }`
+      : `/${player.name}/locations`;
 
-  return questId && quest ? (
-    <Wrapper>
+  return quest ? (
+    <>
+      <BorderInner>
+        <ControlsWrapper>
+          <Button to={locationLink} onClick={onSubmitQuest}>
+            далее
+          </Button>
+        </ControlsWrapper>
+      </BorderInner>
+      <Divider />
       <ScrollArea>
         <Padbox>
           <Typer>{quest.text}</Typer>
         </Padbox>
       </ScrollArea>
-      <div>
-        <Divider />
-        <BorderInner>
-          <ControlsWrapper>
-            {state.questbook.includes(questId) ? (
-              <>
-                <Button to={locationLink} onClick={onCancelQuest}>
-                  Отменить
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button to={locationLink}>Отказаться</Button>
-                <Button to={locationLink} onClick={onSubmitQuest}>
-                  Принять
-                </Button>
-              </>
-            )}
-          </ControlsWrapper>
-        </BorderInner>
-      </div>
-    </Wrapper>
+    </>
   ) : (
     <Redirect to={locationLink} />
   );
