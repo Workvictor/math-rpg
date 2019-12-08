@@ -1,4 +1,6 @@
 export const colors = {
+  commonWhite: '#ccccb7',
+
   health: '#476f04',
   mana: '#345ba0',
   stamina: '#c3b46e',
@@ -29,15 +31,4 @@ export const colors = {
   grey60: '#414141',
   grey65: '#535353',
   grey70: '#646464'
-
-  // grey0: '#000000',
-  // grey10: '#080808',
-  // grey15: '#0c0c0c',
-  // grey20: '#131313',
-  // grey30: '#171717',
-  // grey40: '#2b2b2b',
-  // grey50: '#242424',
-  // grey60: '#2e2e2e',
-  // grey65: '#3a3a3a',
-  // grey70: '#484848'
 };

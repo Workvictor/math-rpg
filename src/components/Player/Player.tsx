@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { BorderElevated, BorderInner, FlexStart, Rythm } from '../layout';
@@ -10,11 +10,11 @@ import { ManaBar } from '../StatusBar/ManaBar';
 import { HealthBar } from '../StatusBar/HealthBar';
 import { StaminaBar } from '../StatusBar/StaminaBar';
 import { ExperienceBar } from '../StatusBar/ExpirienceBar';
-import { useRaf } from '../utils/RAF';
-import { useTimer } from '../utils/timer';
 import { useTimeout } from '../utils/useTimeout';
 import { useUIContext } from '../UIContext';
 import { locations } from '../world/world';
+import { Skills } from '../Icon/Skills';
+import { ProgressBar } from '../ProgressBar';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -46,6 +46,9 @@ const Name = styled(BorderElevated)`
   justify-content: center;
   padding: 2px 4px;
 `;
+const StyledProgressBar = styled(ProgressBar)`
+  height: 4px;
+`;
 
 const Level = styled(Name)`
   min-width: 20px;
@@ -70,10 +73,26 @@ export const Player: FC = memo(() => {
     stamina,
     staminaMax,
     name,
-    location
+    location,
+    nextAttackTime,
+    attackDelay
   } = state;
 
   const history = useHistory();
+
+  const [attackTimer, setAttackTimer] = useState(0);
+
+  useEffect(() => {
+    setAttackTimer(0);
+  }, [nextAttackTime]);
+
+  useTimeout(
+    () => {
+      setAttackTimer(Date.now());
+    },
+    nextAttackTime > Date.now(),
+    300
+  );
 
   useTimeout(() => {
     dispatch({
@@ -91,7 +110,8 @@ export const Player: FC = memo(() => {
 
   useEffect(() => {
     if (healthPoints <= 0) {
-      history.push(`/${name}/locations/${locations[location].name}`);
+      // TODO set player [Home] link
+      history.push(`/${name}/locations/${locations[location].id}`);
     }
   }, [healthPoints, history, location, name]);
 
@@ -99,8 +119,12 @@ export const Player: FC = memo(() => {
     <Wrapper>
       <Inner>
         <FlexStart>
-          <StyledAvatar type={'cementShoes'}>
+          <StyledAvatar>
             <Level>{level}</Level>
+            <StyledProgressBar
+              value={nextAttackTime - Date.now()}
+              max={attackDelay}
+            />
           </StyledAvatar>
           <Content>
             <Rythm>
@@ -122,7 +146,9 @@ export const Player: FC = memo(() => {
             </Rythm>
           </Content>
           <Route path={`/${name}/locations`}>
-            <SkillsButton type={'skills'} to={`/${name}/info`} />
+            <SkillsButton to={`/${name}/info`}>
+              <Skills />
+            </SkillsButton>
           </Route>
         </FlexStart>
         <ExperienceBar value={exp} max={expMax} />

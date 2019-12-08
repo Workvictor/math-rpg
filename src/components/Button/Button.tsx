@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Howl } from 'howler';
+import { useHistory } from 'react-router';
 
 import { Border } from '../layout';
 import { useGameContext } from '../Game/GameContext';
@@ -60,6 +60,12 @@ const Wrapper = styled(Border)`
   cursor: unset;
   font-size: 14px;
   text-shadow: 0 1px 1px ${props => props.theme.colors.grey10};
+  & ${ButtonInner} {
+    filter: brightness(0.75);
+  }
+  &:hover ${ButtonInner} {
+    filter: brightness(1);
+  }
   :after {
     top: 2px;
     left: 2px;
@@ -71,10 +77,6 @@ const Wrapper = styled(Border)`
     height: calc(100% - 2px);
     box-shadow: inset 0 0 5px ${props => props.theme.colors.greenDark},
       inset 0 0 2px ${props => props.theme.colors.greenDark};
-  }
-  :hover:after {
-    box-shadow: inset 0 -6px 6px 0px ${props => props.theme.colors.goldenrod};
-    opacity: 0.15;
   }
   :active,
   &.active {
@@ -100,15 +102,17 @@ export interface Interface {
   onClick?: () => void;
 }
 
-export const Button: React.FC<Interface> = ({
-  children,
-  to = '',
-  onClick,
-  className,
-  navigation,
-  disable,
-  soundType = 'click'
-}) => {
+export const Button: React.FC<Interface> = props => {
+  const {
+    children,
+    to = '',
+    onClick,
+    className,
+    navigation,
+    disable,
+    soundType = 'click'
+  } = props;
+  const history = useHistory();
   const classNames = [className];
 
   const { dispatch } = useGameContext();
@@ -131,6 +135,9 @@ export const Button: React.FC<Interface> = ({
 
   const onBtnClick = () => {
     onClick && onClick();
+    if (to) {
+      history.push(to);
+    }
     dispatch({
       type: 'addClickCount'
     });
@@ -143,13 +150,7 @@ export const Button: React.FC<Interface> = ({
       onClick={disable ? undefined : onBtnClick}
       className={classNames.join(' ')}
     >
-      {!disable && to ? (
-        <Link to={to}>
-          <ButtonInner>{children}</ButtonInner>
-        </Link>
-      ) : (
-        <ButtonInner>{children}</ButtonInner>
-      )}
+      <ButtonInner>{children}</ButtonInner>
     </Wrapper>
   );
 };

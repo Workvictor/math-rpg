@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Redirect } from 'react-router';
+import { Redirect, useHistory } from 'react-router';
 
 import { Border, Flex, ScrollArea, BorderInner, Padbox } from '../layout';
 import { Input } from '../Input';
@@ -8,6 +8,7 @@ import { Button } from '../Button';
 import { Typography } from '../layout/Typography';
 import { Divider } from '../layout/Divider';
 import { useGameContext } from '../Game/GameContext';
+import { usePlayerContext } from '../Player/PlayerContext';
 
 const Header = styled(Border)`
   height: 250px;
@@ -20,23 +21,40 @@ const Header = styled(Border)`
 export const newGamePath = 'newgame';
 
 export const NewGame = () => {
+  const [gameNameSubmitted, submitGameName] = useState(false);
+
+  const [name, setName] = React.useState('');
+
+  const [nameIsValid, setNameIsValid] = React.useState(false);
+
   const {
     state: { players },
     dispatch
   } = useGameContext();
-  const [name, setName] = React.useState('');
 
-  const onStartNewGame = () => {
+  const history = useHistory();
+
+  const onSubmitGameName = () => {
+    submitGameName(true);
     dispatch({
       type: 'startNewGame',
       name
     });
   };
 
-  const validName =
-    name !== 'newgame' &&
-    name.length >= 3 &&
-    !players.find(i => i.name === name);
+  useEffect(() => {
+    setNameIsValid(
+      name !== 'newgame' &&
+        name.length >= 3 &&
+        !players.find(i => i.name === name)
+    );
+  }, [name, players]);
+
+  useEffect(() => {
+    if (gameNameSubmitted && nameIsValid) {
+      history.push(`/${name}/quests/0`);
+    }
+  }, [gameNameSubmitted, history, name, nameIsValid]);
 
   return players.length < 3 ? (
     <>
@@ -58,11 +76,7 @@ export const NewGame = () => {
               Имя:
               <Input value={name} onChange={setName} />
             </label>
-            <Button
-              disable={!validName}
-              to={`/${name}/quests/1`}
-              onClick={onStartNewGame}
-            >
+            <Button disable={!nameIsValid} onClick={onSubmitGameName}>
               Далее
             </Button>
           </Flex>

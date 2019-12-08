@@ -1,88 +1,58 @@
-import React from 'react';
-import { Redirect, useRouteMatch } from 'react-router';
+import React, { FC, useEffect } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
-import { TabLabel } from '../TabLabel';
-import { rooms, locations } from '../world/world';
-import {
-  UIBlockInner,
-  Padbox,
-  ScrollArea,
-  BorderInner,
-  Rythm,
-  FlexStart
-} from '../layout';
-import { Player } from '../Player';
-import { Divider } from '../layout/Divider';
-import { Button } from '../Button';
-import styled from 'styled-components';
-import { HealButton } from '../HealButton';
-import { ButtonGroup } from '../Button/ButtonGroup';
-import { BorderIcon } from '../Icon/BorderIcon';
+import { locations } from '../world/world';
+import { ScrollArea } from '../layout';
+import { RoomRoute } from '../Room/RoomRoute';
+import { AreaEntity } from '../AreaEntity';
+import { ILocationRoute } from './ILocationRoute';
+import { usePlayerContext } from '../Player/PlayerContext';
+import { AreaRestore } from '../AreaRestore';
 
-const RoomWrapper = styled(UIBlockInner)`
-  color: ${props => props.theme.colors.blueDark};
-`;
+export const Location: FC = () => {
+  const { params, path } = useRouteMatch<ILocationRoute>();
+  const { state: player, dispatch } = usePlayerContext();
+  const locationId = parseInt(params.locationId);
 
-const StyledBorderIcon = styled(BorderIcon)`
-  margin-right: 8px;
-`;
+  useEffect(() => {
+    if (player.location !== locationId) {
+      dispatch({
+        type: 'changeLocation',
+        locationId
+      });
+    }
+  }, [dispatch, locationId, player.location]);
 
-export const Location = () => {
-  const {
-    params: { locationName, gameName }
-  } = useRouteMatch<{
-    gameName: string;
-    locationName: string;
-  }>();
-
-  const location = locations.find(location => location.name === locationName);
+  const location = locations.find(i => i.id === locationId);
 
   return location ? (
-    <>
-      <TabLabel label={location.name}>
-        <Button to={`/${gameName}/locations`}>на карту</Button>
-      </TabLabel>
-      <BorderInner>
-        <Player />
-        <Padbox>
-          <div>Действия:</div>
-          <ButtonGroup>
-            <HealButton />
-            <Button disable>чинить(скоро)</Button>
-            <Button disable>отдых(скоро)</Button>
-          </ButtonGroup>
-        </Padbox>
-      </BorderInner>
-      <Divider />
-      <ScrollArea>
-        {location.roomIds.map(roomId => {
-          const room = rooms.find(item => item.id === roomId);
-          return room ? (
-            <Rythm r={2} key={roomId}>
-              <RoomWrapper>
-                <FlexStart>
-                  <StyledBorderIcon type={room.icon} />
-                  <div>
-                    <div>
-                      {room.name} [{room.levelRange.join('-')}]
-                    </div>
-                    {room.description}
-                  </div>
-                </FlexStart>
-                <Divider />
-                <Button
-                  disable={room.locked}
-                  to={`${location.name}/${room.name}`}
-                >
-                  войти
-                </Button>
-              </RoomWrapper>
-            </Rythm>
-          ) : null;
-        })}
-      </ScrollArea>
-    </>
+    <Switch>
+      <Route exact path={path}>
+        <AreaRestore />
+        <ScrollArea>
+          {location.rooms.map(room => {
+            return (
+              <AreaEntity
+                key={room.name}
+                aside={room.icon}
+                title={room.label}
+                description={room.description}
+                level={room.level}
+                locked={!player.unlockedRoomNames.includes(room.name)}
+                to={`${location.id}/${room.name}`}
+              />
+            );
+          })}
+        </ScrollArea>
+      </Route>
+
+      <Route exact path={`${path}/:roomName`}>
+        <RoomRoute />
+      </Route>
+
+      <Redirect to={`/${params.gameName}/locations/${params.locationId}`} />
+    </Switch>
   ) : (
-    <Redirect to={`/${gameName}/${locations[0].name}`} />
+    <Redirect to={`/${params.gameName}/locations`} />
   );
 };

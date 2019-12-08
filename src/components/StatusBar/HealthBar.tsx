@@ -1,12 +1,15 @@
 import React, { FC } from 'react';
 
-import { Icon } from '../Icon';
 import { EBarType, StatusBar, IStatusBar } from './StatusBar';
+import { Heart } from '../Icon/Heart';
 
 export const HealthBar: FC<IStatusBar> = props => {
   return (
-    <StatusBar {...props} barType={EBarType.health}>
-      <Icon type={'heart'} />
-    </StatusBar>
+    <StatusBar
+      shortName={'heap'}
+      icon={<Heart />}
+      {...props}
+      barType={EBarType.health}
+    />
   );
 };

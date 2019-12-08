@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 import { ProgressBar, ProgressBarInner } from '../ProgressBar';
@@ -9,6 +9,13 @@ const Wrapper = styled(Flex)`
   position: relative;
   font-size: 12px;
   height: 10px;
+`;
+
+const ShortName = styled.div`
+  width: 36px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex-shrink: 0;
 `;
 
 export interface ITextVisibility {
@@ -51,6 +58,8 @@ const StyledProgressBar = styled(ProgressBar)<IBarType>`
 
 export interface IStatusBar extends IProgressBar, ITextVisibility {
   onClick?: () => void;
+  icon?: ReactNode;
+  shortName?: ReactNode;
 }
 
 export const StatusBar: FC<IStatusBar & IBarType> = props => {
@@ -61,15 +70,18 @@ export const StatusBar: FC<IStatusBar & IBarType> = props => {
     barType,
     className,
     onClick,
-    textIsVisible
+    textIsVisible,
+    icon,
+    shortName
   } = props;
   return (
     <Wrapper className={className} onClick={onClick}>
-      {children}
+      {icon}
       <Text textIsVisible={textIsVisible}>
         {value}/{max}
       </Text>
       <StyledProgressBar barType={barType} max={max} value={value} />
+      {shortName ? <ShortName>{shortName}</ShortName> : children}
     </Wrapper>
   );
 };

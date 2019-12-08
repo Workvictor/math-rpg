@@ -1,5 +1,6 @@
 import { locations } from '../world/world';
 import { HealthModel } from '../Model/HealthModel';
+import { room } from '../world/rooms';
 
 export class PlayerModel {
   static ExperienceProgressionBase = [25, 60];
@@ -19,23 +20,40 @@ export class PlayerModel {
   healthPointsFlatBonus = 0;
   healthPointsPercentBonus = 0;
   //skills
+  outOfCombat = true;
   damage = Math.floor(6 * (1 + this.strength * 0.02));
   healValue = Math.floor(25 + this.intelligence * 0.025);
-  healthPointsPerSecond = 0;
+  healRefreshTimeout = 5000;
+  nextHealTime = Date.now();
+  healthPointsPerSecond = 1;
   staminaPerSecond = 1 + Math.floor(this.stamina * 0.005);
   manaPerSecond = Math.floor(this.mana * 0.0075);
   skillPoints = 0;
   attackDelay = Math.max(500, Math.floor(2000 - this.agility * 25));
-  //utils
-  targetId: number | null = null;
   nextAttackTime = Date.now();
+  targetId: number | null = null;
+  restPointsPerSecond = 3;
+  restRefreshTimeout = 15000;
+  nextRestTime = Date.now();
   questbook: number[] = [];
   clickCount = 0;
+  goldAmount = 0;
   lastUpdate = Date.now();
   // TODO вынести логику локаций в отдельную сущность
   location = locations[0].id;
+  areaRestore = false;
   unlockedLocations = [locations[0].id];
-  constructor(public name: string) {}
+  unlockedRoomNames = [room.hideout.name];
+  constructor(public name: string) {
+    const healthModel = new HealthModel(
+      this.level,
+      this.strength,
+      this.healthPointsFlatBonus,
+      this.healthPointsPercentBonus
+    );
+    this.healthPointsMax = healthModel.healthPointsMax;
+    this.healthPoints = healthModel.healthPointsMax;
+  }
 }
 
 export const enrichPlayerData = (player: PlayerModel) => {

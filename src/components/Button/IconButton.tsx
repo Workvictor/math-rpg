@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Button, ButtonInner, Interface as ButtonInterface } from './Button';
-import { TIcon } from '../Icon/TIcon';
-import { Icon } from '../Icon';
+import { Button, ButtonInner } from './Button';
 
 export const StyledButton = styled(Button)`
   font-size: inherit;
@@ -16,12 +14,7 @@ export const StyledButton = styled(Button)`
   }
 `;
 
-interface IIconButton extends ButtonInterface {
-  type: TIcon;
-}
-
-export const IconButton = ({ type, ...buttonProps }: IIconButton) => (
-  <StyledButton {...buttonProps}>
-    <Icon type={type} />
-  </StyledButton>
-);
+export const IconButton: typeof Button = props => {
+  const { children, ...rest } = props;
+  return <StyledButton {...rest}>{children}</StyledButton>;
+};

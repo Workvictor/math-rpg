@@ -3,10 +3,8 @@ import styled from 'styled-components';
 
 import { ScrollArea, Padbox, FlexBetween } from '../layout';
 import { Divider } from '../layout/Divider';
-import { icons } from '../Icon/icons1';
-import { TIcon } from '../Icon/TIcon';
-import { Icon } from '../Icon';
 import { TabLabel } from '../TabLabel';
+import { iconsList } from '../Icon/iconsList';
 
 const IconWrapper = styled.span`
   font-size: 42px;
@@ -26,27 +24,24 @@ export const Credits = () => {
           >
             workvictor
           </a>
+          (victorpunko@gmail.com)
         </Padbox>
         <Divider />
         <Padbox>
           <div>иконки:</div>
           <Divider />
-          {Object.keys(icons).map(key => (
-            <>
-              <FlexBetween key={key}>
+          {iconsList.map(({ authorUrl, component: ListComponent }) => (
+            <div key={authorUrl}>
+              <FlexBetween>
                 <IconWrapper>
-                  <Icon type={key as TIcon} />
+                  <ListComponent />
                 </IconWrapper>
-                <a
-                  className={'link'}
-                  href={icons[key as TIcon].authorUrl}
-                  target={'_blank'}
-                >
+                <a className={'link'} href={authorUrl} target={'_blank'}>
                   автор
                 </a>
               </FlexBetween>
               <Divider />
-            </>
+            </div>
           ))}
         </Padbox>
       </ScrollArea>

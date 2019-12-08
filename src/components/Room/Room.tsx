@@ -1,93 +1,149 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
-import { BorderInner, Padbox, Rythm, ScrollArea } from '../layout';
-import { IRoom } from '../world/world';
-import { Player } from '../Player';
+import { Rythm, ScrollArea, UIBlockInner } from '../layout';
 import { ClickableObject } from '../ClickableObject';
-import { Divider } from '../layout/Divider';
-import { Button } from '../Button';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
 import { usePlayerContext } from '../Player/PlayerContext';
-import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { Clob } from '../world/Clob';
 import { spreadRange } from '../utils/spreadRange';
 import { randomElementFrom } from '../utils/randomElementFrom';
+import { RoomModel } from '../world/RoomModel';
+import { room } from '../world/rooms';
+import { locations } from '../world/world';
+import { Button } from '../Button';
+import { useRouteMatch } from 'react-router';
+import { IRoomRoute } from './IRoomRoute';
 
-const Rew: FC<{ to: string }> = ({ to }) => {
-  const { dispatch } = usePlayerContext();
-  const onPickSpecialLoot = () => {
-    dispatch({
-      type: 'addUnlockedLocation',
-      locationId: 1
-    });
-  };
-  return (
-    <Button to={to} onClick={onPickSpecialLoot}>
-      собрать
-    </Button>
-  );
-};
+export const Room: FC<{ room: RoomModel }> = props => {
+  const {
+    clobsCount,
+    level,
+    clobsTypes,
+    nextLocationId,
+    nextRoom
+  } = props.room;
 
-export const Room: FC<{ room: IRoom }> = ({ room, children }) => {
-  const { dispatch } = usePlayerContext();
+  const firstTimeUnlockLocation = useRef<boolean>();
+  const firstTimeUnlockRoom = useRef<boolean>();
 
-  const { objectCount, clobs, levelRange, unlocksLocation } = room;
+  const { params } = useRouteMatch<IRoomRoute>();
 
+  const { dispatch, state: player } = usePlayerContext();
+
+  const [killCount, setKillCount] = useState(0);
+  const [killCountMax, setKillCountMax] = useState(1);
   const [objects, setObjects] = useState<{ key: number; clob: Clob }[]>([]);
 
   useEffect(() => {
-    setObjects(
-      new Array(spreadRange(objectCount, 0.3)).fill(0).map((_, key) => ({
-        key,
-        clob: randomElementFrom(clobs).setLevel(
-          randomValueFromRange(levelRange)
-        )
-      }))
-    );
-  }, [clobs, levelRange, objectCount]);
+    if (!firstTimeUnlockLocation.current && nextLocationId) {
+      firstTimeUnlockLocation.current = !player.unlockedLocations.includes(
+        nextLocationId
+      );
+    }
+  }, [nextLocationId, player.unlockedLocations]);
 
-  const onMobDeath = (index: number) => () => {
+  useEffect(() => {
+    if (!firstTimeUnlockRoom.current && nextRoom) {
+      firstTimeUnlockRoom.current = !player.unlockedRoomNames.includes(
+        nextRoom
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    const arr = new Array(spreadRange(clobsCount)).fill(0).map((_, key) => ({
+      key,
+      clob: randomElementFrom(clobsTypes).setLevel(spreadRange(level))
+    }));
+    setKillCount(0);
+    setKillCountMax(arr.length);
+    setObjects(arr);
+  }, [clobsCount, clobsTypes, level]);
+
+  const clear = () => {
+    //TODO add notify before reload
+    setKillCount(0);
+    setKillCountMax(1);
+    setObjects([]);
+  };
+
+  const onMobKill = (index: number) => {
+    setKillCount(prev => prev + 1);
+  };
+
+  const onLootBoxClose = (index: number) => {
     setObjects(prev => prev.filter(item => item.key !== index));
   };
 
   useEffect(() => {
-    if (objects.length === 0 && unlocksLocation) {
-      dispatch({
-        type: 'addUnlockedLocation',
-        locationId: unlocksLocation
-      });
+    if (killCount === killCountMax) {
+      nextLocationId &&
+        dispatch({
+          type: 'addUnlockedLocation',
+          locationId: nextLocationId
+        });
+      nextRoom &&
+        dispatch({
+          type: 'unlockRoom',
+          roomName: nextRoom
+        });
     }
-  }, [dispatch, objects, unlocksLocation]);
+  }, [dispatch, killCount, killCountMax, nextLocationId, nextRoom]);
 
   return (
-    <>
-      <HitContextProvider>
-        {children}
-        <BorderInner>
-          <Player />
-          <Padbox>
-            <Divider />
-          </Padbox>
-        </BorderInner>
-        <Divider />
-
-        <ScrollArea>
-          {objects.map(i => {
-            return (
-              <Rythm key={i.key}>
-                <ClickableObject
-                  clob={i.clob}
-                  onDeath={onMobDeath(i.key)}
-                  index={i.key}
-                />
-              </Rythm>
-            );
-          })}
-          {objects.length === 0 && <div>молодец, всех победил!</div>}
-        </ScrollArea>
-        <HitArea />
-      </HitContextProvider>
-    </>
+    <HitContextProvider>
+      <ScrollArea>
+        {killCount === killCountMax && (
+          <Rythm>
+            <UIBlockInner>
+              молодец, всех победил!
+              {nextLocationId &&
+              firstTimeUnlockLocation.current &&
+              player.unlockedLocations.includes(nextLocationId) ? (
+                <div>
+                  Новая локация доступна{' '}
+                  <Button
+                    to={`/${params.gameName}/locations/${nextLocationId}`}
+                    onClick={clear}
+                  >
+                    {locations[nextLocationId].name}
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  {nextRoom &&
+                    firstTimeUnlockRoom.current &&
+                    player.unlockedRoomNames.includes(nextRoom) && (
+                      <div>
+                        Новая зона доступна{' '}
+                        <Button
+                          onClick={clear}
+                          to={`/${params.gameName}/locations/${params.locationId}/${room[nextRoom].name}`}
+                        >
+                          {room[nextRoom].label}
+                        </Button>
+                      </div>
+                    )}
+                </>
+              )}
+            </UIBlockInner>
+          </Rythm>
+        )}
+        {objects.map(i => {
+          return (
+            <Rythm key={i.key}>
+              <ClickableObject
+                clob={i.clob}
+                onKill={onMobKill}
+                onLootBoxClose={onLootBoxClose}
+                index={i.key}
+              />
+            </Rythm>
+          );
+        })}
+      </ScrollArea>
+      <HitArea />
+    </HitContextProvider>
   );
 };

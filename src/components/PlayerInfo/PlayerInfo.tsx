@@ -9,6 +9,10 @@ import { Divider } from '../layout/Divider';
 import { Button, IconButton } from '../Button';
 import { Quest } from '../Quests/Quest';
 import { UnderConstruction } from '../UnderConstruction';
+import { Skills } from '../Icon/Skills';
+import { CheckboxTree } from '../Icon/CheckboxTree';
+import { Backpack } from '../Icon/Backpack';
+import { Bookmark } from '../Icon/Bookmark';
 
 const TabButton = styled(IconButton)`
   font-size: 28px;
@@ -16,9 +20,9 @@ const TabButton = styled(IconButton)`
 
 export const PlayerInfo = () => {
   const {
-    params: { gameName, locationName }
+    params: { gameName, locationId }
   } = useRouteMatch<{
-    locationName: string;
+    locationId: string;
     gameName: string;
   }>();
 
@@ -26,38 +30,24 @@ export const PlayerInfo = () => {
 
   return (
     <>
-      <TabLabel label={'Информация'}>
-        <Button to={`/${gameName}/locations/${locationName}`}>локации</Button>
-      </TabLabel>
-
       <BorderInner>
-        <Player />
         <Padbox>
-          <Divider />
-          <TabButton
-            soundType={'navigation'}
-            navigation
-            to={root}
-            type={'skills'}
-          />
-          <TabButton
-            soundType={'navigation'}
-            navigation
-            to={`${root}/skills`}
-            type={'checkboxTree'}
-          />
+          <TabButton soundType={'navigation'} navigation to={root}>
+            <Skills />
+          </TabButton>
+          <TabButton soundType={'navigation'} navigation to={`${root}/skills`}>
+            <CheckboxTree />
+          </TabButton>
           <TabButton
             soundType={'navigation'}
             navigation
             to={`${root}/backpack`}
-            type={'backpack'}
-          />
-          <TabButton
-            soundType={'navigation'}
-            navigation
-            to={`${root}/quests`}
-            type={'bookmark'}
-          />
+          >
+            <Backpack />
+          </TabButton>
+          <TabButton soundType={'navigation'} navigation to={`${root}/quests`}>
+            <Bookmark />
+          </TabButton>
         </Padbox>
       </BorderInner>
 

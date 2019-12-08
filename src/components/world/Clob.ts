@@ -1,6 +1,6 @@
-import { TIcon } from '../Icon/TIcon';
 import { ClobPrefix } from './clobPrefix';
 import { IItem } from './items';
+import { ReactNode } from 'react';
 
 export class ClobModifiers {
   damageValue = 1;
@@ -11,6 +11,7 @@ export class ClobModifiers {
 }
 
 export class Clob extends ClobModifiers {
+  static counter = 0;
   tier?: 1 | 2 | 3;
   goldAmount = 0;
   loot: IItem[] = [];
@@ -26,7 +27,7 @@ export class Clob extends ClobModifiers {
 
   level = 1;
 
-  constructor(private name: string, public icon: TIcon) {
+  constructor(private name: string, public icon: ReactNode) {
     super();
     this.label = name;
   }

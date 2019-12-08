@@ -3,50 +3,35 @@ import styled from 'styled-components';
 
 import { Button } from '../Button';
 import { usePlayerContext } from '../Player/PlayerContext';
+import { useTimer } from '../utils/timer';
 
 const StyledButton = styled(Button)`
   width: 90px;
 `;
 
 export const HealButton: FC = () => {
-  const { state: playerState, dispatch: playerDispatch } = usePlayerContext();
+  const { state: player, dispatch: playerDispatch } = usePlayerContext();
 
-  const player = playerState;
+  const { nextHealTime } = player;
 
-  const healRefreshTimeout = 5000;
-
-  const [healRefresh, setHealRefresh] = useState(healRefreshTimeout);
+  const refreshing = nextHealTime > Date.now();
 
   const onHeal = () => {
-    if (healRefresh === 0) {
-      playerDispatch({
-        type: 'healSelf'
-      });
-      setHealRefresh(healRefreshTimeout);
-    }
+    playerDispatch({
+      type: 'healSelf'
+    });
   };
 
-  useEffect(() => {
-    if (healRefresh > 0) {
-      const tId = setTimeout(() => {
-        setHealRefresh(prev => Math.max(0, prev - 1000));
-      }, 1000);
-      return () => {
-        clearTimeout(tId);
-      };
-    }
-  }, [healRefresh]);
+  useTimer(refreshing);
 
-  const disable = player.healthPoints >= player.healthPointsMax;
+  const disable = player.healthPoints >= player.healthPointsMax || refreshing;
 
   return (
-    <StyledButton
-      soundType={'healing'}
-      disable={disable || healRefresh > 0}
-      onClick={onHeal}
-    >
+    <StyledButton soundType={'healing'} disable={disable} onClick={onHeal}>
       лечить
-      {healRefresh > 0 && <span>({Math.floor(healRefresh / 1000)})</span>}
+      {refreshing && (
+        <span>({Math.ceil((nextHealTime - Date.now()) / 1000)})</span>
+      )}
     </StyledButton>
   );
 };

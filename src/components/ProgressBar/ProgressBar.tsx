@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   box-shadow: inset 0 -1px 0px rgba(255, 255, 255, 0.11),
     inset 0 1px 1px rgba(0, 0, 0, 0.67);
   overflow: visible;
+  transition: all 150ms;
 `;
 
 export const ProgressBarInner = styled.div.attrs<{ width: number }>(props => ({
@@ -18,7 +19,7 @@ export const ProgressBarInner = styled.div.attrs<{ width: number }>(props => ({
     width: `${Math.min(Math.max(0, props.width * 100), 100)}%`
   }
 }))<{ width: number }>`
-  transition: all 150ms;
+  transition: inherit;
   background-color: ${props => props.theme.colors.grey60};
   border-radius: inherit;
   height: 100%;
@@ -32,7 +33,8 @@ export interface IProgressBar {
   className?: string;
 }
 
-export const ProgressBar: FC<IProgressBar> = ({ value, max, className }) => {
+export const ProgressBar: FC<IProgressBar> = props => {
+  const { value, max, className } = props;
   return (
     <Wrapper className={className}>
       <ProgressBarInner width={value / max} />

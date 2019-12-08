@@ -3,7 +3,7 @@ interface IObjective {
   count: number;
 }
 
-interface IQuest {
+export interface IQuest {
   id: number;
   text: string;
   name: string;
@@ -11,11 +11,12 @@ interface IQuest {
 
 export const quests: IQuest[] = [
   {
+    id: 0,
     name: 'Призыв к оружию',
     text:
-      'Очнулся наконец? Повезло тебе, почти не задело, а я вот не такой везучий. Кровь идет сильно, и похоже мне уже не долго осталось. А тебе не помешало бы раздобыть какое-нибудь оружие. Разбей дверь в [Соседней комнате] и доберись до арсенала.'
+      'Очнулся наконец? Повезло тебе, почти не задело, а я вот не такой везучий. Кровь идет сильно, и похоже мне уже не долго осталось. А тебе не помешало бы раздобыть какое-нибудь оружие. Попробуй поискать для начала в [Сарае]'
   }
-].map((i, id) => ({ ...i, id: id + 1 }));
+];
 
 export const getQuestById = (id: number): IQuest | undefined => {
   return quests.find(item => item.id === id);

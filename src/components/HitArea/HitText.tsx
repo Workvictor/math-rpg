@@ -3,10 +3,10 @@ import styled, { keyframes } from 'styled-components';
 
 const anim = keyframes`
   0% {
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1);
   }
   100% {
-    transform: translate(-50%, -200%);
+    transform: translate(-50%, -300%) scale(1.75);
   }
 `;
 
@@ -15,7 +15,7 @@ const Hit = styled.div`
   top: 50%;
   left: 50%;
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
   padding: 4px;
   width: 100%;
   height: 100%;

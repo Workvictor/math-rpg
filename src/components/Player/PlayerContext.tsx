@@ -4,12 +4,11 @@ import React, {
   useReducer,
   useContext,
   useEffect,
-  useState,
-  useCallback, useRef
+  useState
 } from 'react';
+import { Redirect } from 'react-router';
 
 import { ContextModel, reducer } from './store/reducer';
-import { Redirect } from 'react-router';
 import { useGameContext } from '../Game/GameContext';
 
 const context = new ContextModel();
@@ -36,7 +35,9 @@ export const PlayerProvider: FC<IProps> = ({ children, gameName }) => {
   }, [gameDispatch, state, player]);
 
   return gameName && player ? (
-    <PlayerContext.Provider value={{ state, dispatch }}>
+    <PlayerContext.Provider
+      value={{ state, dispatch, actions: context.actions }}
+    >
       {children}
     </PlayerContext.Provider>
   ) : (

@@ -18,12 +18,12 @@ export const useTimeout = (
 
   // a tick timer that runs callback
   useEffect(() => {
-    if (isRunning) {
+    if (isRunning && wakeUp) {
       const tid = setTimeout(() => {
         ref.current && ref.current();
         setIsRunning(false);
       }, timeout);
       return () => clearInterval(tid);
     }
-  }, [isRunning, timeout]);
+  }, [isRunning, timeout, wakeUp]);
 };

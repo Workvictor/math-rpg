@@ -8,7 +8,7 @@ import { Home } from './components/Home';
 import { NewGame } from './components/NewGame';
 import { GameProvider } from './components/Game/GameContext';
 import { AppFrame } from './components/AppFrame';
-import { Credits } from './components/Credits/Credits';
+import { Credits } from './components/Credits';
 
 export const App: React.FC = () => {
   return (

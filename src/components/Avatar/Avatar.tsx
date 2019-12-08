@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { Border } from '../layout';
-import { Icon } from '../Icon';
 import React, { FC } from 'react';
-import { TIcon } from '../Icon/TIcon';
+import { CementShoes } from '../Icon/CementShoes';
 
 interface IView {
   readonly size?: number;
@@ -29,14 +28,13 @@ export const AvatarInner = styled.div`
 `;
 
 interface IProps extends IView {
-  type: TIcon;
   className?: string;
 }
 
-export const Avatar: FC<IProps> = ({ type, size, className, children }) => {
+export const Avatar: FC<IProps> = ({ size, className, children }) => {
   return (
     <Wrapper size={size} className={className}>
-      <Icon type={type} />
+      <CementShoes />
       <AvatarInner>{children}</AvatarInner>
     </Wrapper>
   );

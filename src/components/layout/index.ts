@@ -18,3 +18,5 @@ export { Tab } from './Tab';
 export { ColumnFrame } from './ColumnFrame';
 export { ScrollArea } from './ScrollArea';
 export { TextSize } from './TextSize';
+export { IconWrapper } from './IconWrapper';
+export { ColorText } from './ColorText';

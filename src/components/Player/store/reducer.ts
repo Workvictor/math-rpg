@@ -1,9 +1,13 @@
 import { Dispatch } from 'react';
 
 import { playerAddExp, PlayerModel } from '../PlayerModel';
+import { TRoomName } from '../../world/rooms';
+import { didAttack } from '../actions';
+
+type ITargetId = number | null;
 
 type TUpdate = { type: 'update'; payload: Partial<PlayerModel> };
-type TSetTarget = { type: 'setTarget'; targetId: number | null };
+type TSetTarget = { type: 'setTarget'; targetId: ITargetId };
 type TAddExp = { type: 'addExp'; expReward: number };
 type TAddQuest = { type: 'addQuest'; questId: number };
 type TRemoveQuest = { type: 'removeQuest'; questId: number };
@@ -14,9 +18,25 @@ type THealSelf = { type: 'healSelf' };
 type TAddUnlockedLocation = { type: 'addUnlockedLocation'; locationId: number };
 type TChangeLocation = { type: 'changeLocation'; locationId: number };
 type TLoseStamina = { type: 'loseStamina'; amount: number };
+type TUnlockRoom = { type: 'unlockRoom'; roomName: TRoomName };
+type TPickGold = { type: 'pickGold'; amount: number };
 
-type TActions =
+type TVisitAreaRestore = { type: 'visitAreaRestore' };
+type TLeaveAreaRestore = { type: 'leaveAreaRestore' };
+type TRest = { type: 'rest' };
+type TRestRestore = { type: 'restRestore' };
+
+type TDidAttack = ReturnType<typeof didAttack>;
+
+export type TActions =
   | TUpdate
+  | TRest
+  | TPickGold
+  | TRestRestore
+  | TVisitAreaRestore
+  | TLeaveAreaRestore
+  | TDidAttack
+  | TUnlockRoom
   | TSetTarget
   | TAddExp
   | TAddQuest
@@ -32,6 +52,9 @@ type TActions =
 export class ContextModel {
   state: PlayerModel = new PlayerModel('');
   dispatch: Dispatch<TActions> = () => {};
+  actions = {
+    didAttack
+  };
 }
 
 export const reducer = (state: PlayerModel, action: TActions) => {
@@ -40,6 +63,48 @@ export const reducer = (state: PlayerModel, action: TActions) => {
       return {
         ...state,
         ...action.payload
+      };
+    case 'pickGold':
+      return {
+        ...state,
+        goldAmount: state.goldAmount + action.amount
+      };
+    case 'rest':
+      return {
+        ...state,
+        nextRestTime: Date.now() + state.restRefreshTimeout,
+        targetId: null,
+        outOfCombat: true
+      };
+    case 'restRestore':
+      return {
+        ...state,
+        stamina: Math.min(
+          state.staminaMax,
+          state.stamina + state.restPointsPerSecond
+        )
+      };
+    case 'didAttack':
+      return {
+        ...state,
+        nextAttackTime: Date.now() + state.attackDelay,
+        stamina: state.stamina - action.loseStaminaAmount,
+        targetId: action.targetId
+      };
+    case 'visitAreaRestore':
+      return {
+        ...state,
+        areaRestore: true
+      };
+    case 'leaveAreaRestore':
+      return {
+        ...state,
+        areaRestore: false
+      };
+    case 'unlockRoom':
+      return {
+        ...state,
+        unlockedRoomNames: [...state.unlockedRoomNames, action.roomName]
       };
     case 'loseStamina':
       return {
@@ -76,6 +141,7 @@ export const reducer = (state: PlayerModel, action: TActions) => {
     case 'takeDamage':
       return {
         ...state,
+        outOfCombat: false,
         healthPoints: Math.max(0, state.healthPoints - action.damage)
       };
     case 'healSelf':
@@ -84,7 +150,8 @@ export const reducer = (state: PlayerModel, action: TActions) => {
         healthPoints: Math.min(
           state.healthPointsMax,
           state.healthPoints + state.healValue
-        )
+        ),
+        nextHealTime: Date.now() + state.healRefreshTimeout
       };
     case 'restoreHealth':
       return {
