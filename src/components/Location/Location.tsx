@@ -8,6 +8,8 @@ import { AreaEntity } from '../AreaEntity';
 import { ILocationRoute } from './ILocationRoute';
 import { usePlayerContext } from '../Player/PlayerContext';
 import { AreaRestore } from '../AreaRestore';
+import { clobs } from '../world/clobs';
+import { GoalList } from '../GoalList/GoalList';
 
 export const Location: FC = () => {
   const { params, path } = useRouteMatch<ILocationRoute>();
@@ -36,7 +38,17 @@ export const Location: FC = () => {
                 key={room.name}
                 aside={room.icon}
                 title={room.label}
-                description={room.description}
+                description={
+                  <>
+                    <GoalList
+                      title={'Задания:'}
+                      items={room.goals.map(i => ({
+                        label: `убить [${clobs[i.clobType].label}]`,
+                        count: i.count
+                      }))}
+                    />
+                  </>
+                }
                 level={room.level}
                 locked={!player.unlockedRoomNames.includes(room.name)}
                 to={`${location.id}/${room.name}`}

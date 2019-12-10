@@ -19,7 +19,10 @@ export const GameProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, context.state);
 
   useEffect(() => {
-    window.addEventListener('storage', () => {
+    window.addEventListener('storage', (e: StorageEvent) => {
+      if (e.key === GameModel.appName && e.newValue !== null) {
+        return dispatch({ type: 'loadGame' });
+      }
       dispatch({ type: 'reloadGame' });
     });
   }, []);

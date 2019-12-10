@@ -19,6 +19,7 @@ import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { spreadRange } from '../utils/spreadRange';
 import { LootBag } from '../Icon/LootBag';
 import { Click } from '../Icon/Click';
+import { useGameContext } from '../Game/GameContext';
 
 const onDeath = keyframes`
   0% {
@@ -92,6 +93,9 @@ export const ClickableObject: FC<{
     dispatch: playerDispatch,
     actions: playerActions
   } = usePlayerContext();
+
+  const { dispatch: gameDispatch } = useGameContext();
+
   const { dispatch: hitDispatch } = useHitContext();
 
   const { clob, index, onLootBoxClose, onKill } = props;
@@ -111,6 +115,10 @@ export const ClickableObject: FC<{
 
   const onMobClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { pageX, pageY } = e;
+
+    gameDispatch({
+      type: 'addClickCount'
+    });
 
     playerDispatch(playerActions.didAttack(index, 5));
 
@@ -179,6 +187,9 @@ export const ClickableObject: FC<{
     playerDispatch({
       type: 'pickGold',
       amount: goldAmount
+    });
+    gameDispatch({
+      type: 'addClickCount'
     });
     setGoldAmount(0);
   };

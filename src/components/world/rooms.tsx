@@ -16,10 +16,26 @@ export const room: { [key in TRoomName]: RoomModel } = {
     level: 1,
     description: 'Отыщите оружие',
     clobsCount: 10,
-    clobsTypes: [clobs.woodenDoor, clobs.barrel],
+    clobsTypes: [clobs.woodenDoor, clobs.barrel, clobs.rat],
     icon: <Hideout height={'48px'} />,
     locationId: 0,
-    nextRoom: 'wheat'
+    nextRoom: 'wheat',
+    goals: [
+      {
+        clobType: 'rat',
+        count: 10
+      }
+    ],
+    objects: [
+      {
+        chance: 50,
+        clobType: 'barrel'
+      },
+      {
+        chance: 100,
+        clobType: 'rat'
+      }
+    ]
   }),
   wheat: new RoomModel({
     name: 'wheat',
@@ -31,7 +47,27 @@ export const room: { [key in TRoomName]: RoomModel } = {
     icon: <Wheat height={'48px'} />,
     locationId: 0,
     nextLocationId: 1,
-    nextRoom: 'windmill'
+    nextRoom: 'windmill',
+    goals: [
+      {
+        clobType: 'fearfulWolf',
+        count: 20
+      }
+    ],
+    objects: [
+      {
+        chance: 0.25,
+        clobType: 'barrel'
+      },
+      {
+        chance: 1,
+        clobType: 'fearfulWolf'
+      },
+      {
+        chance: 1,
+        clobType: 'rat'
+      }
+    ]
   }),
   windmill: new RoomModel({
     name: 'windmill',
@@ -42,7 +78,9 @@ export const room: { [key in TRoomName]: RoomModel } = {
     clobsCount: 28,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
     icon: <Windmill height={'48px'} />,
-    locationId: 1
+    locationId: 1,
+    goals: [],
+    objects: []
   }),
   darkForest: new RoomModel({
     name: 'darkForest',
@@ -52,6 +90,8 @@ export const room: { [key in TRoomName]: RoomModel } = {
     clobsCount: 36,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
     icon: <Forest height={'48px'} />,
-    locationId: 1
+    locationId: 1,
+    goals: [],
+    objects: []
   })
 };

@@ -14,6 +14,12 @@ import { locations } from '../world/world';
 import { Button } from '../Button';
 import { useRouteMatch } from 'react-router';
 import { IRoomRoute } from './IRoomRoute';
+import { sortBy } from '../utils/sortBy';
+import { randomValueFromRange } from '../utils/randomValueFromRange';
+import { getChanceIndex } from '../utils/getChanceIndex';
+import { fillByChance } from '../utils/fillByChance';
+import { getSumBy } from '../utils/getSumBy';
+import { clobs } from '../world/clobs';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -21,7 +27,8 @@ export const Room: FC<{ room: RoomModel }> = props => {
     level,
     clobsTypes,
     nextLocationId,
-    nextRoom
+    nextRoom,
+    objects: rObjs
   } = props.room;
 
   const firstTimeUnlockLocation = useRef<boolean>();
@@ -49,16 +56,17 @@ export const Room: FC<{ room: RoomModel }> = props => {
         nextRoom
       );
     }
-  }, []);
+  }, [nextRoom, player.unlockedRoomNames]);
 
   useEffect(() => {
-    const arr = new Array(spreadRange(clobsCount)).fill(0).map((_, key) => ({
-      key,
-      clob: randomElementFrom(clobsTypes).setLevel(spreadRange(level))
-    }));
+    const clobTypeTable = fillByChance(
+      spreadRange(clobsCount),
+      rObjs.map(({ chance, clobType: item }) => ({ chance, item }))
+    ).map((type, key) => ({ key, clob: clobs[type] }));
+
     setKillCount(0);
-    setKillCountMax(arr.length);
-    setObjects(arr);
+    setKillCountMax(clobTypeTable.length);
+    setObjects(clobTypeTable);
   }, [clobsCount, clobsTypes, level]);
 
   const clear = () => {

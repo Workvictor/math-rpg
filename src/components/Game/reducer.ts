@@ -6,6 +6,7 @@ import { readGameState } from './readGameState';
 import { UIModel } from '../UIContext/UIModel';
 
 type TReloadGame = { type: 'reloadGame' };
+type TLoadGame = { type: 'loadGame' };
 type TStartNewGame = { type: 'startNewGame'; name: string };
 type TAddClickCount = { type: 'addClickCount' };
 type TOnPlayerUpdate = { type: 'onPlayerUpdate'; player: PlayerModel };
@@ -13,6 +14,7 @@ type TOnUIModelUpdate = { type: 'onUIUpdate'; state: UIModel };
 
 export type GameActions =
   | TStartNewGame
+  | TLoadGame
   | TAddClickCount
   | TOnPlayerUpdate
   | TOnUIModelUpdate
@@ -27,6 +29,8 @@ export const reducer = (state: GameModel, action: GameActions) => {
   switch (action.type) {
     case 'reloadGame':
       return new GameModel();
+    case 'loadGame':
+      return readGameState();
     case 'startNewGame':
       return {
         ...state,

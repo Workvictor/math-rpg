@@ -29,7 +29,6 @@ export const Game: FC = () => {
             <Route path={`${path}/locations/:locationId`}>
               <BorderInner>
                 <Padbox>
-                  <div>Действия:</div>
                   <ButtonGroup>
                     <HealButton />
                     <RestButton />

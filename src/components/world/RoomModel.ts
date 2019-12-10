@@ -1,6 +1,17 @@
 import { ReactNode } from 'react';
 import { Clob } from './Clob';
 import { TRoomName } from './rooms';
+import { TClobType } from './clobs';
+
+interface IRoomObject {
+  chance: number;
+  clobType: TClobType;
+}
+
+interface IRoomGoal {
+  clobType: TClobType;
+  count: number;
+}
 
 interface IConstructor {
   name: string;
@@ -8,6 +19,8 @@ interface IConstructor {
   description?: string;
   icon: ReactNode;
   clobsTypes: Clob[];
+  objects: IRoomObject[];
+  goals: IRoomGoal[];
   clobsCount: number;
   locationId: number;
   level: number;
@@ -22,19 +35,20 @@ export class RoomModel implements IConstructor {
   label: string;
   description?: string;
   clobsTypes: Clob[];
+  objects: IRoomObject[];
+  goals: IRoomGoal[];
   clobsCount: number;
   locationId: number;
   icon: ReactNode;
   prevRoom?: TRoomName;
   nextRoom?: TRoomName;
   nextLocationId?: number;
-  prevLocationId?: number;
 
   constructor(props: IConstructor) {
     const {
       name,
       label,
-      description = '',
+      description,
       icon,
       clobsTypes,
       clobsCount,
@@ -42,9 +56,13 @@ export class RoomModel implements IConstructor {
       level,
       nextRoom,
       prevRoom,
-      nextLocationId
+      nextLocationId,
+      objects,
+      goals
     } = props;
     this.level = level;
+    this.objects = objects;
+    this.goals = goals;
     this.label = label;
     this.name = name;
     this.description = description;
@@ -56,6 +74,5 @@ export class RoomModel implements IConstructor {
     this.prevRoom = prevRoom;
     // TODO change to listName
     this.nextLocationId = nextLocationId;
-    this.prevLocationId = this.locationId - 1;
   }
 }

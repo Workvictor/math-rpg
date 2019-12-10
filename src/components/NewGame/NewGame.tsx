@@ -8,7 +8,6 @@ import { Button } from '../Button';
 import { Typography } from '../layout/Typography';
 import { Divider } from '../layout/Divider';
 import { useGameContext } from '../Game/GameContext';
-import { usePlayerContext } from '../Player/PlayerContext';
 
 const Header = styled(Border)`
   height: 250px;
