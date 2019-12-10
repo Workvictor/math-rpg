@@ -7,18 +7,13 @@ import { HitContextProvider } from '../HitArea/Context';
 import { usePlayerContext } from '../Player/PlayerContext';
 import { Clob } from '../world/Clob';
 import { spreadRange } from '../utils/spreadRange';
-import { randomElementFrom } from '../utils/randomElementFrom';
 import { RoomModel } from '../world/RoomModel';
 import { room } from '../world/rooms';
 import { locations } from '../world/world';
 import { Button } from '../Button';
 import { useRouteMatch } from 'react-router';
 import { IRoomRoute } from './IRoomRoute';
-import { sortBy } from '../utils/sortBy';
-import { randomValueFromRange } from '../utils/randomValueFromRange';
-import { getChanceIndex } from '../utils/getChanceIndex';
 import { fillByChance } from '../utils/fillByChance';
-import { getSumBy } from '../utils/getSumBy';
 import { clobs } from '../world/clobs';
 
 export const Room: FC<{ room: RoomModel }> = props => {
