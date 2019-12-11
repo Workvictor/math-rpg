@@ -15,13 +15,14 @@ interface IProps {
 }
 
 export const LocationEntity: FC<IProps> = ({ location }) => {
-  const { id, icon, name } = location;
+  const { id, icon, name, image } = location;
   const { state } = usePlayerContext();
   const locationIsTheSame = state.location === id;
   const isUnlocked = state.unlockedLocations.includes(id);
 
   return (
     <AreaEntity
+      image={image}
       key={id}
       aside={icon}
       title={name}

@@ -12,6 +12,7 @@ import { Village } from '../Icon/Village';
 import { Castle } from '../Icon/Castle';
 import { room } from './rooms';
 import { RoomModel } from './RoomModel';
+import hideout from './img/hideout.png';
 
 export enum ETowns {
   t1 = 't1',
@@ -89,6 +90,7 @@ export interface ILocation {
   icon: ReactNode;
   level?: number[];
   name: string;
+  image?: string;
   rooms: RoomModel[];
 }
 
@@ -96,6 +98,7 @@ export const locations: ILocation[] = [
   {
     id: 0,
     name: 'Убежище',
+    image: hideout,
     icon: <House height={'48px'} />,
     rooms: [room.hideout, room.wheat]
   },

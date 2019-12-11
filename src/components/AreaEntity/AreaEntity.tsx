@@ -13,7 +13,16 @@ interface IRoomEntity extends IEntityVisual {
 
 export const AreaEntity: FC<IRoomEntity> = props => {
   const { state: player } = usePlayerContext();
-  const { aside, title, description, level, locked, to, children } = props;
+  const {
+    aside,
+    title,
+    description,
+    level,
+    locked,
+    to,
+    children,
+    image
+  } = props;
   const getLevelText = () => {
     if (level && player.level - level > 4) {
       return (
@@ -48,6 +57,7 @@ export const AreaEntity: FC<IRoomEntity> = props => {
   const levelText = getLevelText();
   return (
     <EntityVisual
+      image={image}
       aside={aside}
       title={<ColorText textColor={'blueDark'}>{title}</ColorText>}
       description={description}

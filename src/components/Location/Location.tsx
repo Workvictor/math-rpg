@@ -9,7 +9,7 @@ import { ILocationRoute } from './ILocationRoute';
 import { usePlayerContext } from '../Player/PlayerContext';
 import { AreaRestore } from '../AreaRestore';
 import { clobs } from '../world/clobs';
-import { GoalList } from '../GoalList/GoalList';
+import { GoalList } from '../GoalList';
 
 export const Location: FC = () => {
   const { params, path } = useRouteMatch<ILocationRoute>();
