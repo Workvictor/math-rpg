@@ -9,6 +9,15 @@ const Aside = styled(IconWrapper)`
   flex-shrink: 0;
 `;
 
+const StyledDivider = styled(Divider)`
+  background: linear-gradient(
+    to right,
+    ${p => p.theme.colors.grey0} 20%,
+    transparent 50%,
+    transparent
+  );
+`;
+
 export interface IEntityVisualBody {
   aside: ReactNode;
   title: ReactNode;
@@ -29,7 +38,7 @@ export const EntityVisualBody: FC<IEntityVisualBody> = props => {
           {children}
         </FullWidth>
       </FlexStart>
-      <Divider />
+      <StyledDivider />
     </FullWidth>
   );
 };

@@ -56,15 +56,15 @@ export const room: { [key in TRoomName]: RoomModel } = {
     ],
     objects: [
       {
-        chance: 0.25,
+        chance: 25,
         clobType: 'barrel'
       },
       {
-        chance: 1,
+        chance: 100,
         clobType: 'fearfulWolf'
       },
       {
-        chance: 1,
+        chance: 100,
         clobType: 'rat'
       }
     ]
@@ -79,19 +79,67 @@ export const room: { [key in TRoomName]: RoomModel } = {
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
     icon: <Windmill height={'48px'} />,
     locationId: 1,
-    goals: [],
-    objects: []
+    goals: [
+      {
+        clobType: 'wolf',
+        count: 38
+      }
+    ],
+    objects: [
+      {
+        chance: 25,
+        clobType: 'barrel'
+      },
+      {
+        chance: 45,
+        clobType: 'rat'
+      },
+      {
+        chance: 100,
+        clobType: 'wolf'
+      },
+      {
+        chance: 85,
+        clobType: 'skeleton'
+      }
+    ]
   }),
   darkForest: new RoomModel({
     name: 'darkForest',
     label: 'Тёмный лес',
     description: 'Только самый смелый путник доберется сюда',
     level: 10,
-    clobsCount: 36,
+    clobsCount: 46,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
     icon: <Forest height={'48px'} />,
     locationId: 1,
-    goals: [],
-    objects: []
+    goals: [
+      {
+        clobType: 'bear',
+        count: 40
+      }
+    ],
+    objects: [
+      {
+        chance: 15,
+        clobType: 'barrel'
+      },
+      {
+        chance: 65,
+        clobType: 'rat'
+      },
+      {
+        chance: 100,
+        clobType: 'bear'
+      },
+      {
+        chance: 90,
+        clobType: 'wolf'
+      },
+      {
+        chance: 75,
+        clobType: 'skeleton'
+      }
+    ]
   })
 };
