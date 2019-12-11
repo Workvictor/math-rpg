@@ -19,6 +19,7 @@ import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { spreadRange } from '../utils/spreadRange';
 import { LootBag } from '../Icon/LootBag';
 import { Click } from '../Icon/Click';
+import { useGameContext } from '../Game/GameContext';
 
 const onDeath = keyframes`
   0% {
@@ -51,12 +52,26 @@ const shake = keyframes`
 `;
 
 const Wrapper = styled(UIBlockInner)`
+  position: relative;
   padding: 2px;
   &.animated {
     animation: 300ms ${shake};
   }
   &.onDeath {
     animation: 1000ms ${onDeath};
+  }
+  &:after {
+    position: absolute;
+    content: '';
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: inherit;
+  }
+  &.selected:after {
+    box-shadow: inset 0 0 6px rgba(218, 189, 72, 0.56);
   }
 `;
 
@@ -92,6 +107,9 @@ export const ClickableObject: FC<{
     dispatch: playerDispatch,
     actions: playerActions
   } = usePlayerContext();
+
+  const { dispatch: gameDispatch } = useGameContext();
+
   const { dispatch: hitDispatch } = useHitContext();
 
   const { clob, index, onLootBoxClose, onKill } = props;
@@ -111,6 +129,10 @@ export const ClickableObject: FC<{
 
   const onMobClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { pageX, pageY } = e;
+
+    gameDispatch({
+      type: 'addClickCount'
+    });
 
     playerDispatch(playerActions.didAttack(index, 5));
 
@@ -180,6 +202,9 @@ export const ClickableObject: FC<{
       type: 'pickGold',
       amount: goldAmount
     });
+    gameDispatch({
+      type: 'addClickCount'
+    });
     setGoldAmount(0);
   };
 
@@ -192,11 +217,19 @@ export const ClickableObject: FC<{
     healthPoints > 0 &&
     playerState.stamina >= 5;
 
+  const classes = [];
+  if (isAnimated) {
+    classes.push('animated');
+  }
+  if (playerState.targetId === index) {
+    classes.push('selected');
+  }
+
   return (
     <>
       <Wrapper
         onAnimationEnd={onAnimationEnd}
-        className={isAnimated ? 'animated' : ''}
+        className={classes.join(' ')}
         onClick={playerCanAttack ? onMobClick : undefined}
       >
         <FlexWide>
@@ -223,7 +256,7 @@ export const ClickableObject: FC<{
               <StatsWrapper>
                 <Stats>
                   <FlexStart>
-                    {Boolean(goldAmount) && (
+                    {goldAmount > 0 && (
                       <UIBlockInner onClick={onPickGold}>
                         {goldAmount} золото <Click />
                       </UIBlockInner>

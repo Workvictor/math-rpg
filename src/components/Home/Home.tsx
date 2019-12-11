@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import {
   Border,
   Rythm,
-  UIBlockInner,
   BorderInner,
   ScrollArea,
   FlexColumnWide,
@@ -15,6 +14,7 @@ import bg1 from './img/bg1.jpg';
 import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
 import { useGameContext } from '../Game/GameContext';
+import { PlayerSelectFrame } from '../PlayerSelectFrame';
 
 const Header = styled(Border)`
   height: 250px;
@@ -69,16 +69,8 @@ export const Home = () => {
         </Menu>
         <Divider />
         {players.length > 0 && <Rythm r={2}>Недавние игры:</Rythm>}
-        {players.map(({ name, level }) => (
-          <Rythm r={2} key={name}>
-            <UIBlockInner>
-              {name}
-              <div>уровень - {level}</div>
-              <Menu>
-                <StyledButton to={`/${name}`}>Продолжить</StyledButton>
-              </Menu>
-            </UIBlockInner>
-          </Rythm>
+        {players.map(player => (
+          <PlayerSelectFrame key={player.name} player={player} />
         ))}
       </ScrollArea>
     </Wrapper>

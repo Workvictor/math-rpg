@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ScrollArea, Padbox, FlexBetween } from '../layout';
 import { Divider } from '../layout/Divider';
 import { TabLabel } from '../TabLabel';
-import { iconsList } from '../Icon/iconsList';
+import { icons } from '../Icon/icons';
 
 const IconWrapper = styled.span`
   font-size: 42px;
@@ -30,7 +30,7 @@ export const Credits = () => {
         <Padbox>
           <div>иконки:</div>
           <Divider />
-          {iconsList.map(({ authorUrl, component: ListComponent }) => (
+          {icons.map(({ authorUrl, component: ListComponent }) => (
             <div key={authorUrl}>
               <FlexBetween>
                 <IconWrapper>

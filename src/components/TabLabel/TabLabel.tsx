@@ -38,7 +38,7 @@ export const TabLabel: FC<ITabLabel> = props => {
           <Route path={'/newgame'}>
             <Navbar />
           </Route>
-          <Route path={'/:gameName/:location?'}>
+          <Route path={'/:gameName'}>
             <Navbar />
           </Route>
         </Switch>

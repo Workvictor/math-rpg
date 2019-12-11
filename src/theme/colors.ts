@@ -11,6 +11,7 @@ export const colors = {
 
   blueDark: '#2a556f',
   blueDark100: '#1270a0',
+  blueDark200: '#041d2b',
 
   goldenrod: '#daa520',
 

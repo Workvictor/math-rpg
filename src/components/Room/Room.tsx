@@ -7,21 +7,22 @@ import { HitContextProvider } from '../HitArea/Context';
 import { usePlayerContext } from '../Player/PlayerContext';
 import { Clob } from '../world/Clob';
 import { spreadRange } from '../utils/spreadRange';
-import { randomElementFrom } from '../utils/randomElementFrom';
 import { RoomModel } from '../world/RoomModel';
 import { room } from '../world/rooms';
 import { locations } from '../world/world';
 import { Button } from '../Button';
 import { useRouteMatch } from 'react-router';
 import { IRoomRoute } from './IRoomRoute';
+import { fillByChance } from '../utils/fillByChance';
+import { clobs } from '../world/clobs';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
     clobsCount,
     level,
-    clobsTypes,
     nextLocationId,
-    nextRoom
+    nextRoom,
+    objects: rObjs
   } = props.room;
 
   const firstTimeUnlockLocation = useRef<boolean>();
@@ -49,17 +50,18 @@ export const Room: FC<{ room: RoomModel }> = props => {
         nextRoom
       );
     }
-  }, []);
+  }, [nextRoom, player.unlockedRoomNames]);
 
   useEffect(() => {
-    const arr = new Array(spreadRange(clobsCount)).fill(0).map((_, key) => ({
-      key,
-      clob: randomElementFrom(clobsTypes).setLevel(spreadRange(level))
-    }));
+    const clobTypeTable = fillByChance(
+      spreadRange(clobsCount),
+      rObjs.map(({ chance, clobType: item }) => ({ chance, item }))
+    ).map((type, key) => ({ key, clob: clobs[type].setLevel(level) }));
+
     setKillCount(0);
-    setKillCountMax(arr.length);
-    setObjects(arr);
-  }, [clobsCount, clobsTypes, level]);
+    setKillCountMax(clobTypeTable.length);
+    setObjects(clobTypeTable);
+  }, [clobsCount, level, rObjs]);
 
   const clear = () => {
     //TODO add notify before reload

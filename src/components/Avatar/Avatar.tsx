@@ -1,7 +1,9 @@
 import styled from 'styled-components';
-import { Border } from '../layout';
-import React, { FC } from 'react';
+import { Border, BorderElevated } from '../layout';
+import React, { FC, ReactNode } from 'react';
 import { CementShoes } from '../Icon/CementShoes';
+import { Icon } from '../Icon';
+import { TIcons } from '../Icon/icons';
 
 interface IView {
   readonly size?: number;
@@ -27,15 +29,32 @@ export const AvatarInner = styled.div`
   padding: inherit;
 `;
 
+const Level = styled(BorderElevated)`
+  display: inline-flex;
+  justify-content: center;
+  min-width: 20px;
+  padding: 2px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%);
+`;
+
 interface IProps extends IView {
   className?: string;
+  iconType: TIcons;
+  level?: ReactNode;
 }
 
-export const Avatar: FC<IProps> = ({ size, className, children }) => {
+export const Avatar: FC<IProps> = props => {
+  const { size, className, children, iconType, level } = props;
   return (
     <Wrapper size={size} className={className}>
-      <CementShoes />
-      <AvatarInner>{children}</AvatarInner>
+      <Icon type={iconType} />
+      <AvatarInner>
+        {level && <Level>{level}</Level>}
+        {children}
+      </AvatarInner>
     </Wrapper>
   );
 };

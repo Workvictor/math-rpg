@@ -104,7 +104,10 @@ export const reducer = (state: PlayerModel, action: TActions) => {
     case 'unlockRoom':
       return {
         ...state,
-        unlockedRoomNames: [...state.unlockedRoomNames, action.roomName]
+        unlockedRoomNames: [
+          ...state.unlockedRoomNames.filter(i => i !== action.roomName),
+          action.roomName
+        ]
       };
     case 'loseStamina':
       return {
@@ -114,7 +117,10 @@ export const reducer = (state: PlayerModel, action: TActions) => {
     case 'addUnlockedLocation':
       return {
         ...state,
-        unlockedLocations: [...state.unlockedLocations, action.locationId]
+        unlockedLocations: [
+          ...state.unlockedLocations.filter(i => i !== action.locationId),
+          action.locationId
+        ]
       };
     case 'changeLocation':
       return {

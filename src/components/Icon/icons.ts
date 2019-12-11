@@ -32,8 +32,10 @@ import wheat from './Wheat';
 import windmill from './Windmill';
 import wolfHead from './WolfHead';
 import woodenDoor from './WoodenDoor';
+import trashcan from './Trashcan';
 
-export const iconsList = [
+export const icons = [
+  trashcan,
   backpack,
   barbarian,
   barrel,
@@ -69,3 +71,43 @@ export const iconsList = [
   wolfHead,
   woodenDoor
 ];
+
+export const iconType = {
+  trashcan,
+  backpack,
+  barbarian,
+  barrel,
+  barrier,
+  bearHead,
+  bookmark,
+  cancel,
+  castle,
+  cementShoes,
+  checkboxTree,
+  compass,
+  crossSwords,
+  dungeonGate,
+  electric,
+  entryDoor,
+  forest,
+  granary,
+  hamburgerMenu,
+  heart,
+  hideout,
+  house,
+  info,
+  lootBag,
+  rat,
+  settings,
+  skeleton,
+  skills,
+  slalom,
+  village,
+  walk,
+  wheat,
+  windmill,
+  wolfHead,
+  woodenDoor
+};
+
+export type TIcons = keyof typeof iconType;
