@@ -20,7 +20,6 @@ export const Room: FC<{ room: RoomModel }> = props => {
   const {
     clobsCount,
     level,
-    clobsTypes,
     nextLocationId,
     nextRoom,
     objects: rObjs
@@ -57,12 +56,12 @@ export const Room: FC<{ room: RoomModel }> = props => {
     const clobTypeTable = fillByChance(
       spreadRange(clobsCount),
       rObjs.map(({ chance, clobType: item }) => ({ chance, item }))
-    ).map((type, key) => ({ key, clob: clobs[type] }));
+    ).map((type, key) => ({ key, clob: clobs[type].setLevel(level) }));
 
     setKillCount(0);
     setKillCountMax(clobTypeTable.length);
     setObjects(clobTypeTable);
-  }, [clobsCount, clobsTypes, level]);
+  }, [clobsCount, level, rObjs]);
 
   const clear = () => {
     //TODO add notify before reload

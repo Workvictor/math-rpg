@@ -31,32 +31,15 @@ const Inner = styled(BorderInner)`
 
 const Content = styled.div`
   width: 100%;
+  margin-left: 8px;
 `;
 
 const SkillsButton = styled(IconButton)`
   font-size: 24px;
 `;
 
-const StyledAvatar = styled(Avatar)`
-  margin-right: 4px;
-`;
-
-const Name = styled(BorderElevated)`
-  display: inline-flex;
-  justify-content: center;
-  padding: 2px 4px;
-`;
 const StyledProgressBar = styled(ProgressBar)`
   height: 4px;
-`;
-
-const Level = styled(Name)`
-  min-width: 20px;
-  padding: 2px;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(-50%, -50%);
 `;
 
 export const Player: FC = memo(() => {
@@ -119,13 +102,12 @@ export const Player: FC = memo(() => {
     <Wrapper>
       <Inner>
         <FlexStart>
-          <StyledAvatar>
-            <Level>{level}</Level>
+          <Avatar iconType={'cementShoes'} level={level}>
             <StyledProgressBar
               value={nextAttackTime - Date.now()}
               max={attackDelay}
             />
-          </StyledAvatar>
+          </Avatar>
           <Content>
             <Rythm>
               <Rythm>{name}</Rythm>

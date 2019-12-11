@@ -8,6 +8,7 @@ import { Button } from '../Button';
 import { Typography } from '../layout/Typography';
 import { Divider } from '../layout/Divider';
 import { useGameContext } from '../Game/GameContext';
+import { TabLabel } from '../TabLabel';
 
 const Header = styled(Border)`
   height: 250px;
@@ -57,9 +58,7 @@ export const NewGame = () => {
 
   return players.length < 3 ? (
     <>
-      <BorderInner>
-        <Header />
-      </BorderInner>
+      <TabLabel label={'Новая игра'} />
       <BorderInner>
         <Padbox>
           <Typography>
@@ -73,7 +72,11 @@ export const NewGame = () => {
           <Flex>
             <label>
               Имя:
-              <Input value={name} onChange={setName} />
+              <Input
+                regExpReplacer={/\W+|\d/}
+                value={name}
+                onChange={setName}
+              />
             </label>
             <Button disable={!nameIsValid} onClick={onSubmitGameName}>
               Далее

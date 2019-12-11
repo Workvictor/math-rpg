@@ -32,8 +32,10 @@ import wheat from './Wheat';
 import windmill from './Windmill';
 import wolfHead from './WolfHead';
 import woodenDoor from './WoodenDoor';
+import trashcan from './Trashcan';
 
-export const iconsList = [
+export const icons = [
+  trashcan,
   backpack,
   barbarian,
   barrel,
@@ -70,7 +72,8 @@ export const iconsList = [
   woodenDoor
 ];
 
-export const iconName = {
+export const iconType = {
+  trashcan,
   backpack,
   barbarian,
   barrel,
@@ -106,3 +109,5 @@ export const iconName = {
   wolfHead,
   woodenDoor
 };
+
+export type TIcons = keyof typeof iconType;

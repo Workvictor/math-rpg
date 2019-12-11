@@ -18,13 +18,13 @@ export const App: React.FC = () => {
         <ThemeProvider theme={theme}>
           <AppFrame>
             <Switch>
-              <Route exact path={'/'} component={Home} />
+              <Route exact path={'/menu'} component={Home} />
               <Route exact path={'/credits'}>
                 <Credits />
               </Route>
               <Route exact path={'/newgame'} component={NewGame} />
               <Route path={'/:gameName'} component={Game} />
-              <Redirect to={'/'} />
+              <Redirect to={'/menu'} />
             </Switch>
           </AppFrame>
         </ThemeProvider>

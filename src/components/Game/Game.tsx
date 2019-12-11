@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
 import { Quest } from '../Quests/Quest';
 import { PlayerProvider } from '../Player/PlayerContext';
-import { PlayerInfo } from '../PlayerInfo';
+import { Info } from '../Info';
 import { IGameRoute } from './IGameRoute';
 import { GameTabs } from '../GameTabs';
 import { BorderInner, Padbox } from '../layout';
@@ -49,7 +49,7 @@ export const Game: FC = () => {
           <LocationSuspense />
         </Route>
         <Route path={`${path}/info`}>
-          <PlayerInfo />
+          <Info />
         </Route>
         <Route path={`${path}/quests/:questId`}>
           <Quest />

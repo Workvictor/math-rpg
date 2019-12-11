@@ -3,7 +3,7 @@ import React, {
   createContext,
   useEffect,
   useReducer,
-  useContext
+  useContext, createRef
 } from 'react';
 
 import { GameModel } from './GameModel';

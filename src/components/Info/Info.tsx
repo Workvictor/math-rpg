@@ -2,11 +2,9 @@ import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 
-import { TabLabel } from '../TabLabel';
 import { Padbox, ScrollArea, BorderInner } from '../layout';
-import { Player } from '../Player';
 import { Divider } from '../layout/Divider';
-import { Button, IconButton } from '../Button';
+import { IconButton } from '../Button';
 import { Quest } from '../Quests/Quest';
 import { UnderConstruction } from '../UnderConstruction';
 import { Skills } from '../Icon/Skills';
@@ -18,9 +16,9 @@ const TabButton = styled(IconButton)`
   font-size: 28px;
 `;
 
-export const PlayerInfo = () => {
+export const Info = () => {
   const {
-    params: { gameName, locationId }
+    params: { gameName }
   } = useRouteMatch<{
     locationId: string;
     gameName: string;

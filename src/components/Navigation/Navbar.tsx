@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { BorderInner, Flex } from '../layout';
 import { IconButton } from '../Button';
-import { HamburgerMenu } from '../Icon/HamburgerMenu';
+import { Icon } from '../Icon';
 
 const Wrapper = styled(Flex.withComponent(BorderInner))`
   border-bottom: none;
@@ -19,7 +19,7 @@ export const Navbar = () => {
   return (
     <Wrapper as={'nav'}>
       <IconButton soundType={'navigation'} to={'/'}>
-        <HamburgerMenu />
+        <Icon type={'hamburgerMenu'} />
       </IconButton>
     </Wrapper>
   );
