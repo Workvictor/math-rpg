@@ -34,6 +34,13 @@ export const PlayerProvider: FC<IProps> = ({ children, gameName }) => {
     }
   }, [gameDispatch, state, player]);
 
+  useEffect(() => {
+    dispatch({
+      type: 'setTarget',
+      targetId: null
+    });
+  }, []);
+
   return gameName && player ? (
     <PlayerContext.Provider
       value={{ state, dispatch, actions: context.actions }}

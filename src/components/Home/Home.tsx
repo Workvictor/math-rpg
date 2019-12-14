@@ -10,15 +10,12 @@ import {
   Padbox
 } from '../layout';
 
-import bg1 from './img/bg1.jpg';
 import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
 import { useGameContext } from '../Game/GameContext';
 import { PlayerSelectFrame } from '../PlayerSelectFrame';
 
 const Header = styled(Border)`
-  height: 250px;
-  background-image: url(${bg1});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -51,10 +48,9 @@ export const Home = () => {
   return (
     <Wrapper>
       <BorderInner>
-        <Header />
-      </BorderInner>
-      <BorderInner>
-        <Padbox>Добро пожаловать!</Padbox>
+        <Header>
+          <Padbox>Добро пожаловать!</Padbox>
+        </Header>
       </BorderInner>
       <Divider />
       <ScrollArea>

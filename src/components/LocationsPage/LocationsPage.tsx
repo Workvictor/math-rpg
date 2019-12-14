@@ -5,7 +5,7 @@ import { ScrollArea } from '../layout';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import { Location } from '../Location';
 import { IGameRoute } from '../Game/IGameRoute';
-import { LocationEntity } from '../LocationEntity';
+import { LocationCard } from '../LocationCard';
 
 export const LocationsPage = () => {
   const { path, params } = useRouteMatch<IGameRoute>();
@@ -16,7 +16,7 @@ export const LocationsPage = () => {
         <Route exact path={path}>
           <ScrollArea>
             {locations.map(l => (
-              <LocationEntity key={l.id} location={l} />
+              <LocationCard key={l.id} location={l} />
             ))}
           </ScrollArea>
         </Route>

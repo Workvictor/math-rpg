@@ -1,0 +1,33 @@
+.margin {
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.body {
+  min-height: 100px;
+  padding: 6px 8px;
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: auto 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.title {
+  color: #2a556f;
+  font-size: 18px;
+  text-shadow: 0 1px 1px #000000, 0px -1px 1px #000000;
+}
+.quote {
+  color: #575757;
+  text-shadow: 0 1px 1px #000000, 0px -1px 1px #000000;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  min-height: 32px;
+  color: #414141;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent);
+}

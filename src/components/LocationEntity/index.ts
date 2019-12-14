@@ -1,1 +1,0 @@
-export { LocationEntity } from './LocationEntity';

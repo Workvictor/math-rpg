@@ -1,20 +1,17 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo } from 'react';
 import styled from 'styled-components';
 
 import { BorderElevated, BorderInner, FlexStart, Rythm } from '../layout';
 import { usePlayerContext } from './PlayerContext';
 import { Avatar } from '../Avatar';
 import { IconButton } from '../Button';
-import { Route, useHistory } from 'react-router';
+import { Route } from 'react-router';
 import { ManaBar } from '../StatusBar/ManaBar';
-import { HealthBar } from '../StatusBar/HealthBar';
 import { StaminaBar } from '../StatusBar/StaminaBar';
 import { ExperienceBar } from '../StatusBar/ExpirienceBar';
 import { useTimeout } from '../utils/useTimeout';
-import { useUIContext } from '../UIContext';
-import { locations } from '../world/world';
 import { Skills } from '../Icon/Skills';
-import { ProgressBar } from '../ProgressBar';
+import { Health } from './Health';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -38,16 +35,11 @@ const SkillsButton = styled(IconButton)`
   font-size: 24px;
 `;
 
-const StyledProgressBar = styled(ProgressBar)`
-  height: 4px;
-`;
 
 export const Player: FC = memo(() => {
   const { state, dispatch } = usePlayerContext();
 
   const {
-    healthPoints,
-    healthPointsMax,
     level,
     exp,
     expMax,
@@ -56,26 +48,7 @@ export const Player: FC = memo(() => {
     stamina,
     staminaMax,
     name,
-    location,
-    nextAttackTime,
-    attackDelay
   } = state;
-
-  const history = useHistory();
-
-  const [attackTimer, setAttackTimer] = useState(0);
-
-  useEffect(() => {
-    setAttackTimer(0);
-  }, [nextAttackTime]);
-
-  useTimeout(
-    () => {
-      setAttackTimer(Date.now());
-    },
-    nextAttackTime > Date.now(),
-    300
-  );
 
   useTimeout(() => {
     dispatch({
@@ -83,41 +56,16 @@ export const Player: FC = memo(() => {
     });
   }, stamina < staminaMax);
 
-  const { dispatch: dispatchUI, state: uiState } = useUIContext();
-
-  const onToggleShowPlayerHealthText = () => {
-    dispatchUI({
-      type: 'toggleShowPlayerHealthText'
-    });
-  };
-
-  useEffect(() => {
-    if (healthPoints <= 0) {
-      // TODO set player [Home] link
-      history.push(`/${name}/locations/${locations[location].id}`);
-    }
-  }, [healthPoints, history, location, name]);
-
   return (
     <Wrapper>
       <Inner>
         <FlexStart>
-          <Avatar iconType={'cementShoes'} level={level}>
-            <StyledProgressBar
-              value={nextAttackTime - Date.now()}
-              max={attackDelay}
-            />
-          </Avatar>
+          <Avatar iconType={'cementShoes'} level={level} />
           <Content>
             <Rythm>
               <Rythm>{name}</Rythm>
               <Rythm>
-                <HealthBar
-                  textIsVisible={uiState.showPlayerHealthText}
-                  onClick={onToggleShowPlayerHealthText}
-                  value={healthPoints}
-                  max={healthPointsMax}
-                />
+                <Health />
               </Rythm>
               <Rythm>
                 <ManaBar value={mana} max={manaMax} />

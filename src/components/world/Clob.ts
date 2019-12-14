@@ -1,6 +1,7 @@
 import { ClobPrefix } from './clobPrefix';
 import { IItem } from './items';
 import { ReactNode } from 'react';
+import { TIcons } from '../Icon/icons';
 
 export class ClobModifiers {
   damageValue = 1;
@@ -27,7 +28,7 @@ export class Clob extends ClobModifiers {
 
   level = 1;
 
-  constructor(private name: string, public icon: ReactNode) {
+  constructor(private name: string, public iconType: TIcons) {
     super();
     this.label = name;
   }

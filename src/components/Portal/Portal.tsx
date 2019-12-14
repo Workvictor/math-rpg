@@ -1,15 +1,21 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
+import styles from './styles.module.scss';
 
 export const Portal: FC = props => {
-  const node = document.createElement('div');
-  document.body.appendChild(node);
-  return ReactDOM.createPortal(<Wrapper>{props.children}</Wrapper>, node);
+  const ref = useRef<HTMLDivElement>();
+  useEffect(() => {
+    ref.current = document.createElement('div');
+    document.body.appendChild(ref.current);
+    return () => {
+      ref.current && document.body.removeChild(ref.current);
+    };
+  }, []);
+  return ref.current
+    ? ReactDOM.createPortal(
+        <div className={styles.portal}>{props.children}</div>,
+        ref.current
+      )
+    : null;
 };
