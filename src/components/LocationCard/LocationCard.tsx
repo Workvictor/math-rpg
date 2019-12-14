@@ -27,7 +27,7 @@ export const LocationCard: FC<IProps> = ({ location }) => {
       animationName={'bounce'}
       animationDelay={id * 200}
     >
-      <UiFrame>
+      <UiFrame className={styles.frame}>
         <div className={styles.body} style={styleBody}>
           <div className={styles.title}>{name}</div>
           <div className={styles.quote}>{quote}</div>
