@@ -10,7 +10,7 @@ import {
   Rythm,
   UIBlockInner
 } from '../layout';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useHitContext } from '../HitArea/Context';
 import { IconButton } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
@@ -24,6 +24,7 @@ import { classJoin } from '../utils/classJoin';
 import { Icon } from '../Icon';
 import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
+import { PlayerModel } from '../Player/PlayerModel';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -91,17 +92,7 @@ export const ClickableObjectRoot: FC<{
   index: number;
   onLootBoxClose: (index: number) => void;
   onKill: (index: number) => void;
-  playerNextAttackTime: number;
-  playerStamina: number;
-  playerTargetId: number | null;
-  playerDamage: number;
-  playerLevel: number;
-  onPlayerDidAttack: (index: number, loseStamina: number) => void;
-  playerSetTarget: (playerTargetId: number | null) => void;
-  playerAddExp: (amount: number) => void;
-  playerTakeDamage: (amount: number) => void;
-  playerPickGold: (amount: number) => void;
-  gameAddClickCount: () => void;
+  player: PlayerModel;
 }> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
   const hitRect = useRef<HTMLDivElement>();
@@ -109,25 +100,20 @@ export const ClickableObjectRoot: FC<{
   const wrapperRef = createRef<HTMLDivElement>();
   const wrapperRect = useRef<HTMLDivElement>();
 
-  const { dispatch: hitDispatch } = useHitContext();
+  // const { dispatch: hitDispatch } = useHitContext();
 
+  // const { dispatch: gameDispatch } = useGameContext();
+
+  const playerDispatch = usePlayerDispatcher();
+
+  const { clob, index, onLootBoxClose, onKill, player } = props;
   const {
-    clob,
-    index,
-    onLootBoxClose,
-    onKill,
-    onPlayerDidAttack,
-    playerTakeDamage,
-    playerPickGold,
-    playerSetTarget,
-    gameAddClickCount,
     playerNextAttackTime,
     playerStamina,
     playerTargetId,
     playerDamage,
-    playerLevel,
-    playerAddExp
-  } = props;
+    playerLevel
+  } = player;
 
   const { level, label, attackTimeout, damage, iconType } = clob;
 
@@ -174,21 +160,28 @@ export const ClickableObjectRoot: FC<{
     if (playerCanAttack) {
       onMobClick();
     } else {
-      playerSetTarget(index);
+      playerDispatch({
+        type: 'setTarget',
+        targetId: index
+      });
     }
   };
 
   const onMobClick = () => {
     if (hitRect.current) {
       const rect = hitRect.current.getBoundingClientRect();
-      hitDispatch({
-        type: 'addHit',
-        pageX: rect.left + rect.width / 2,
-        pageY: rect.top + rect.height / 2,
-        value: playerDamage
-      });
+      // hitDispatch({
+      //   type: 'addHit',
+      //   pageX: rect.left + rect.width / 2,
+      //   pageY: rect.top + rect.height / 2,
+      //   value: playerDamage
+      // });
     }
-    onPlayerDidAttack(index, 5);
+    playerDispatch({
+      type: 'didAttack',
+      targetId: index,
+      loseStaminaAmount: 5
+    });
 
     if (!isAnimated) {
       setAnimated(true);
@@ -211,8 +204,15 @@ export const ClickableObjectRoot: FC<{
       );
       setGoldAmount(spreadRange(clob.goldAmount));
       setAggressive(false);
-      playerSetTarget(null);
-      playerAddExp(clob.getExpRewardByLevel(playerLevel));
+
+      playerDispatch({
+        type: 'setTarget',
+        targetId: null
+      });
+      playerDispatch({
+        type: 'addExp',
+        expReward: clob.getExpRewardByLevel(playerLevel)
+      });
 
       return;
     }
@@ -222,7 +222,10 @@ export const ClickableObjectRoot: FC<{
 
   useTimeout(
     () => {
-      playerTakeDamage(damage);
+      playerDispatch({
+        type: 'takeDamage',
+        damage
+      });
     },
     damage > 0 && aggressive && healthPoints > 0,
     attackTimeout
@@ -237,8 +240,13 @@ export const ClickableObjectRoot: FC<{
   };
 
   const onPickGold = () => {
-    playerPickGold(goldAmount);
-    gameAddClickCount();
+    playerDispatch({
+      type: 'pickGold',
+      amount: goldAmount
+    });
+    // gameDispatch({
+    //   type: 'addClickCount'
+    // });
     setGoldIsPicked(true);
   };
 

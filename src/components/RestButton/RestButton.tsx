@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import { Button } from '../Button';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { useTimer } from '../utils/useTimer';
 import { useTimeout } from '../utils/useTimeout';
 
@@ -11,7 +11,8 @@ const StyledButton = styled(Button)`
 `;
 
 export const RestButton: FC = () => {
-  const { state: player, dispatch: playerDispatch } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const playerDispatch = usePlayerDispatcher();
 
   const { nextRestTime, targetId } = player;
 

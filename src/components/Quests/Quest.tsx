@@ -13,7 +13,7 @@ import {
 import { Typer } from '../Typer';
 import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { getQuestById, IQuest } from './quests';
 import { locations } from '../world/world';
 
@@ -32,7 +32,8 @@ export const Quest: FC = () => {
   const { params } = useRouteMatch<{
     questId: string;
   }>();
-  const { dispatch, state: player } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
   const questId = parseInt(params.questId);
 
   const onSubmitQuest = () => {

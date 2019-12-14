@@ -8,13 +8,18 @@ import React, {
 } from 'react';
 import { Redirect } from 'react-router';
 
-import { ContextModel, reducer } from './store/reducer';
+import { ContextModel, ContextDispatcherModel, reducer } from './store/reducer';
 import { useGameContext } from '../Game/GameContext';
 
 const context = new ContextModel();
+const contextDispatcher = () => {};
 const PlayerContext = createContext<ContextModel>(context);
+const PlayerDispatcherContext = createContext<ContextDispatcherModel>(
+  contextDispatcher
+);
 
 export const usePlayerContext = () => useContext(PlayerContext);
+export const usePlayerDispatcher = () => useContext(PlayerDispatcherContext);
 
 interface IProps {
   gameName: string;
@@ -42,11 +47,11 @@ export const PlayerProvider: FC<IProps> = ({ children, gameName }) => {
   }, []);
 
   return gameName && player ? (
-    <PlayerContext.Provider
-      value={{ state, dispatch, actions: context.actions }}
-    >
-      {children}
-    </PlayerContext.Provider>
+    <PlayerDispatcherContext.Provider value={dispatch}>
+      <PlayerContext.Provider value={{ state }}>
+        {children}
+      </PlayerContext.Provider>
+    </PlayerDispatcherContext.Provider>
   ) : (
     <Redirect to={'/'} />
   );

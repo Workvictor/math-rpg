@@ -5,7 +5,7 @@ import { Rythm, UIBlockInner } from '../layout';
 import { ClickableObject } from '../ClickableObject';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { Clob } from '../world/Clob';
 import { spreadRange } from '../utils/spreadRange';
 import { RoomModel } from '../world/RoomModel';
@@ -18,6 +18,7 @@ import { clobs } from '../world/clobs';
 import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { SmoothScroll } from '../SmoothScroll';
 import { sortBy } from '../utils/sortBy';
+import { ClickableObjectRoot } from '../ClickableObject/ClickableObjectRoot';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -33,7 +34,8 @@ export const Room: FC<{ room: RoomModel }> = props => {
 
   const { params } = useRouteMatch<IRoomRoute>();
 
-  const { dispatch, state: player } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
 
   const [killCount, setKillCount] = useState(0);
   const [killCountMax, setKillCountMax] = useState(1);
@@ -158,12 +160,22 @@ export const Room: FC<{ room: RoomModel }> = props => {
         {objects.map(i => {
           return i.clob ? (
             <Rythm key={i.key}>
-              <ClickableObject
-                clob={i.clob}
-                onKill={onMobKill}
-                onLootBoxClose={onLootBoxClose}
-                index={i.key}
-              />
+              {i.key === player.targetId ? (
+                <ClickableObjectRoot
+                  index={i.key}
+                  clob={i.clob}
+                  onKill={onMobKill}
+                  onLootBoxClose={onLootBoxClose}
+                  player={player}
+                />
+              ) : (
+                <ClickableObject
+                  clob={i.clob}
+                  onKill={onMobKill}
+                  onLootBoxClose={onLootBoxClose}
+                  index={i.key}
+                />
+              )}
             </Rythm>
           ) : null;
         })}

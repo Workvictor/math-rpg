@@ -2,7 +2,6 @@ import { Dispatch } from 'react';
 
 import { playerAddExp, PlayerModel } from '../PlayerModel';
 import { TRoomName } from '../../world/rooms';
-import { didAttack } from '../actions';
 
 type ITargetId = number | null;
 
@@ -26,7 +25,11 @@ type TLeaveAreaRestore = { type: 'leaveAreaRestore' };
 type TRest = { type: 'rest' };
 type TRestRestore = { type: 'restRestore' };
 
-type TDidAttack = ReturnType<typeof didAttack>;
+type TDidAttack = {
+  type: 'didAttack';
+  loseStaminaAmount: number;
+  targetId: ITargetId;
+};
 
 export type TActions =
   | TUpdate
@@ -51,11 +54,9 @@ export type TActions =
 
 export class ContextModel {
   state: PlayerModel = new PlayerModel('');
-  dispatch: Dispatch<TActions> = () => {};
-  actions = {
-    didAttack
-  };
 }
+
+export type ContextDispatcherModel = Dispatch<TActions>;
 
 export const reducer = (state: PlayerModel, action: TActions) => {
   switch (action.type) {

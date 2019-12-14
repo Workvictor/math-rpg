@@ -6,7 +6,7 @@ import { Rythm, ScrollArea } from '../layout';
 import { RoomRoute } from '../Room/RoomRoute';
 import { AreaEntity } from '../AreaEntity';
 import { ILocationRoute } from './ILocationRoute';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { AreaRestore } from '../AreaRestore';
 import { clobs } from '../world/clobs';
 import { GoalList } from '../GoalList';
@@ -14,7 +14,8 @@ import { Animator } from '../animation/Animator';
 
 export const Location: FC = () => {
   const { params, path } = useRouteMatch<ILocationRoute>();
-  const { state: player, dispatch } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
   const locationId = parseInt(params.locationId);
 
   useEffect(() => {

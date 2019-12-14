@@ -1,4 +1,12 @@
-import React, { createRef, FC, memo, useEffect, useRef, useState } from 'react';
+import React, {
+  createRef,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import styled from 'styled-components';
 
 import {
@@ -10,7 +18,7 @@ import {
   Rythm,
   UIBlockInner
 } from '../layout';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { useHitContext } from '../HitArea/Context';
 import { IconButton } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
@@ -24,6 +32,7 @@ import { classJoin } from '../utils/classJoin';
 import { Icon } from '../Icon';
 import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
+import { ClickableObjectRoot } from './ClickableObjectRoot';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -92,11 +101,8 @@ export const ClickableObject: FC<{
   onLootBoxClose: (index: number) => void;
   onKill: (index: number) => void;
 }> = props => {
-  const {
-    state: playerState,
-    dispatch: playerDispatch,
-    actions: playerActions
-  } = usePlayerContext();
+  const { state: playerState } = usePlayerContext();
+  const playerDispatch = usePlayerDispatcher();
 
   const hitRef = createRef<HTMLDivElement>();
   const hitRect = useRef<HTMLDivElement>();
@@ -173,7 +179,12 @@ export const ClickableObject: FC<{
       });
     }
 
-    playerDispatch(playerActions.didAttack(index, 5));
+    playerDispatch({
+      type: 'didAttack',
+      targetId: index,
+      loseStaminaAmount: 5
+    });
+    // playerDispatch(playerActions.didAttack(index, 5));
 
     if (!isAnimated) {
       setAnimated(true);
@@ -265,7 +276,7 @@ export const ClickableObject: FC<{
     }
   };
 
-  console.log('render', index)
+  console.log('render', index);
 
   return (
     <>
