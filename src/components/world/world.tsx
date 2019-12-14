@@ -92,6 +92,7 @@ export interface ILocation {
   name: string;
   image?: string;
   rooms: RoomModel[];
+  quote?: string;
 }
 
 export const locations: ILocation[] = [
@@ -100,13 +101,15 @@ export const locations: ILocation[] = [
     name: 'Убежище',
     image: hideout,
     icon: <House height={'48px'} />,
-    rooms: [room.hideout, room.wheat]
+    rooms: [room.hideout, room.wheat],
+    quote: 'Все начинается с выбора...'
   },
   {
     id: 1,
     name: 'Деревня',
     icon: <Village height={'48px'} />,
     rooms: [room.windmill, room.darkForest]
+    // quote: 'Знать путь и пройти его — не одно и тоже.'
   },
   {
     id: 2,

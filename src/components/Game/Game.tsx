@@ -23,7 +23,9 @@ export const Game: FC = () => {
       <Route path={`${path}`}>
         <GameTabs />
         <BorderInner>
-          <Player />
+          <Route path={`${path}/locations/:locationId`}>
+            <Player />
+          </Route>
           <Padbox>
             <Divider />
             <Route path={`${path}/locations/:locationId`}>

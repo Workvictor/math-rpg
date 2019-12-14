@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
+import { useRouteMatch } from 'react-router';
 
-import { Rythm, ScrollArea, UIBlockInner } from '../layout';
+import { Rythm, UIBlockInner } from '../layout';
 import { ClickableObject } from '../ClickableObject';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
@@ -11,10 +12,12 @@ import { RoomModel } from '../world/RoomModel';
 import { room } from '../world/rooms';
 import { locations } from '../world/world';
 import { Button } from '../Button';
-import { useRouteMatch } from 'react-router';
 import { IRoomRoute } from './IRoomRoute';
 import { fillByChance } from '../utils/fillByChance';
 import { clobs } from '../world/clobs';
+import { randomValueFromRange } from '../utils/randomValueFromRange';
+import { SmoothScroll } from '../SmoothScroll';
+import { sortBy } from '../utils/sortBy';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -37,6 +40,15 @@ export const Room: FC<{ room: RoomModel }> = props => {
   const [objects, setObjects] = useState<{ key: number; clob: Clob }[]>([]);
 
   useEffect(() => {
+    return () => {
+      dispatch({
+        type: 'setTarget',
+        targetId: null
+      });
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
     if (!firstTimeUnlockLocation.current && nextLocationId) {
       firstTimeUnlockLocation.current = !player.unlockedLocations.includes(
         nextLocationId
@@ -53,10 +65,21 @@ export const Room: FC<{ room: RoomModel }> = props => {
   }, [nextRoom, player.unlockedRoomNames]);
 
   useEffect(() => {
+    const sortedByChance = sortBy(rObjs, 'chance', -1);
+
     const clobTypeTable = fillByChance(
-      spreadRange(clobsCount),
-      rObjs.map(({ chance, clobType: item }) => ({ chance, item }))
-    ).map((type, key) => ({ key, clob: clobs[type].setLevel(level) }));
+      sortedByChance.map(i => i.clobType),
+      sortedByChance.map(i => i.chance),
+      spreadRange(clobsCount)
+    ).map((type, key) => {
+      const clob = clobs[type]?.setLevel(
+        randomValueFromRange([Math.max(1, level - 1), level + 1])
+      );
+      return {
+        key,
+        clob
+      };
+    });
 
     setKillCount(0);
     setKillCountMax(clobTypeTable.length);
@@ -95,7 +118,7 @@ export const Room: FC<{ room: RoomModel }> = props => {
 
   return (
     <HitContextProvider>
-      <ScrollArea>
+      <SmoothScroll>
         {killCount === killCountMax && (
           <Rythm>
             <UIBlockInner>
@@ -133,7 +156,7 @@ export const Room: FC<{ room: RoomModel }> = props => {
           </Rythm>
         )}
         {objects.map(i => {
-          return (
+          return i.clob ? (
             <Rythm key={i.key}>
               <ClickableObject
                 clob={i.clob}
@@ -142,9 +165,9 @@ export const Room: FC<{ room: RoomModel }> = props => {
                 index={i.key}
               />
             </Rythm>
-          );
+          ) : null;
         })}
-      </ScrollArea>
+      </SmoothScroll>
       <HitArea />
     </HitContextProvider>
   );

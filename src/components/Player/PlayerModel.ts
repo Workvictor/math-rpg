@@ -40,7 +40,7 @@ export class PlayerModel {
   goldAmount = 0;
   lastUpdate = Date.now();
   // TODO вынести логику локаций в отдельную сущность
-  location = locations[0].id;
+  location = -1;
   areaRestore = false;
   unlockedLocations = [locations[0].id];
   unlockedRoomNames = [room.hideout.name];

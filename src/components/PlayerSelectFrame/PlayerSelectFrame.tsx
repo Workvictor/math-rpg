@@ -55,7 +55,7 @@ export const PlayerSelectFrame: FC<IProps> = props => {
   const { player } = props;
   const { level, name } = player;
 
-  const { isOpen, onClose, openModal } = useModalState();
+  const { modalIsOpen, onClose, openModal } = useModalState();
 
   const { dispatch: gameDispatch } = useGameContext();
 
@@ -75,7 +75,7 @@ export const PlayerSelectFrame: FC<IProps> = props => {
       </DeleteButton>
       <StyledButton to={`/${name}`}>Продолжить</StyledButton>
       <StyledModal
-        isOpen={isOpen}
+        modalIsOpen={modalIsOpen}
         onClose={onClose}
         title={'Удаление персонажа'}
         onSubmit={onRemovePlayer}

@@ -1,0 +1,23 @@
+@value colors: '../layout/colors.module.scss';
+
+@value grey10 from colors;
+
+.title {
+  position: relative;
+  padding: 0 16px 0 0;
+  font-size: 18px;
+  color: goldenrod;
+  & .closeButton {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+  }
+}
+.body {
+  padding: 6px 8px;
+}
+.footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}

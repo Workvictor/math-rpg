@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { Border, BorderElevated } from '../layout';
 import React, { FC, ReactNode } from 'react';
-import { CementShoes } from '../Icon/CementShoes';
+import styled from 'styled-components';
+
+import { Border, BorderElevated } from '../layout';
 import { Icon } from '../Icon';
 import { TIcons } from '../Icon/icons';
 

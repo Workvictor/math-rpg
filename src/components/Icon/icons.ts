@@ -6,6 +6,7 @@ import bearHead from './BearHead';
 import bookmark from './Bookmark';
 import cancel from './Cancel';
 import castle from './Castle';
+import click from './Click';
 import cementShoes from './CementShoes';
 import checkboxTree from './CheckboxTree';
 import compass from './Compass';
@@ -33,9 +34,11 @@ import windmill from './Windmill';
 import wolfHead from './WolfHead';
 import woodenDoor from './WoodenDoor';
 import trashcan from './Trashcan';
+import fist from './Fist';
 
 export const icons = [
   trashcan,
+  fist,
   backpack,
   barbarian,
   barrel,
@@ -69,12 +72,15 @@ export const icons = [
   wheat,
   windmill,
   wolfHead,
-  woodenDoor
+  woodenDoor,
+  click
 ];
 
 export const iconType = {
   trashcan,
   backpack,
+  fist,
+  click,
   barbarian,
   barrel,
   barrier,

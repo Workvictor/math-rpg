@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Button } from '../Button';
 import { usePlayerContext } from '../Player/PlayerContext';
-import { useTimer } from '../utils/timer';
+import { useTimer } from '../utils/useTimer';
 
 const StyledButton = styled(Button)`
   width: 90px;
