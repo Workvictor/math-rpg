@@ -86,29 +86,48 @@ const ColorAvatar = styled(Avatar)`
   }
 `;
 
-export const ClickableObject: FC<{
+export const ClickableObjectRoot: FC<{
   clob: Clob;
   index: number;
   onLootBoxClose: (index: number) => void;
   onKill: (index: number) => void;
-}> = props => {
-  const {
-    state: playerState,
-    dispatch: playerDispatch,
-    actions: playerActions
-  } = usePlayerContext();
-
+  playerNextAttackTime: number;
+  playerStamina: number;
+  playerTargetId: number | null;
+  playerDamage: number;
+  playerLevel: number;
+  onPlayerDidAttack: (index: number, loseStamina: number) => void;
+  playerSetTarget: (playerTargetId: number | null) => void;
+  playerAddExp: (amount: number) => void;
+  playerTakeDamage: (amount: number) => void;
+  playerPickGold: (amount: number) => void;
+  gameAddClickCount: () => void;
+}> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
   const hitRect = useRef<HTMLDivElement>();
 
   const wrapperRef = createRef<HTMLDivElement>();
   const wrapperRect = useRef<HTMLDivElement>();
 
-  const { dispatch: gameDispatch } = useGameContext();
-
   const { dispatch: hitDispatch } = useHitContext();
 
-  const { clob, index, onLootBoxClose, onKill } = props;
+  const {
+    clob,
+    index,
+    onLootBoxClose,
+    onKill,
+    onPlayerDidAttack,
+    playerTakeDamage,
+    playerPickGold,
+    playerSetTarget,
+    gameAddClickCount,
+    playerNextAttackTime,
+    playerStamina,
+    playerTargetId,
+    playerDamage,
+    playerLevel,
+    playerAddExp
+  } = props;
 
   const { level, label, attackTimeout, damage, iconType } = clob;
 
@@ -128,9 +147,9 @@ export const ClickableObject: FC<{
   const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
   const playerCanAttack =
-    playerState.nextAttackTime <= Date.now() &&
+    playerNextAttackTime <= Date.now() &&
     healthPoints > 0 &&
-    playerState.stamina >= 5;
+    playerStamina >= 5;
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -144,8 +163,8 @@ export const ClickableObject: FC<{
         onMobClick();
       }
     },
-    playerState.targetId === index,
-    playerState.nextAttackTime - Date.now()
+    playerTargetId === index,
+    playerNextAttackTime - Date.now()
   );
 
   const onPlayerAttack = () => {
@@ -155,10 +174,7 @@ export const ClickableObject: FC<{
     if (playerCanAttack) {
       onMobClick();
     } else {
-      playerDispatch({
-        type: 'setTarget',
-        targetId: index
-      });
+      playerSetTarget(index);
     }
   };
 
@@ -169,11 +185,10 @@ export const ClickableObject: FC<{
         type: 'addHit',
         pageX: rect.left + rect.width / 2,
         pageY: rect.top + rect.height / 2,
-        value: playerState.damage
+        value: playerDamage
       });
     }
-
-    playerDispatch(playerActions.didAttack(index, 5));
+    onPlayerDidAttack(index, 5);
 
     if (!isAnimated) {
       setAnimated(true);
@@ -183,7 +198,7 @@ export const ClickableObject: FC<{
       setAggressive(true);
     }
 
-    if (healthPoints - playerState.damage <= 0) {
+    if (healthPoints - playerDamage <= 0) {
       setHealthPoints(0);
       onKill(index);
       setLoot(
@@ -196,26 +211,18 @@ export const ClickableObject: FC<{
       );
       setGoldAmount(spreadRange(clob.goldAmount));
       setAggressive(false);
-      playerDispatch({
-        type: 'setTarget',
-        targetId: null
-      });
-      playerDispatch({
-        type: 'addExp',
-        expReward: clob.getExpRewardByLevel(playerState.level)
-      });
+      playerSetTarget(null);
+      playerAddExp(clob.getExpRewardByLevel(playerLevel));
+
       return;
     }
 
-    setHealthPoints(prev => Math.max(0, prev - playerState.damage));
+    setHealthPoints(prev => Math.max(0, prev - playerDamage));
   };
 
   useTimeout(
     () => {
-      playerDispatch({
-        type: 'takeDamage',
-        damage
-      });
+      playerTakeDamage(damage);
     },
     damage > 0 && aggressive && healthPoints > 0,
     attackTimeout
@@ -230,13 +237,8 @@ export const ClickableObject: FC<{
   };
 
   const onPickGold = () => {
-    playerDispatch({
-      type: 'pickGold',
-      amount: goldAmount
-    });
-    gameDispatch({
-      type: 'addClickCount'
-    });
+    playerPickGold(goldAmount);
+    gameAddClickCount();
     setGoldIsPicked(true);
   };
 
@@ -250,7 +252,7 @@ export const ClickableObject: FC<{
   };
 
   const classes = classJoin([
-    playerState.targetId === index && 'selected',
+    playerTargetId === index && 'selected',
     healthPoints <= 0 && 'disable'
   ]);
 
@@ -265,7 +267,7 @@ export const ClickableObject: FC<{
     }
   };
 
-  console.log('render', index)
+  console.log('render root', index);
 
   return (
     <>
@@ -304,7 +306,7 @@ export const ClickableObject: FC<{
               />
             </StatsWrapper>
             <IconButton
-              disable={healthPoints <= 0 && playerState.targetId === index}
+              disable={healthPoints <= 0 && playerTargetId === index}
               onClick={onPlayerAttack}
             >
               <Icon height={'24px'} type={'crossSwords'} />
@@ -327,4 +329,4 @@ export const ClickableObject: FC<{
       </Animator>
     </>
   );
-};
+});
