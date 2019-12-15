@@ -5,14 +5,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #000;
   color: #ccccb7;
-  height: 100vh;
   display: flex;
   user-select: none;
+  overflow: hidden;
 }
 
 #root {
-  height: 100vh;
   width: 100%;
+  position: relative;
+  left: 0;
+  right: 0;
+  height: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 body * {

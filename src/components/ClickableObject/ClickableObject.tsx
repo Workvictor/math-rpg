@@ -162,10 +162,10 @@ export const ClickableObject: FC<{
         value: playerDamage
       });
     }
+
     playerDispatch({
       type: 'didAttack',
-      targetId: index,
-      loseStaminaAmount: 5
+      targetId: index
     });
 
     if (!isAnimated) {
@@ -248,8 +248,6 @@ export const ClickableObject: FC<{
       onLootBoxClose(index);
     }
   };
-
-  console.log('render root', index);
 
   return (
     <>
