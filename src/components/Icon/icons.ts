@@ -39,9 +39,15 @@ import bladeDrag from './BladeDrag';
 import sprint from './Sprint';
 import healing from './Healing';
 import healPlus from './HealPlus';
+import strong from './Strong';
+import agility from './Agility';
+import smart from './Smart';
 
 export const icons = [
   trashcan,
+  smart,
+  agility,
+  strong,
   healPlus,
   healing,
   sprint,
@@ -86,6 +92,9 @@ export const icons = [
 
 export const iconType = {
   trashcan,
+  smart,
+  agility,
+  strong,
   healPlus,
   healing,
   backpack,

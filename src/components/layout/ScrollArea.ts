@@ -7,6 +7,7 @@ export const ScrollArea = styled(BorderInner)`
   overflow-x: hidden;
   width: 100%;
   height: 100%;
+  padding: 0;
   &::-webkit-scrollbar-track {
     border-radius: 2px;
     background-color: ${props => props.theme.colors.grey10};
