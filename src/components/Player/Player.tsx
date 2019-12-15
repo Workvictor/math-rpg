@@ -1,17 +1,18 @@
 import React, { FC, memo } from 'react';
 import styled from 'styled-components';
 
-import { BorderElevated, BorderInner, FlexStart, Rythm } from '../layout';
+import { BorderElevated, BorderInner } from '../layout';
 import { usePlayerContext, usePlayerDispatcher } from './PlayerContext';
 import { Avatar } from '../Avatar';
-import { IconButton } from '../Button';
-import { Route } from 'react-router';
+import { Button } from '../Button';
 import { ManaBar } from '../StatusBar/ManaBar';
 import { StaminaBar } from '../StatusBar/StaminaBar';
 import { ExperienceBar } from '../StatusBar/ExpirienceBar';
 import { useTimeout } from '../utils/useTimeout';
-import { Skills } from '../Icon/Skills';
 import { Health } from './Health';
+import layout from '../layout/layout.module.scss';
+import { Icon } from '../Icon';
+import { StatValue } from '../StatValue';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -26,15 +27,6 @@ const Inner = styled(BorderInner)`
     0 0 0 1px ${props => props.theme.colors.grey0};
 `;
 
-const Content = styled.div`
-  width: 100%;
-  margin-left: 8px;
-`;
-
-const SkillsButton = styled(IconButton)`
-  font-size: 24px;
-`;
-
 export const Player: FC = memo(() => {
   const { state } = usePlayerContext();
   const dispatch = usePlayerDispatcher();
@@ -47,7 +39,10 @@ export const Player: FC = memo(() => {
     manaMax,
     stamina,
     staminaMax,
-    name
+    name,
+    damage,
+    attackDelay,
+    healValue
   } = state;
 
   useTimeout(() => {
@@ -59,29 +54,57 @@ export const Player: FC = memo(() => {
   return (
     <Wrapper>
       <Inner>
-        <FlexStart>
-          <Avatar iconType={'cementShoes'} level={level} />
-          <Content>
-            <Rythm>
-              <Rythm>{name}</Rythm>
-              <Rythm>
-                <Health />
-              </Rythm>
-              <Rythm>
-                <ManaBar value={mana} max={manaMax} />
-              </Rythm>
-              <Rythm>
-                <StaminaBar value={stamina} max={staminaMax} />
-              </Rythm>
-            </Rythm>
-          </Content>
-          <Route path={`/${name}/locations`}>
-            <SkillsButton to={`/${name}/info`}>
-              <Skills />
-            </SkillsButton>
-          </Route>
-        </FlexStart>
-        <ExperienceBar value={exp} max={expMax} />
+        <div className={layout.flexStart}>
+          <Avatar
+            iconType={'cementShoes'}
+            level={level}
+            className={layout.marginRight}
+          />
+          <ul className={layout.cadenceList}>
+            <li>{name}</li>
+            <li>
+              <Health />
+            </li>
+            <li>
+              <ManaBar value={mana} max={manaMax} />
+            </li>
+            <li>
+              <StaminaBar value={stamina} max={staminaMax} />
+            </li>
+          </ul>
+        </div>
+        <div className={layout.flexStart}>
+          <div className={layout.fullWidth}>
+            <ul className={layout.columnList}>
+              <li>
+                <StatValue
+                  colorType={'physical'}
+                  icon={'fist'}
+                  value={damage}
+                />
+              </li>
+              <li>
+                <StatValue
+                  colorType={'natural'}
+                  icon={'sprint'}
+                  value={Math.floor((1000 / attackDelay) * 100) / 100}
+                />
+              </li>
+              <li>
+                <StatValue
+                  colorType={'mental'}
+                  icon={'healPlus'}
+                  value={healValue}
+                />
+              </li>
+            </ul>
+            <ExperienceBar value={exp} max={expMax} />
+          </div>
+          <Button to={`/${name}/info`} className={layout.typography4}>
+            <Icon type={'skills'} className={layout.marginRight} />
+            skills
+          </Button>
+        </div>
       </Inner>
     </Wrapper>
   );

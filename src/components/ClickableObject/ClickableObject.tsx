@@ -1,7 +1,7 @@
 import React, { createRef, FC, memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { Flex, Rythm, UIBlockInner } from '../layout';
+import { UIBlockInner } from '../layout';
 import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useHitDispatcher } from '../HitArea/Context';
 import { IconButton } from '../Button';
@@ -14,6 +14,8 @@ import { classJoin } from '../utils/classJoin';
 import { Icon } from '../Icon';
 import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
+import { StatValue } from '../StatValue';
+import layout from '../layout/layout.module.scss';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -63,11 +65,6 @@ const Gold = styled(UIBlockInner)`
   background-color: #212121;
   padding: 0 6px 2px;
   box-shadow: inset 0 0 0 1px #020202, 0 5px 7px -5px rgb(162, 124, 24);
-`;
-
-const StatsWrapper = styled.div`
-  padding: 0 6px;
-  width: 100%;
 `;
 
 const ColorAvatar = styled(Avatar)`
@@ -258,7 +255,7 @@ export const ClickableObject: FC<{
       >
         <LootBox className={lootBoxClassName}>
           <Wrapper ref={wrapperRef} className={classes}>
-            <div ref={hitRef}>
+            <div ref={hitRef} className={layout.marginRight}>
               <Animator
                 animationName={'shake'}
                 play={isAnimated}
@@ -272,15 +269,30 @@ export const ClickableObject: FC<{
                 />
               </Animator>
             </div>
-            <StatsWrapper>
-              <Rythm>{label}</Rythm>
-              <Rythm>
-                <Flex>
-                  <Icon type={'fist'} /> {damage}
-                </Flex>
-              </Rythm>
-              <HealthBar value={healthPoints} max={clob.healthPoints} />
-            </StatsWrapper>
+            <ul className={layout.cadenceList}>
+              <li>{label}</li>
+              <li>
+                <ul className={layout.columnList}>
+                  <li>
+                    <StatValue
+                      colorType={'physical'}
+                      icon={'fist'}
+                      value={damage}
+                    />
+                  </li>
+                  <li>
+                    <StatValue
+                      colorType={'natural'}
+                      icon={'sprint'}
+                      value={Math.floor((1000 / attackTimeout) * 100) / 100}
+                    />
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <HealthBar value={healthPoints} max={clob.healthPoints} />
+              </li>
+            </ul>
             <IconButton
               disable={healthPoints <= 0 && playerTargetId === index}
               onClick={onPlayerAttack}

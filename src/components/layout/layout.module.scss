@@ -1,9 +1,112 @@
+.typography1,
+h1 {
+  font-size: 22px;
+}
+
+.typography2,
+h2 {
+  font-size: 20px;
+}
+
+.typography3,
+h3 {
+  font-size: 18px;
+}
+
+.typography4,
+h4 {
+  font-size: 16px;
+}
+
+.typography5,
+h5 {
+  font-size: 14px;
+}
+
+.typography6,
+h6 {
+  font-size: 12px;
+}
+
+.caption,
+caption {
+  font-size: 10px;
+}
+
 .padbox {
   padding: 6px 8px;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
+.shrinkFull {
+  composes: fullWidth;
+  flex-shrink: 1;
+}
+
 .flex {
+  composes: fullWidth;
+  display: flex;
+}
+
+.flexCenter {
+  composes: flex;
+  align-items: center;
+}
+
+.flexStart {
+  composes: flex;
+  align-items: flex-start;
+}
+
+.marginRight {
+  margin-right: 8px;
+}
+
+.marginLeft {
+  margin-left: 8px;
+}
+
+ul.cadenceList {
+  list-style-type: none;
+  width: 100%;
+  li {
+    margin-bottom: 4px;
+  }
+}
+
+ul.columnList {
+  list-style-type: none;
+  width: 100%;
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  li {
+    display: flex;
+    align-items: center;
+    &:after {
+      flex-shrink: 0;
+      content: '';
+      width: 2px;
+      height: 1em;
+      background-color: rgba(53, 53, 53, 0.6);
+      margin: 0 8px;
+    }
+    &:last-child:after {
+      content: none;
+    }
+  }
+}
+
+.cadence {
+  margin-bottom: 4px;
+}
+
+.cadence2 {
+  margin-bottom: 8px;
+}
+
+.cadence3 {
+  margin-bottom: 12px;
 }

@@ -35,10 +35,18 @@ import wolfHead from './WolfHead';
 import woodenDoor from './WoodenDoor';
 import trashcan from './Trashcan';
 import fist from './Fist';
+import bladeDrag from './BladeDrag';
+import sprint from './Sprint';
+import healing from './Healing';
+import healPlus from './HealPlus';
 
 export const icons = [
   trashcan,
+  healPlus,
+  healing,
+  sprint,
   fist,
+  bladeDrag,
   backpack,
   barbarian,
   barrel,
@@ -78,8 +86,12 @@ export const icons = [
 
 export const iconType = {
   trashcan,
+  healPlus,
+  healing,
   backpack,
   fist,
+  sprint,
+  bladeDrag,
   click,
   barbarian,
   barrel,
