@@ -16,6 +16,7 @@ import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
 import { StatValue } from '../StatValue';
 import layout from '../layout/layout.module.scss';
+import { mathAPS } from '../utils/mathAPS';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -284,7 +285,7 @@ export const ClickableObject: FC<{
                     <StatValue
                       colorType={'natural'}
                       icon={'sprint'}
-                      value={Math.floor((1000 / attackTimeout) * 100) / 100}
+                      value={mathAPS(attackTimeout)}
                     />
                   </li>
                 </ul>

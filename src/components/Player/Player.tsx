@@ -13,6 +13,7 @@ import { Health } from './Health';
 import layout from '../layout/layout.module.scss';
 import { Icon } from '../Icon';
 import { StatValue } from '../StatValue';
+import { mathAPS } from '../utils/mathAPS';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -87,7 +88,7 @@ export const Player: FC = memo(() => {
                 <StatValue
                   colorType={'natural'}
                   icon={'sprint'}
-                  value={Math.floor((1000 / attackDelay) * 100) / 100}
+                  value={mathAPS(attackDelay)}
                 />
               </li>
               <li>

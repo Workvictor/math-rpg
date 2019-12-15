@@ -11,20 +11,18 @@ import { Skills } from '../Icon/Skills';
 import { CheckboxTree } from '../Icon/CheckboxTree';
 import { Backpack } from '../Icon/Backpack';
 import { Bookmark } from '../Icon/Bookmark';
+import { IGameRoute } from '../Game/IGameRoute';
+import { Stats } from './Stats';
+import { SmoothScroll } from '../SmoothScroll';
 
 const TabButton = styled(IconButton)`
   font-size: 28px;
 `;
 
 export const Info = () => {
-  const {
-    params: { gameName }
-  } = useRouteMatch<{
-    locationId: string;
-    gameName: string;
-  }>();
+  const { params } = useRouteMatch<IGameRoute>();
 
-  const root = `/${gameName}/info`;
+  const root = `/${params.gameName}/info`;
 
   return (
     <>
@@ -51,13 +49,13 @@ export const Info = () => {
 
       <Divider />
 
-      <ScrollArea>
+      <SmoothScroll>
         <Switch>
+          <Route exact path={`${root}`}>
+            <Stats />
+          </Route>
           <Route path={`${root}/quests/:questId`}>
             <Quest />
-          </Route>
-          <Route path={`${root}`}>
-            <UnderConstruction />
           </Route>
           <Route path={`${root}/quests`}>
             <UnderConstruction />
@@ -70,7 +68,7 @@ export const Info = () => {
           </Route>
           <Redirect to={root} />
         </Switch>
-      </ScrollArea>
+      </SmoothScroll>
     </>
   );
 };

@@ -1,3 +1,15 @@
+h1,
+h2,
+h3 {
+  margin: 8px 0;
+}
+
+h4,
+h5,
+h6,
+caption {
+  margin: 4px 0;
+}
 .typography1,
 h1 {
   font-size: 22px;
@@ -33,7 +45,8 @@ caption {
   font-size: 10px;
 }
 
-.padbox {
+.padbox,
+section {
   padding: 6px 8px;
 }
 
@@ -74,6 +87,28 @@ ul.cadenceList {
   width: 100%;
   li {
     margin-bottom: 4px;
+  }
+}
+
+ul.statTable {
+  list-style-type: none;
+  width: 100%;
+  li {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    & > svg {
+      margin-right: 4px;
+    }
+    & hr {
+      margin: 0;
+      width: 100%;
+      border: 1px dashed #3d3d3d;
+      height: 1px;
+    }
   }
 }
 
