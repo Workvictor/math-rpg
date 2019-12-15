@@ -4,7 +4,7 @@ import { Howl } from 'howler';
 import { useHistory } from 'react-router';
 
 import { Border } from '../layout';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 
 const clickSound = new Howl({
   src: ['sfx/bookOpen.ogg'],
@@ -115,7 +115,7 @@ export const Button: React.FC<Interface> = props => {
   const history = useHistory();
   const classNames = [className];
 
-  const { dispatch } = useGameContext();
+  const dispatch = useGameDispatcher();
 
   const active = window.location.pathname === to && navigation;
 

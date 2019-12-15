@@ -7,13 +7,14 @@ import React, {
 } from 'react';
 
 import { ContextModel, reducer } from './reducer';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 
 const initial = new ContextModel();
 const UI = createContext<ContextModel>(initial);
 
 export const UIProvider: FC = ({ children }) => {
-  const { dispatch: gameDispatch, state: gameState } = useGameContext();
+  const gameState = useGameContext();
+  const gameDispatch = useGameDispatcher();
 
   const [state, dispatch] = useReducer(reducer, gameState.ui || initial.state);
 

@@ -19,14 +19,14 @@ import {
   UIBlockInner
 } from '../layout';
 import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
-import { useHitContext } from '../HitArea/Context';
+import { useHitContext, useHitDispatcher } from '../HitArea/Context';
 import { IconButton } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
 import { Clob } from '../world/Clob';
 import { IItem } from '../world/items';
 import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { spreadRange } from '../utils/spreadRange';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 import { Animator } from '../animation/Animator';
 import { classJoin } from '../utils/classJoin';
 import { Icon } from '../Icon';
@@ -110,9 +110,9 @@ export const ClickableObject: FC<{
   const wrapperRef = createRef<HTMLDivElement>();
   const wrapperRect = useRef<HTMLDivElement>();
 
-  const { dispatch: gameDispatch } = useGameContext();
+  const gameDispatch = useGameDispatcher();
 
-  const { dispatch: hitDispatch } = useHitContext();
+  const hitDispatch = useHitDispatcher();
 
   const { clob, index, onLootBoxClose, onKill } = props;
 
@@ -213,7 +213,8 @@ export const ClickableObject: FC<{
       });
       playerDispatch({
         type: 'addExp',
-        expReward: clob.getExpRewardByLevel(playerState.level)
+        expReward: clob.expReward,
+        targetLevel: clob.level
       });
       return;
     }

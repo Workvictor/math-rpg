@@ -56,6 +56,23 @@ export class PlayerModel {
   }
 }
 
+export const getExpRewardByLevel = (
+  expBase: number,
+  playerLevel: number,
+  targetLevel: number
+) => {
+  if (targetLevel > playerLevel - 2 && targetLevel <= playerLevel + 6) {
+    return expBase;
+  }
+  if (targetLevel <= playerLevel - 2) {
+    return Math.floor(expBase * 0.75);
+  }
+  if (targetLevel <= playerLevel - 3 && targetLevel >= playerLevel - 4) {
+    return Math.floor(expBase * 0.5);
+  }
+  return Math.floor(expBase * 0.2);
+};
+
 export const enrichPlayerData = (player: PlayerModel) => {
   return {
     ...new PlayerModel(player.name),
@@ -73,9 +90,11 @@ export const getExpByLevel = (level: number) => {
 
 export const playerAddExp = (
   player: PlayerModel,
-  addValue: number
+  expBase: number,
+  targetLevel: number
 ): PlayerModel => {
-  const exp = player.exp + addValue;
+  const exp =
+    player.exp + getExpRewardByLevel(expBase, player.level, targetLevel);
   if (exp >= player.expMax) {
     // levelUp
     const level = player.level + 1;

@@ -5,7 +5,7 @@ import { Rythm, UIBlockInner } from '../layout';
 
 import { Button, IconButton } from '../Button';
 import { Divider } from '../layout/Divider';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 import { Icon } from '../Icon';
 import { PlayerModel } from '../Player/PlayerModel';
 import { Modal, useModalState } from '../Modal';
@@ -57,7 +57,7 @@ export const PlayerSelectFrame: FC<IProps> = props => {
 
   const { modalIsOpen, onClose, openModal } = useModalState();
 
-  const { dispatch: gameDispatch } = useGameContext();
+  const gameDispatch = useGameDispatcher();
 
   const onRemovePlayer = () => {
     gameDispatch({

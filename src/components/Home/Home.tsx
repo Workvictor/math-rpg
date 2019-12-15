@@ -42,9 +42,7 @@ const Menu = styled(FlexColumnWide)`
 `;
 
 export const Home = () => {
-  const {
-    state: { players }
-  } = useGameContext();
+  const { players } = useGameContext();
   return (
     <Wrapper>
       <BorderInner>

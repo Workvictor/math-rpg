@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 
 import { Rythm, UIBlockInner } from '../layout';
@@ -95,13 +95,13 @@ export const Room: FC<{ room: RoomModel }> = props => {
     setObjects([]);
   };
 
-  const onMobKill = (index: number) => {
+  const onMobKill = useCallback((index: number) => {
     setKillCount(prev => prev + 1);
-  };
+  }, []);
 
-  const onLootBoxClose = (index: number) => {
+  const onLootBoxClose = useCallback((index: number) => {
     setObjects(prev => prev.filter(item => item.key !== index));
-  };
+  }, []);
 
   useEffect(() => {
     if (killCount === killCountMax) {
@@ -143,12 +143,12 @@ export const Room: FC<{ room: RoomModel }> = props => {
                     firstTimeUnlockRoom.current &&
                     player.unlockedRoomNames.includes(nextRoom) && (
                       <div>
-                        Новая зона доступна{' '}
+                        Новая зона [{room[nextRoom].label}] доступна{' '}
                         <Button
                           onClick={clear}
-                          to={`/${params.gameName}/locations/${params.locationId}/${room[nextRoom].name}`}
+                          to={`/${params.gameName}/locations/${params.locationId}}`}
                         >
-                          {room[nextRoom].label}
+                          выход
                         </Button>
                       </div>
                     )}
@@ -160,22 +160,20 @@ export const Room: FC<{ room: RoomModel }> = props => {
         {objects.map(i => {
           return i.clob ? (
             <Rythm key={i.key}>
-              {i.key === player.targetId ? (
-                <ClickableObjectRoot
-                  index={i.key}
-                  clob={i.clob}
-                  onKill={onMobKill}
-                  onLootBoxClose={onLootBoxClose}
-                  player={player}
-                />
-              ) : (
-                <ClickableObject
-                  clob={i.clob}
-                  onKill={onMobKill}
-                  onLootBoxClose={onLootBoxClose}
-                  index={i.key}
-                />
-              )}
+              <ClickableObjectRoot
+                index={i.key}
+                clob={i.clob}
+                onKill={onMobKill}
+                onLootBoxClose={onLootBoxClose}
+                playerTargetId={player.targetId}
+                playerCanAttack={
+                  (player.targetId === i.key || player.targetId === null) &&
+                  player.nextAttackTime <= Date.now() &&
+                  player.stamina >= 5
+                }
+                playerAttackDelay={player.attackDelay}
+                playerDamage={player.damage}
+              />
             </Rythm>
           ) : null;
         })}

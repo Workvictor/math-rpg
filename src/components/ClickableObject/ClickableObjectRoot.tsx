@@ -11,14 +11,14 @@ import {
   UIBlockInner
 } from '../layout';
 import { usePlayerDispatcher } from '../Player/PlayerContext';
-import { useHitContext } from '../HitArea/Context';
+import { useHitContext, useHitDispatcher } from '../HitArea/Context';
 import { IconButton } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
 import { Clob } from '../world/Clob';
 import { IItem } from '../world/items';
 import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { spreadRange } from '../utils/spreadRange';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 import { Animator } from '../animation/Animator';
 import { classJoin } from '../utils/classJoin';
 import { Icon } from '../Icon';
@@ -92,7 +92,11 @@ export const ClickableObjectRoot: FC<{
   index: number;
   onLootBoxClose: (index: number) => void;
   onKill: (index: number) => void;
-  player: PlayerModel;
+
+  playerTargetId: number | null;
+  playerDamage: number;
+  playerCanAttack: boolean;
+  playerAttackDelay: number;
 }> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
   const hitRect = useRef<HTMLDivElement>();
@@ -100,20 +104,23 @@ export const ClickableObjectRoot: FC<{
   const wrapperRef = createRef<HTMLDivElement>();
   const wrapperRect = useRef<HTMLDivElement>();
 
-  // const { dispatch: hitDispatch } = useHitContext();
+  const hitDispatch = useHitDispatcher();
 
-  // const { dispatch: gameDispatch } = useGameContext();
+  const gameDispatch = useGameDispatcher();
 
   const playerDispatch = usePlayerDispatcher();
 
-  const { clob, index, onLootBoxClose, onKill, player } = props;
   const {
-    playerNextAttackTime,
-    playerStamina,
+    clob,
+    index,
+    onLootBoxClose,
+    onKill,
+
     playerTargetId,
     playerDamage,
-    playerLevel
-  } = player;
+    playerCanAttack,
+    playerAttackDelay
+  } = props;
 
   const { level, label, attackTimeout, damage, iconType } = clob;
 
@@ -132,11 +139,6 @@ export const ClickableObjectRoot: FC<{
 
   const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
-  const playerCanAttack =
-    playerNextAttackTime <= Date.now() &&
-    healthPoints > 0 &&
-    playerStamina >= 5;
-
   useEffect(() => {
     if (wrapperRef.current) {
       wrapperRect.current = wrapperRef.current;
@@ -145,12 +147,10 @@ export const ClickableObjectRoot: FC<{
 
   useTimeout(
     () => {
-      if (playerCanAttack) {
-        onMobClick();
-      }
+      onMobClick();
     },
-    playerTargetId === index,
-    playerNextAttackTime - Date.now()
+    playerTargetId === index && playerCanAttack,
+    playerAttackDelay
   );
 
   const onPlayerAttack = () => {
@@ -170,12 +170,12 @@ export const ClickableObjectRoot: FC<{
   const onMobClick = () => {
     if (hitRect.current) {
       const rect = hitRect.current.getBoundingClientRect();
-      // hitDispatch({
-      //   type: 'addHit',
-      //   pageX: rect.left + rect.width / 2,
-      //   pageY: rect.top + rect.height / 2,
-      //   value: playerDamage
-      // });
+      hitDispatch({
+        type: 'addHit',
+        pageX: rect.left + rect.width / 2,
+        pageY: rect.top + rect.height / 2,
+        value: playerDamage
+      });
     }
     playerDispatch({
       type: 'didAttack',
@@ -211,7 +211,8 @@ export const ClickableObjectRoot: FC<{
       });
       playerDispatch({
         type: 'addExp',
-        expReward: clob.getExpRewardByLevel(playerLevel)
+        expReward: clob.expReward,
+        targetLevel: clob.level
       });
 
       return;
@@ -244,9 +245,9 @@ export const ClickableObjectRoot: FC<{
       type: 'pickGold',
       amount: goldAmount
     });
-    // gameDispatch({
-    //   type: 'addClickCount'
-    // });
+    gameDispatch({
+      type: 'addClickCount'
+    });
     setGoldIsPicked(true);
   };
 
@@ -307,11 +308,7 @@ export const ClickableObjectRoot: FC<{
                   <Icon type={'fist'} /> {damage}
                 </Flex>
               </Rythm>
-              <HealthBar
-                textIsVisible={true}
-                value={healthPoints}
-                max={clob.healthPoints}
-              />
+              <HealthBar value={healthPoints} max={clob.healthPoints} />
             </StatsWrapper>
             <IconButton
               disable={healthPoints <= 0 && playerTargetId === index}

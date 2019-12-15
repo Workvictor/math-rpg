@@ -7,7 +7,7 @@ type ITargetId = number | null;
 
 type TUpdate = { type: 'update'; payload: Partial<PlayerModel> };
 type TSetTarget = { type: 'setTarget'; targetId: ITargetId };
-type TAddExp = { type: 'addExp'; expReward: number };
+type TAddExp = { type: 'addExp'; expReward: number; targetLevel: number };
 type TAddQuest = { type: 'addQuest'; questId: number };
 type TRemoveQuest = { type: 'removeQuest'; questId: number };
 type TTakeDamage = { type: 'takeDamage'; damage: number };
@@ -129,7 +129,7 @@ export const reducer = (state: PlayerModel, action: TActions) => {
         location: action.locationId
       };
     case 'addExp':
-      return playerAddExp(state, action.expReward);
+      return playerAddExp(state, action.expReward, action.targetLevel);
     case 'setTarget':
       return {
         ...state,

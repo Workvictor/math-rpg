@@ -7,7 +7,7 @@ import { Input } from '../Input';
 import { Button } from '../Button';
 import { Typography } from '../layout/Typography';
 import { Divider } from '../layout/Divider';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 import { TabLabel } from '../TabLabel';
 
 const Header = styled(Border)`
@@ -27,10 +27,9 @@ export const NewGame = () => {
 
   const [nameIsValid, setNameIsValid] = React.useState(false);
 
-  const {
-    state: { players },
-    dispatch
-  } = useGameContext();
+  const { players } = useGameContext();
+
+  const dispatch = useGameDispatcher();
 
   const history = useHistory();
 
