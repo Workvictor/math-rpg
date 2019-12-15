@@ -33,6 +33,7 @@ export class PlayerModel {
   nextAttackTime = Date.now();
   targetId: number | null = null;
   restPointsPerSecond = 3;
+  staminaCostPerAttack = 5;
   restRefreshTimeout = 15000;
   nextRestTime = Date.now();
   questbook: number[] = [];

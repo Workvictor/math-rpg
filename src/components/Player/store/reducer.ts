@@ -27,7 +27,6 @@ type TRestRestore = { type: 'restRestore' };
 
 type TDidAttack = {
   type: 'didAttack';
-  loseStaminaAmount: number;
   targetId: ITargetId;
 };
 
@@ -89,7 +88,7 @@ export const reducer = (state: PlayerModel, action: TActions) => {
       return {
         ...state,
         nextAttackTime: Date.now() + state.attackDelay,
-        stamina: state.stamina - action.loseStaminaAmount,
+        stamina: state.stamina - state.staminaCostPerAttack,
         targetId: action.targetId
       };
     case 'visitAreaRestore':
