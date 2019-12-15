@@ -2,7 +2,6 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 
 import { Rythm, UIBlockInner } from '../layout';
-import { ClickableObject } from '../ClickableObject';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
 import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
@@ -18,7 +17,7 @@ import { clobs } from '../world/clobs';
 import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { SmoothScroll } from '../SmoothScroll';
 import { sortBy } from '../utils/sortBy';
-import { ClickableObjectRoot } from '../ClickableObject/ClickableObjectRoot';
+import { ClickableObject } from '../ClickableObject';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -158,9 +157,9 @@ export const Room: FC<{ room: RoomModel }> = props => {
           </Rythm>
         )}
         {objects.map(i => {
-          return i.clob ? (
+          return (
             <Rythm key={i.key}>
-              <ClickableObjectRoot
+              <ClickableObject
                 index={i.key}
                 clob={i.clob}
                 onKill={onMobKill}
@@ -175,7 +174,7 @@ export const Room: FC<{ room: RoomModel }> = props => {
                 playerDamage={player.damage}
               />
             </Rythm>
-          ) : null;
+          );
         })}
       </SmoothScroll>
       <HitArea />

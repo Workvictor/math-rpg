@@ -1,13 +1,5 @@
-import React from 'react';
-
 import { Clob } from './Clob';
 import { clobPrefix } from './clobPrefix';
-import { WoodenDoor } from '../Icon/WoodenDoor';
-import { WolfHead } from '../Icon/WolfHead';
-import { BearHead } from '../Icon/BearHead';
-import { Rat } from '../Icon/Rat';
-import { Skeleton } from '../Icon/Skeleton';
-import { Barrel } from '../Icon/Barrel';
 
 export type TClobType =
   | 'woodenDoor'

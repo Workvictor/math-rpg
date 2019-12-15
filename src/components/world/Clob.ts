@@ -1,6 +1,5 @@
 import { ClobPrefix } from './clobPrefix';
 import { IItem } from './items';
-import { ReactNode } from 'react';
 import { TIcons } from '../Icon/icons';
 
 export class ClobModifiers {
@@ -100,16 +99,4 @@ export class Clob extends ClobModifiers {
         this.expValue
     );
   }
-  getExpRewardByLevel = (playerLevel: number) => {
-    if (this.level > playerLevel - 2 && this.level <= playerLevel + 6) {
-      return this.expReward;
-    }
-    if (this.level <= playerLevel - 2) {
-      return Math.floor(this.expReward * 0.75);
-    }
-    if (this.level <= playerLevel - 3 && this.level >= playerLevel - 4) {
-      return Math.floor(this.expReward * 0.5);
-    }
-    return Math.floor(this.expReward * 0.2);
-  };
 }

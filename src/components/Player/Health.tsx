@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import { usePlayerContext } from './PlayerContext';
 import { useHistory } from 'react-router';

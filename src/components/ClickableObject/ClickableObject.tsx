@@ -1,38 +1,19 @@
-import React, {
-  createRef,
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { createRef, FC, memo, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import {
-  Border,
-  Flex,
-  FlexBetween,
-  FlexStart,
-  FlexWide,
-  Rythm,
-  UIBlockInner
-} from '../layout';
-import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
-import { useHitContext, useHitDispatcher } from '../HitArea/Context';
+import { Flex, Rythm, UIBlockInner } from '../layout';
+import { usePlayerDispatcher } from '../Player/PlayerContext';
+import { useHitDispatcher } from '../HitArea/Context';
 import { IconButton } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
 import { Clob } from '../world/Clob';
-import { IItem } from '../world/items';
-import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { spreadRange } from '../utils/spreadRange';
-import { useGameContext, useGameDispatcher } from '../Game/GameContext';
+import { useGameDispatcher } from '../Game/GameContext';
 import { Animator } from '../animation/Animator';
 import { classJoin } from '../utils/classJoin';
 import { Icon } from '../Icon';
 import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
-import { ClickableObjectRoot } from './ClickableObjectRoot';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -100,21 +81,35 @@ export const ClickableObject: FC<{
   index: number;
   onLootBoxClose: (index: number) => void;
   onKill: (index: number) => void;
-}> = props => {
-  const { state: playerState } = usePlayerContext();
-  const playerDispatch = usePlayerDispatcher();
 
+  playerTargetId: number | null;
+  playerDamage: number;
+  playerCanAttack: boolean;
+  playerAttackDelay: number;
+}> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
   const hitRect = useRef<HTMLDivElement>();
 
   const wrapperRef = createRef<HTMLDivElement>();
   const wrapperRect = useRef<HTMLDivElement>();
 
-  const gameDispatch = useGameDispatcher();
-
   const hitDispatch = useHitDispatcher();
 
-  const { clob, index, onLootBoxClose, onKill } = props;
+  const gameDispatch = useGameDispatcher();
+
+  const playerDispatch = usePlayerDispatcher();
+
+  const {
+    clob,
+    index,
+    onLootBoxClose,
+    onKill,
+
+    playerTargetId,
+    playerDamage,
+    playerCanAttack,
+    playerAttackDelay
+  } = props;
 
   const { level, label, attackTimeout, damage, iconType } = clob;
 
@@ -123,20 +118,11 @@ export const ClickableObject: FC<{
 
   const [closeRequest, setCloseRequest] = useState(false);
 
-  const [loot, setLoot] = useState<{ item: IItem; key: number }[]>([]);
-
   const [isAnimated, setAnimated] = useState(false);
 
   const [aggressive, setAggressive] = useState(false);
 
-  const [hpMax] = useState(clob.healthPoints);
-
   const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
-
-  const playerCanAttack =
-    playerState.nextAttackTime <= Date.now() &&
-    healthPoints > 0 &&
-    playerState.stamina >= 5;
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -146,12 +132,10 @@ export const ClickableObject: FC<{
 
   useTimeout(
     () => {
-      if (playerCanAttack) {
-        onMobClick();
-      }
+      onMobClick();
     },
-    playerState.targetId === index,
-    playerState.nextAttackTime - Date.now()
+    playerTargetId === index && playerCanAttack,
+    playerAttackDelay
   );
 
   const onPlayerAttack = () => {
@@ -175,16 +159,14 @@ export const ClickableObject: FC<{
         type: 'addHit',
         pageX: rect.left + rect.width / 2,
         pageY: rect.top + rect.height / 2,
-        value: playerState.damage
+        value: playerDamage
       });
     }
-
     playerDispatch({
       type: 'didAttack',
       targetId: index,
       loseStaminaAmount: 5
     });
-    // playerDispatch(playerActions.didAttack(index, 5));
 
     if (!isAnimated) {
       setAnimated(true);
@@ -194,19 +176,12 @@ export const ClickableObject: FC<{
       setAggressive(true);
     }
 
-    if (healthPoints - playerState.damage <= 0) {
+    if (healthPoints - playerDamage <= 0) {
       setHealthPoints(0);
       onKill(index);
-      setLoot(
-        clob.loot
-          .filter(
-            (_, index) =>
-              randomValueFromRange([0, 100]) < clob.lootChance[index] * 100
-          )
-          .map((item, key) => ({ item, key }))
-      );
       setGoldAmount(spreadRange(clob.goldAmount));
       setAggressive(false);
+
       playerDispatch({
         type: 'setTarget',
         targetId: null
@@ -216,10 +191,11 @@ export const ClickableObject: FC<{
         expReward: clob.expReward,
         targetLevel: clob.level
       });
+
       return;
     }
 
-    setHealthPoints(prev => Math.max(0, prev - playerState.damage));
+    setHealthPoints(prev => Math.max(0, prev - playerDamage));
   };
 
   useTimeout(
@@ -257,12 +233,8 @@ export const ClickableObject: FC<{
     onCloseLootBox();
   };
 
-  const onPickItem = (key: number) => () => {
-    setLoot(prev => prev.filter(i => i.key !== key));
-  };
-
   const classes = classJoin([
-    playerState.targetId === index && 'selected',
+    playerTargetId === index && 'selected',
     healthPoints <= 0 && 'disable'
   ]);
 
@@ -277,7 +249,7 @@ export const ClickableObject: FC<{
     }
   };
 
-  console.log('render', index);
+  console.log('render root', index);
 
   return (
     <>
@@ -309,14 +281,10 @@ export const ClickableObject: FC<{
                   <Icon type={'fist'} /> {damage}
                 </Flex>
               </Rythm>
-              <HealthBar
-                textIsVisible={true}
-                value={healthPoints}
-                max={clob.healthPoints}
-              />
+              <HealthBar value={healthPoints} max={clob.healthPoints} />
             </StatsWrapper>
             <IconButton
-              disable={healthPoints <= 0 && playerState.targetId === index}
+              disable={healthPoints <= 0 && playerTargetId === index}
               onClick={onPlayerAttack}
             >
               <Icon height={'24px'} type={'crossSwords'} />
@@ -339,4 +307,4 @@ export const ClickableObject: FC<{
       </Animator>
     </>
   );
-};
+});

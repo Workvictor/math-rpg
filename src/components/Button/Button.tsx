@@ -4,7 +4,7 @@ import { Howl } from 'howler';
 import { useHistory } from 'react-router';
 
 import { Border } from '../layout';
-import { useGameContext, useGameDispatcher } from '../Game/GameContext';
+import { useGameDispatcher } from '../Game/GameContext';
 
 const clickSound = new Howl({
   src: ['sfx/bookOpen.ogg'],

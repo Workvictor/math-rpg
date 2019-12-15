@@ -4,7 +4,8 @@ import React, {
   useReducer,
   useContext,
   useEffect,
-  useState, memo
+  useState,
+  memo
 } from 'react';
 import { Redirect } from 'react-router';
 
