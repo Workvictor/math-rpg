@@ -4,24 +4,31 @@ import React, {
   useReducer,
   useContext,
   useEffect,
-  useState
+  useState,
+  memo
 } from 'react';
 import { Redirect } from 'react-router';
 
-import { ContextModel, reducer } from './store/reducer';
-import { useGameContext } from '../Game/GameContext';
+import { ContextModel, ContextDispatcherModel, reducer } from './store/reducer';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 
 const context = new ContextModel();
+const contextDispatcher = () => {};
 const PlayerContext = createContext<ContextModel>(context);
+const PlayerDispatcherContext = createContext<ContextDispatcherModel>(
+  contextDispatcher
+);
 
 export const usePlayerContext = () => useContext(PlayerContext);
+export const usePlayerDispatcher = () => useContext(PlayerDispatcherContext);
 
 interface IProps {
   gameName: string;
 }
 
-export const PlayerProvider: FC<IProps> = ({ children, gameName }) => {
-  const { dispatch: gameDispatch, state: gameState } = useGameContext();
+export const PlayerProvider: FC<IProps> = memo(({ children, gameName }) => {
+  const gameState = useGameContext();
+  const gameDispatch = useGameDispatcher();
   const [player] = useState(gameState.players.find(i => i.name === gameName));
   const [state, dispatch] = useReducer(reducer, player || context.state);
 
@@ -42,12 +49,12 @@ export const PlayerProvider: FC<IProps> = ({ children, gameName }) => {
   }, []);
 
   return gameName && player ? (
-    <PlayerContext.Provider
-      value={{ state, dispatch, actions: context.actions }}
-    >
-      {children}
-    </PlayerContext.Provider>
+    <PlayerDispatcherContext.Provider value={dispatch}>
+      <PlayerContext.Provider value={{ state }}>
+        {children}
+      </PlayerContext.Provider>
+    </PlayerDispatcherContext.Provider>
   ) : (
     <Redirect to={'/'} />
   );
-};
+});

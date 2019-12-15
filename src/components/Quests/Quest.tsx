@@ -2,26 +2,14 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import { Redirect, useRouteMatch } from 'react-router';
 
-import {
-  Padbox,
-  BorderInner,
-  FlexWide,
-  ScrollArea,
-  FlexColumnWide
-} from '../layout';
+import { Padbox, BorderInner, FlexWide, ScrollArea } from '../layout';
 
 import { Typer } from '../Typer';
 import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
-import { usePlayerContext } from '../Player/PlayerContext';
-import { getQuestById, IQuest } from './quests';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
+import { getQuestById } from './quests';
 import { locations } from '../world/world';
-
-const Wrapper = styled(FlexColumnWide)`
-  align-items: stretch;
-  justify-content: space-between;
-  height: 100%;
-`;
 
 const ControlsWrapper = styled(FlexWide)`
   flex-shrink: 0;
@@ -32,7 +20,8 @@ export const Quest: FC = () => {
   const { params } = useRouteMatch<{
     questId: string;
   }>();
-  const { dispatch, state: player } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
   const questId = parseInt(params.questId);
 
   const onSubmitQuest = () => {

@@ -2,13 +2,12 @@ import { Dispatch } from 'react';
 
 import { playerAddExp, PlayerModel } from '../PlayerModel';
 import { TRoomName } from '../../world/rooms';
-import { didAttack } from '../actions';
 
 type ITargetId = number | null;
 
 type TUpdate = { type: 'update'; payload: Partial<PlayerModel> };
 type TSetTarget = { type: 'setTarget'; targetId: ITargetId };
-type TAddExp = { type: 'addExp'; expReward: number };
+type TAddExp = { type: 'addExp'; expReward: number; targetLevel: number };
 type TAddQuest = { type: 'addQuest'; questId: number };
 type TRemoveQuest = { type: 'removeQuest'; questId: number };
 type TTakeDamage = { type: 'takeDamage'; damage: number };
@@ -26,7 +25,11 @@ type TLeaveAreaRestore = { type: 'leaveAreaRestore' };
 type TRest = { type: 'rest' };
 type TRestRestore = { type: 'restRestore' };
 
-type TDidAttack = ReturnType<typeof didAttack>;
+type TDidAttack = {
+  type: 'didAttack';
+  loseStaminaAmount: number;
+  targetId: ITargetId;
+};
 
 export type TActions =
   | TUpdate
@@ -51,11 +54,9 @@ export type TActions =
 
 export class ContextModel {
   state: PlayerModel = new PlayerModel('');
-  dispatch: Dispatch<TActions> = () => {};
-  actions = {
-    didAttack
-  };
 }
+
+export type ContextDispatcherModel = Dispatch<TActions>;
 
 export const reducer = (state: PlayerModel, action: TActions) => {
   switch (action.type) {
@@ -128,7 +129,7 @@ export const reducer = (state: PlayerModel, action: TActions) => {
         location: action.locationId
       };
     case 'addExp':
-      return playerAddExp(state, action.expReward);
+      return playerAddExp(state, action.expReward, action.targetLevel);
     case 'setTarget':
       return {
         ...state,

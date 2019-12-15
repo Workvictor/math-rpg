@@ -1,5 +1,3 @@
-import { Dispatch } from 'react';
-
 import { GameModel } from './GameModel';
 import { PlayerModel } from '../Player/PlayerModel';
 import { readGameState } from './readGameState';
@@ -21,11 +19,6 @@ export type GameActions =
   | TOnPlayerUpdate
   | TOnUIModelUpdate
   | TReloadGame;
-
-export class GameContextModel {
-  state: GameModel = readGameState();
-  dispatch: Dispatch<GameActions> = () => {};
-}
 
 export const reducer = (state: GameModel, action: GameActions) => {
   switch (action.type) {

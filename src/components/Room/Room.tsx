@@ -1,11 +1,10 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 
 import { Rythm, UIBlockInner } from '../layout';
-import { ClickableObject } from '../ClickableObject';
 import { HitArea } from '../HitArea';
 import { HitContextProvider } from '../HitArea/Context';
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { Clob } from '../world/Clob';
 import { spreadRange } from '../utils/spreadRange';
 import { RoomModel } from '../world/RoomModel';
@@ -18,6 +17,7 @@ import { clobs } from '../world/clobs';
 import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { SmoothScroll } from '../SmoothScroll';
 import { sortBy } from '../utils/sortBy';
+import { ClickableObject } from '../ClickableObject';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -33,7 +33,8 @@ export const Room: FC<{ room: RoomModel }> = props => {
 
   const { params } = useRouteMatch<IRoomRoute>();
 
-  const { dispatch, state: player } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
 
   const [killCount, setKillCount] = useState(0);
   const [killCountMax, setKillCountMax] = useState(1);
@@ -93,13 +94,13 @@ export const Room: FC<{ room: RoomModel }> = props => {
     setObjects([]);
   };
 
-  const onMobKill = (index: number) => {
+  const onMobKill = useCallback((index: number) => {
     setKillCount(prev => prev + 1);
-  };
+  }, []);
 
-  const onLootBoxClose = (index: number) => {
+  const onLootBoxClose = useCallback((index: number) => {
     setObjects(prev => prev.filter(item => item.key !== index));
-  };
+  }, []);
 
   useEffect(() => {
     if (killCount === killCountMax) {
@@ -141,12 +142,12 @@ export const Room: FC<{ room: RoomModel }> = props => {
                     firstTimeUnlockRoom.current &&
                     player.unlockedRoomNames.includes(nextRoom) && (
                       <div>
-                        Новая зона доступна{' '}
+                        Новая зона [{room[nextRoom].label}] доступна{' '}
                         <Button
                           onClick={clear}
-                          to={`/${params.gameName}/locations/${params.locationId}/${room[nextRoom].name}`}
+                          to={`/${params.gameName}/locations/${params.locationId}}`}
                         >
-                          {room[nextRoom].label}
+                          выход
                         </Button>
                       </div>
                     )}
@@ -156,16 +157,24 @@ export const Room: FC<{ room: RoomModel }> = props => {
           </Rythm>
         )}
         {objects.map(i => {
-          return i.clob ? (
+          return (
             <Rythm key={i.key}>
               <ClickableObject
+                index={i.key}
                 clob={i.clob}
                 onKill={onMobKill}
                 onLootBoxClose={onLootBoxClose}
-                index={i.key}
+                playerTargetId={player.targetId}
+                playerCanAttack={
+                  (player.targetId === i.key || player.targetId === null) &&
+                  player.nextAttackTime <= Date.now() &&
+                  player.stamina >= 5
+                }
+                playerAttackDelay={player.attackDelay}
+                playerDamage={player.damage}
               />
             </Rythm>
-          ) : null;
+          );
         })}
       </SmoothScroll>
       <HitArea />

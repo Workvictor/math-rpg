@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react';
 import styled from 'styled-components';
 
 import { BorderElevated, BorderInner, FlexStart, Rythm } from '../layout';
-import { usePlayerContext } from './PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from './PlayerContext';
 import { Avatar } from '../Avatar';
 import { IconButton } from '../Button';
 import { Route } from 'react-router';
@@ -35,9 +35,9 @@ const SkillsButton = styled(IconButton)`
   font-size: 24px;
 `;
 
-
 export const Player: FC = memo(() => {
-  const { state, dispatch } = usePlayerContext();
+  const { state } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
 
   const {
     level,
@@ -47,7 +47,7 @@ export const Player: FC = memo(() => {
     manaMax,
     stamina,
     staminaMax,
-    name,
+    name
   } = state;
 
   useTimeout(() => {

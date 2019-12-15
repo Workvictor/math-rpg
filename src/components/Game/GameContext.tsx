@@ -3,20 +3,25 @@ import React, {
   createContext,
   useEffect,
   useReducer,
-  useContext, createRef
+  useContext,
+  Dispatch
 } from 'react';
 
 import { GameModel } from './GameModel';
-import { GameContextModel, reducer } from './reducer';
+import { GameActions, reducer } from './reducer';
 import { UIProvider } from '../UIContext';
+import { readGameState } from './readGameState';
 
-const context = new GameContextModel();
-const GameContext = createContext<GameContextModel>(context);
+const initialState = readGameState();
+
+const GameContext = createContext<GameModel>(initialState);
+const GameDispatch = createContext<Dispatch<GameActions>>(() => {});
 
 export const useGameContext = () => useContext(GameContext);
+export const useGameDispatcher = () => useContext(GameDispatch);
 
 export const GameProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, context.state);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     window.addEventListener('storage', (e: StorageEvent) => {
@@ -32,8 +37,10 @@ export const GameProvider: FC = ({ children }) => {
   }, [state]);
 
   return (
-    <GameContext.Provider value={{ state, dispatch }}>
-      <UIProvider>{children}</UIProvider>
-    </GameContext.Provider>
+    <GameDispatch.Provider value={dispatch}>
+      <GameContext.Provider value={state}>
+        <UIProvider>{children}</UIProvider>
+      </GameContext.Provider>
+    </GameDispatch.Provider>
   );
 };

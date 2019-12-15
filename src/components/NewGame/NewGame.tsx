@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Redirect, useHistory } from 'react-router';
 
-import { Border, Flex, ScrollArea, BorderInner, Padbox } from '../layout';
+import { Flex, ScrollArea, BorderInner, Padbox } from '../layout';
 import { Input } from '../Input';
 import { Button } from '../Button';
 import { Typography } from '../layout/Typography';
 import { Divider } from '../layout/Divider';
-import { useGameContext } from '../Game/GameContext';
+import { useGameContext, useGameDispatcher } from '../Game/GameContext';
 import { TabLabel } from '../TabLabel';
-
-const Header = styled(Border)`
-  height: 250px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  ${props => props.theme.shadows.header}
-`;
 
 export const newGamePath = 'newgame';
 
@@ -27,10 +18,9 @@ export const NewGame = () => {
 
   const [nameIsValid, setNameIsValid] = React.useState(false);
 
-  const {
-    state: { players },
-    dispatch
-  } = useGameContext();
+  const { players } = useGameContext();
+
+  const dispatch = useGameDispatcher();
 
   const history = useHistory();
 

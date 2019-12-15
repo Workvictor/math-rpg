@@ -27,11 +27,6 @@ interface IHit {
 
 type Actions = TAddHit | TRemoveHit;
 
-class ContextModel {
-  state: IHit[] = [];
-  dispatch: Dispatch<Actions> = () => {};
-}
-
 export const reducer = (state: IHit[], action: Actions) => {
   switch (action.type) {
     case 'addHit':
@@ -42,18 +37,19 @@ export const reducer = (state: IHit[], action: Actions) => {
       return state;
   }
 };
-
-const context = new ContextModel();
-const HitContext = createContext<ContextModel>(context);
+const initialState: IHit[] = [];
+const HitContext = createContext<IHit[]>(initialState);
+const HitDispatch = createContext<Dispatch<Actions>>(() => {});
 
 export const useHitContext = () => useContext(HitContext);
+export const useHitDispatcher = () => useContext(HitDispatch);
 
 export const HitContextProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, context.state);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <HitContext.Provider value={{ state, dispatch }}>
-      {children}
-    </HitContext.Provider>
+    <HitDispatch.Provider value={dispatch}>
+      <HitContext.Provider value={state}>{children}</HitContext.Provider>
+    </HitDispatch.Provider>
   );
 };

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import styled, { keyframes } from 'styled-components';
-import { useHitContext } from './Context';
+import { useHitContext, useHitDispatcher } from './Context';
 import { HitText } from './HitText';
 
 const HitWrapper = styled.div`
@@ -41,7 +41,8 @@ const Ripples = styled.div`
 `;
 
 export const HitArea: FC = () => {
-  const { state, dispatch } = useHitContext();
+  const state = useHitContext();
+  const dispatch = useHitDispatcher();
 
   const onAnimationEnd = (id: number) => {
     dispatch({

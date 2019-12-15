@@ -1,10 +1,11 @@
 import { FC, useEffect } from 'react';
 
-import { usePlayerContext } from '../Player/PlayerContext';
+import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { useTimeout } from '../utils/useTimeout';
 
 export const AreaRestore: FC = () => {
-  const { state: player, dispatch } = usePlayerContext();
+  const { state: player } = usePlayerContext();
+  const dispatch = usePlayerDispatcher();
   const { stamina, staminaMax, healthPoints, healthPointsMax } = player;
 
   useTimeout(() => {

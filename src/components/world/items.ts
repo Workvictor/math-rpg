@@ -1,15 +1,14 @@
-
 export const equippableItems = {
   stick: {
     equippable: true,
     damage: [2, 4]
   }
-}
+};
 
 export const items = {
   stick: {
     name: 'stick',
-    label: 'палка',
+    label: 'палка'
   }
 };
 
