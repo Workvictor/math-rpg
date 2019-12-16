@@ -19,10 +19,10 @@ export class Clob extends ClobModifiers {
 
   label: string;
 
-  private baseDamage = 5;
-  private baseHealthPoints = 20;
-  private baseAttackTimeout = 1000;
-  private baseExpReward = 5;
+  private baseDamage = 3;
+  private baseHealthPoints = 30;
+  private baseAttackTimeout = 2000;
+  private baseExpReward = 10;
   private baseGoldAmount = 1;
 
   level = 1;
@@ -90,13 +90,22 @@ export class Clob extends ClobModifiers {
   }
   get attackTimeout() {
     return Math.floor(
-      (this.baseAttackTimeout - this.level * 5) * this.attackTimeoutValue
+      this.baseAttackTimeout *
+        (this.baseAttackTimeout /
+          (this.baseAttackTimeout * this.attackTimeoutValue))
     );
   }
   get expReward() {
     return Math.floor(
-      (this.baseExpReward + this.healthPoints * 0.25 + this.damage * 0.25) *
-        this.expValue
+      (this.baseExpReward +
+        (this.healthPoints * 0.65) /
+          (Math.max(1, this.level - 1) / this.level) +
+        this.damage * 0.65) *
+        ((this.expValue +
+          this.damageValue +
+          this.healthPointValue +
+          this.attackTimeoutValue) /
+          4)
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 
-import { playerAddExp, PlayerModel } from '../PlayerModel';
+import { addStat, playerAddExp, PlayerModel } from '../PlayerModel';
 import { TRoomName } from '../../world/rooms';
 
 type ITargetId = number | null;
@@ -24,6 +24,11 @@ type TVisitAreaRestore = { type: 'visitAreaRestore' };
 type TLeaveAreaRestore = { type: 'leaveAreaRestore' };
 type TRest = { type: 'rest' };
 type TRestRestore = { type: 'restRestore' };
+type TUpgradeStat = {
+  type: 'upgradeStat';
+  statName: keyof Pick<PlayerModel, 'strength' | 'agility' | 'intelligence'>;
+  amount: number;
+};
 
 type TDidAttack = {
   type: 'didAttack';
@@ -32,6 +37,7 @@ type TDidAttack = {
 
 export type TActions =
   | TUpdate
+  | TUpgradeStat
   | TRest
   | TPickGold
   | TRestRestore
@@ -63,6 +69,11 @@ export const reducer = (state: PlayerModel, action: TActions) => {
       return {
         ...state,
         ...action.payload
+      };
+    case 'upgradeStat':
+      return {
+        ...state,
+        ...addStat(state, action.statName, action.amount)
       };
     case 'pickGold':
       return {

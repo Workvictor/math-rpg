@@ -101,14 +101,14 @@ export const locations: ILocation[] = [
     name: 'Убежище',
     image: hideout,
     icon: <House height={'48px'} />,
-    rooms: [room.hideout, room.wheat],
+    rooms: [room.hideout, room.wheat, room.windmill, room.darkForest],
     quote: 'Все начинается с выбора...'
   },
   {
     id: 1,
     name: 'Деревня',
     icon: <Village height={'48px'} />,
-    rooms: [room.windmill, room.darkForest]
+    rooms: []
     // quote: 'Знать путь и пройти его — не одно и тоже.'
   },
   {

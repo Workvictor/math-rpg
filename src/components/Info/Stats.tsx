@@ -1,34 +1,15 @@
-import React, { FC, memo } from 'react';
-import styled from 'styled-components';
+import React, { FC } from 'react';
 
-import { BorderElevated, BorderInner } from '../layout';
 import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
-import { Button } from '../Button';
-import { ManaBar } from '../StatusBar/ManaBar';
-import { StaminaBar } from '../StatusBar/StaminaBar';
-import { ExperienceBar } from '../StatusBar/ExpirienceBar';
 import { useTimeout } from '../utils/useTimeout';
 import { Icon } from '../Icon';
-import { StatValue } from '../StatValue';
-import { SmoothScroll } from '../SmoothScroll';
-import layout from '../layout/layout.module.scss';
 import { mathAPS } from '../utils/mathAPS';
 import { useGameContext } from '../Game/GameContext';
+import layout from '../layout/layout.module.scss';
+import styles from './styles.module.scss';
+import { IconButton } from '../Button';
 
-const Wrapper = styled(BorderElevated)`
-  width: 100%;
-  flex-shrink: 0;
-  padding: 6px;
-  ${props => props.theme.bg.cssMarble};
-`;
-
-const Inner = styled(BorderInner)`
-  border: 1px solid ${props => props.theme.colors.grey15};
-  box-shadow: inset 0 1px 14px ${props => props.theme.colors.grey20},
-    0 0 0 1px ${props => props.theme.colors.grey0};
-`;
-
-export const Stats: FC = memo(() => {
+export const Stats: FC = () => {
   const gameContext = useGameContext();
   const { state } = usePlayerContext();
   const dispatch = usePlayerDispatcher();
@@ -52,6 +33,7 @@ export const Stats: FC = memo(() => {
     strength,
     intelligence,
     goldAmount,
+    statPoints,
     skillPoints
   } = state;
 
@@ -61,34 +43,77 @@ export const Stats: FC = memo(() => {
     });
   }, stamina < staminaMax);
 
+  const onAddStrength = () => {
+    dispatch({
+      type: 'upgradeStat',
+      amount: 1,
+      statName: 'strength'
+    });
+  };
+  const onAddAgility = () => {
+    dispatch({
+      type: 'upgradeStat',
+      amount: 1,
+      statName: 'agility'
+    });
+  };
+  const onAddIntelligence = () => {
+    dispatch({
+      type: 'upgradeStat',
+      amount: 1,
+      statName: 'intelligence'
+    });
+  };
+
   return (
     <>
       <section>
         <h1>{name} характеристики</h1>
-        <ul className={layout.statTable}>
+        <hr />
+        {statPoints > 0 && <span>не распределенные очки ({statPoints})</span>}
+
+        <ul className={styles.mainStats}>
+          <li>
+            <span>
+              <Icon type={'strong'} />
+              strength
+              <hr />
+              {strength}
+            </span>
+            <IconButton onClick={onAddStrength} disable={statPoints <= 0}>
+              <Icon type={'healPlus'} />
+            </IconButton>
+          </li>
+          <li>
+            <span>
+              <Icon type={'agility'} />
+              agility
+              <hr />
+              {agility}
+            </span>
+            <IconButton onClick={onAddAgility} disable={statPoints <= 0}>
+              <Icon type={'healPlus'} />
+            </IconButton>
+          </li>
+          <li>
+            <span>
+              <Icon type={'smart'} />
+              intelligence
+              <hr />
+              {intelligence}
+            </span>
+            <IconButton onClick={onAddIntelligence} disable={statPoints <= 0}>
+              <Icon type={'healPlus'} />
+            </IconButton>
+          </li>
+        </ul>
+        <hr />
+        <ul className={styles.stats}>
           <li>
             <Icon type={'skills'} />
             level
             <hr />
             {level}
-          </li>
-          <li>
-            <Icon type={'strong'} />
-            strength
-            <hr />
-            {strength}
-          </li>
-          <li>
-            <Icon type={'agility'} />
-            agility
-            <hr />
-            {agility}
-          </li>
-          <li>
-            <Icon type={'smart'} />
-            intelligence
-            <hr />
-            {intelligence}
           </li>
           <li>
             <Icon type={'heart'} />
@@ -154,4 +179,4 @@ export const Stats: FC = memo(() => {
       </section>
     </>
   );
-});
+};

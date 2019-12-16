@@ -43,7 +43,9 @@ export const Player: FC = memo(() => {
     name,
     damage,
     attackDelay,
-    healValue
+    healValue,
+    statPoints,
+    skillPoints
   } = state;
 
   useTimeout(() => {
@@ -102,7 +104,11 @@ export const Player: FC = memo(() => {
             <ExperienceBar value={exp} max={expMax} />
           </div>
           <Button to={`/${name}/info`} className={layout.typography4}>
-            <Icon type={'skills'} className={layout.marginRight} />
+            {statPoints > 0 || skillPoints > 0 ? (
+              <Icon type={'healPlus'} className={layout.marginRight} />
+            ) : (
+              <Icon type={'skills'} className={layout.marginRight} />
+            )}
             skills
           </Button>
         </div>
