@@ -77,6 +77,7 @@ const ColorAvatar = styled(Avatar)`
 export const ClickableObject: FC<{
   clob: Clob;
   index: number;
+  isBoss?: boolean;
   onLootBoxClose: (index: number) => void;
   onKill: (index: number) => void;
 
@@ -84,6 +85,7 @@ export const ClickableObject: FC<{
   playerDamage: number;
   playerCanAttack: boolean;
   playerAttackDelay: number;
+  playerNextAttackTime: number;
 }> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
   const hitRect = useRef<HTMLDivElement>();
@@ -106,7 +108,8 @@ export const ClickableObject: FC<{
     playerTargetId,
     playerDamage,
     playerCanAttack,
-    playerAttackDelay
+    playerAttackDelay,
+    playerNextAttackTime
   } = props;
 
   const { level, label, attackTimeout, damage, iconType } = clob;
@@ -123,6 +126,10 @@ export const ClickableObject: FC<{
   const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
   useEffect(() => {
+    setGoldAmount(Math.max(1, spreadRange(clob.goldAmount)));
+  }, [clob.goldAmount]);
+
+  useEffect(() => {
     if (wrapperRef.current) {
       wrapperRect.current = wrapperRef.current;
     }
@@ -133,7 +140,7 @@ export const ClickableObject: FC<{
       onMobClick();
     },
     playerTargetId === index && playerCanAttack,
-    playerAttackDelay
+    playerNextAttackTime - Date.now()
   );
 
   const onPlayerAttack = () => {
@@ -177,7 +184,6 @@ export const ClickableObject: FC<{
     if (healthPoints - playerDamage <= 0) {
       setHealthPoints(0);
       onKill(index);
-      setGoldAmount(spreadRange(clob.goldAmount));
       setAggressive(false);
 
       playerDispatch({
@@ -271,7 +277,10 @@ export const ClickableObject: FC<{
               </Animator>
             </div>
             <ul className={layout.cadenceList}>
-              <li>{label}</li>
+              <li>
+                {label}
+                {props.isBoss ? '[boss]' : ''}
+              </li>
               <li>
                 <ul className={layout.columnList}>
                   <li>
@@ -302,7 +311,7 @@ export const ClickableObject: FC<{
             </IconButton>
           </Wrapper>
           <GoldWrapper>
-            {goldAmount > 0 && (
+            {healthPoints <= 0 && goldAmount > 0 && (
               <Animator animationName={'drop'} animationDelay={100}>
                 <Animator
                   animationName={'fadeOut'}

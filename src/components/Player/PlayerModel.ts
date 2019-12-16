@@ -21,15 +21,16 @@ export class PlayerModel {
   healthPointsPercentBonus = 0;
   //skills
   outOfCombat = true;
-  damage = Math.floor(6 * (1 + this.strength * 0.02));
-  healValue = Math.floor(25 + this.intelligence * 0.025);
-  healRefreshTimeout = 5000;
+  damage = Math.floor(7 * (1 + this.strength * 0.04));
+  healValue = Math.floor(35 + this.intelligence * 0.025);
+  healRefreshTimeout = 7500;
   nextHealTime = Date.now();
   healthPointsPerSecond = 1;
   staminaPerSecond = 1 + Math.floor(this.stamina * 0.005);
   manaPerSecond = Math.floor(this.mana * 0.0075);
   skillPoints = 0;
-  attackDelay = Math.max(500, Math.floor(2000 - this.agility * 25));
+  statPoints = 0;
+  attackDelay = Math.max(500, Math.floor(1750 - this.agility * 25));
   nextAttackTime = Date.now();
   targetId: number | null = null;
   restPointsPerSecond = 3;
@@ -98,6 +99,7 @@ export const playerAddExp = (
     player.exp + getExpRewardByLevel(expBase, player.level, targetLevel);
   if (exp >= player.expMax) {
     // levelUp
+    const overCupExp = exp - player.expMax;
     const level = player.level + 1;
     const healthModel = new HealthModel(
       level,
@@ -108,17 +110,53 @@ export const playerAddExp = (
     const healthPointsMax = healthModel.healthPointsMax;
     return {
       ...player,
-      exp: 0,
+      exp: overCupExp,
       level,
-      healthPointsMax: healthPointsMax,
-      healthPoints: healthPointsMax,
+      healthPointsMax: Math.floor(healthPointsMax),
+      healthPoints: Math.floor(healthPointsMax),
       expMax: getExpByLevel(level),
       skillPoints: player.skillPoints + 1,
-      damage: Math.floor(6 * (1 + player.strength * 0.02))
+      statPoints: player.statPoints + 5,
+      damage: calcDamage(player.strength, player.agility),
+      attackDelay: calcAttackDelay(player.strength)
     };
   }
   return {
     ...player,
     exp
+  };
+};
+
+export const calcDamage = (strength: number, agility: number) => {
+  return Math.floor(6 + strength * 0.25 + agility * 0.1);
+};
+
+export const calcAttackDelay = (agility: number) => {
+  return Math.max(500, Math.floor(1750 - agility * 25));
+};
+
+export const addStat = (
+  state: PlayerModel,
+  statName: keyof Pick<PlayerModel, 'strength' | 'agility' | 'intelligence'>,
+  amount: number
+): PlayerModel => {
+  const nextState = {
+    ...state,
+    [statName]: state[statName] + amount,
+    statPoints: state.statPoints - amount
+  };
+  const damage = calcDamage(nextState.strength, nextState.agility);
+  const attackDelay = calcAttackDelay(nextState.agility);
+  const healthModel = new HealthModel(
+    nextState.level,
+    nextState.strength,
+    nextState.healthPointsFlatBonus,
+    nextState.healthPointsPercentBonus
+  );
+  return {
+    ...nextState,
+    damage,
+    attackDelay,
+    healthPointsMax: healthModel.healthPointsMax
   };
 };

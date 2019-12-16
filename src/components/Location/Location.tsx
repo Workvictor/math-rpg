@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
 import { locations } from '../world/world';
-import { Rythm, ScrollArea } from '../layout';
+import { Rythm } from '../layout';
 import { RoomRoute } from '../Room/RoomRoute';
 import { AreaEntity } from '../AreaEntity';
 import { ILocationRoute } from './ILocationRoute';
@@ -11,6 +11,7 @@ import { AreaRestore } from '../AreaRestore';
 import { clobs } from '../world/clobs';
 import { GoalList } from '../GoalList';
 import { Animator } from '../animation/Animator';
+import { SmoothScroll } from '../SmoothScroll';
 
 export const Location: FC = () => {
   const { params, path } = useRouteMatch<ILocationRoute>();
@@ -33,7 +34,7 @@ export const Location: FC = () => {
     <Switch>
       <Route exact path={path}>
         <AreaRestore />
-        <ScrollArea>
+        <SmoothScroll>
           {location.rooms.map((room, index) => {
             return (
               <Rythm r={2} key={room.name}>
@@ -60,7 +61,7 @@ export const Location: FC = () => {
               </Rythm>
             );
           })}
-        </ScrollArea>
+        </SmoothScroll>
       </Route>
 
       <Route exact path={`${path}/:roomName`}>

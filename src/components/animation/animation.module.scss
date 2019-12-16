@@ -1,29 +1,29 @@
 @keyframes bounce {
   0% {
     opacity: 0;
-    transform: translate(0, 200%);
+    transform: translateY(200%);
   }
   80% {
     opacity: 1;
-    transform: translate(0, -10%);
+    transform: translateY(-10%);
   }
   90% {
     opacity: 1;
-    transform: translate(0, 5%);
+    transform: translateY(5%);
   }
   100% {
     opacity: 1;
-    transform: translate(0, 0);
+    transform: translateY(0);
   }
 }
 
 .bounce {
   opacity: 0;
-  transform: translate(0, 200%);
+  transform: translateY(200%);
   animation: bounce 500ms;
   &.static {
     opacity: 1;
-    transform: translate(0, 0);
+    transform: translateY(0);
   }
 }
 

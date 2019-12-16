@@ -42,9 +42,11 @@ import healPlus from './HealPlus';
 import strong from './Strong';
 import agility from './Agility';
 import smart from './Smart';
+import upgrade from './Upgrade';
 
 export const icons = [
   trashcan,
+  upgrade,
   smart,
   agility,
   strong,
@@ -92,6 +94,7 @@ export const icons = [
 
 export const iconType = {
   trashcan,
+  upgrade,
   smart,
   agility,
   strong,

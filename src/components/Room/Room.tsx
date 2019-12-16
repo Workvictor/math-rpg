@@ -36,9 +36,13 @@ export const Room: FC<{ room: RoomModel }> = props => {
   const { state: player } = usePlayerContext();
   const dispatch = usePlayerDispatcher();
 
+  const [bossIsKilled, setBossIsKilled] = useState(false);
+
   const [killCount, setKillCount] = useState(0);
   const [killCountMax, setKillCountMax] = useState(1);
-  const [objects, setObjects] = useState<{ key: number; clob: Clob }[]>([]);
+  const [objects, setObjects] = useState<
+    { key: number; clob: Clob; isBoss?: boolean }[]
+  >([]);
 
   useEffect(() => {
     return () => {
@@ -82,10 +86,21 @@ export const Room: FC<{ room: RoomModel }> = props => {
       };
     });
 
+    const boss = clobs[props.room.bossType].setLevel(level + 2).setModifiers({
+      expValue: 1.5,
+      damageValue: 1.5,
+      attackTimeoutValue: 1.5,
+      healthPointValue: 3,
+      goldAmountValue: 4
+    });
+
     setKillCount(0);
-    setKillCountMax(clobTypeTable.length);
-    setObjects(clobTypeTable);
-  }, [clobsCount, level, rObjs]);
+    setKillCountMax(clobTypeTable.length + 1);
+    setObjects([
+      ...clobTypeTable,
+      { key: clobTypeTable.length, clob: boss, isBoss: true }
+    ]);
+  }, [clobsCount, level, props.room.bossType, rObjs]);
 
   const clear = () => {
     //TODO add notify before reload
@@ -161,6 +176,7 @@ export const Room: FC<{ room: RoomModel }> = props => {
             <Rythm key={i.key}>
               <ClickableObject
                 index={i.key}
+                isBoss={i.isBoss}
                 clob={i.clob}
                 onKill={onMobKill}
                 onLootBoxClose={onLootBoxClose}
@@ -170,6 +186,7 @@ export const Room: FC<{ room: RoomModel }> = props => {
                   player.nextAttackTime <= Date.now() &&
                   player.stamina >= 5
                 }
+                playerNextAttackTime={player.nextAttackTime}
                 playerAttackDelay={player.attackDelay}
                 playerDamage={player.damage}
               />
