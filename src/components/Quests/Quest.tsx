@@ -9,7 +9,6 @@ import { Button } from '../Button';
 import { Divider } from '../layout/Divider';
 import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
 import { getQuestById } from './quests';
-import { locations } from '../world/world';
 
 const ControlsWrapper = styled(FlexWide)`
   flex-shrink: 0;
@@ -35,9 +34,7 @@ export const Quest: FC = () => {
 
   const locationLink =
     player.location >= 0
-      ? `/${player.name}/locations/${player.location}/${
-          locations[player.location].rooms[0].name
-        }`
+      ? `/${player.name}/locations/${player.location}`
       : `/${player.name}/locations`;
 
   return quest ? (

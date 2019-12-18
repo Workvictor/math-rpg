@@ -17,6 +17,7 @@ import { HealthBar } from '../StatusBar/HealthBar';
 import { StatValue } from '../StatValue';
 import layout from '../layout/layout.module.scss';
 import { mathAPS } from '../utils/mathAPS';
+import { EColorType } from '../layout/TextColor';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -279,20 +280,20 @@ export const ClickableObject: FC<{
             <ul className={layout.cadenceList}>
               <li>
                 {label}
-                {props.isBoss ? '[boss]' : ''}
+                {props.isBoss ? ' - [boss]' : ''}
               </li>
               <li>
                 <ul className={layout.columnList}>
                   <li>
                     <StatValue
-                      colorType={'physical'}
+                      colorType={EColorType.physical}
                       icon={'fist'}
                       value={damage}
                     />
                   </li>
                   <li>
                     <StatValue
-                      colorType={'natural'}
+                      colorType={EColorType.natural}
                       icon={'sprint'}
                       value={mathAPS(attackTimeout)}
                     />

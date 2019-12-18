@@ -17,7 +17,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     description: 'Отыщите оружие',
     clobsCount: 10,
     clobsTypes: [clobs.barrel, clobs.smallRat],
-    icon: <Hideout height={'48px'} />,
+    icon: 'hideout', // <Hideout height={'48px'} />,
     locationId: 0,
     nextRoom: 'wheat',
     goals: [
@@ -46,7 +46,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     level: 4,
     clobsCount: 12,
     clobsTypes: [clobs.fearfulWolf, clobs.barrel, clobs.rat],
-    icon: <Wheat height={'48px'} />,
+    icon: 'wheat',
     locationId: 0,
     nextRoom: 'windmill',
     goals: [
@@ -80,7 +80,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     level: 6,
     clobsCount: 28,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
-    icon: <Windmill height={'48px'} />,
+    icon: 'windmill',
     locationId: 1,
     goals: [
       {
@@ -116,7 +116,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     level: 10,
     clobsCount: 46,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
-    icon: <Forest height={'48px'} />,
+    icon: 'forest',
     locationId: 1,
     goals: [
       {

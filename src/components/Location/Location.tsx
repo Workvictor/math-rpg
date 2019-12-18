@@ -12,6 +12,7 @@ import { clobs } from '../world/clobs';
 import { GoalList } from '../GoalList';
 import { Animator } from '../animation/Animator';
 import { SmoothScroll } from '../SmoothScroll';
+import { RoomCard } from './RoomCard';
 
 export const Location: FC = () => {
   const { params, path } = useRouteMatch<ILocationRoute>();
@@ -35,31 +36,41 @@ export const Location: FC = () => {
       <Route exact path={path}>
         <AreaRestore />
         <SmoothScroll>
-          {location.rooms.map((room, index) => {
+          {location.rooms.map(({ room, id }) => {
             return (
-              <Rythm r={2} key={room.name}>
-                <Animator animationName={'bounce'} animationDelay={index * 200}>
-                  <AreaEntity
-                    aside={room.icon}
-                    title={room.label}
-                    description={
-                      <>
-                        <GoalList
-                          title={'Задания:'}
-                          items={room.goals.map(i => ({
-                            label: `убить [${clobs[i.clobType].label}]`,
-                            count: i.count
-                          }))}
-                        />
-                      </>
-                    }
-                    level={room.level}
-                    locked={!player.unlockedRoomNames.includes(room.name)}
-                    to={`${location.id}/${room.name}`}
-                  />
-                </Animator>
-              </Rythm>
+              <RoomCard
+                levelDelta={player.level - room.level}
+                isLocked={!player.unlockedRoomNames.includes(room.name)}
+                locationId={params.locationId}
+                key={id}
+                room={room}
+                index={id}
+              />
             );
+            // return (
+            //   <Rythm r={2} key={room.name}>
+            //     <Animator animationName={'bounce'} animationDelay={index * 200}>
+            //       <AreaEntity
+            //         aside={room.icon}
+            //         title={room.label}
+            //         description={
+            //           <>
+            //             <GoalList
+            //               title={'Задания:'}
+            //               items={room.goals.map(i => ({
+            //                 label: `убить [${clobs[i.clobType].label}]`,
+            //                 count: i.count
+            //               }))}
+            //             />
+            //           </>
+            //         }
+            //         level={room.level}
+            //         locked={!player.unlockedRoomNames.includes(room.name)}
+            //         to={`${location.id}/${room.name}`}
+            //       />
+            //     </Animator>
+            //   </Rythm>
+            // );
           })}
         </SmoothScroll>
       </Route>

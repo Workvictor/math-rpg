@@ -1,14 +1,14 @@
 h1,
 h2,
 h3 {
-  margin: 8px 0;
+  margin: 0 0 8px 0;
 }
 
 h4,
 h5,
 h6,
 caption {
-  margin: 4px 0;
+  margin: 0 0 4px 0;
 }
 .typography1,
 h1 {
@@ -50,9 +50,19 @@ section {
   padding: 6px 8px;
 }
 
-section hr {
+.paragraph,
+p {
+  padding: 0 8px;
+  margin: 0 0 0.5em;
+  &:last-child {
+    margin: 0;
+  }
+}
+
+section hr,
+.divider {
   border-color: #191919;
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
 .fullWidth {
@@ -77,6 +87,11 @@ section hr {
 .flexStart {
   composes: flex;
   align-items: flex-start;
+}
+
+.flexBetween {
+  composes: flex;
+  justify-content: space-between;
 }
 
 .flexEnd {
@@ -132,4 +147,16 @@ ul.columnList {
 
 .cadence3 {
   margin-bottom: 12px;
+}
+
+.borderInner {
+  padding: 2px;
+  border-radius: 4px;
+  background-color: #171717;
+  border: 1px solid #1d1d1d;
+  border-bottom-color: #3d3d3d;
+  box-shadow: inset 0 0 3px 2px #060606, inset 0 0 6px 2px #060606;
+  & .inline {
+    display: inline-flex;
+  }
 }

@@ -9,24 +9,12 @@ interface IWrapper {
   image?: string;
 }
 
-const show = keyframes`
-  0% {
-    opacity: 0;
-    transform: translate(0, 100%);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-`;
-
 const Wrapper = styled(UIBlockInner)<IWrapper>`
   margin-bottom: 8px;
   background-image: url(${p => p.image});
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: top right;
-  animation: 300ms ${show};
   &:last-child {
     margin-bottom: 0;
   }

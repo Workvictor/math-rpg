@@ -14,6 +14,7 @@ import layout from '../layout/layout.module.scss';
 import { Icon } from '../Icon';
 import { StatValue } from '../StatValue';
 import { mathAPS } from '../utils/mathAPS';
+import { EColorType } from '../layout/TextColor';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -81,21 +82,21 @@ export const Player: FC = memo(() => {
             <ul className={layout.columnList}>
               <li>
                 <StatValue
-                  colorType={'physical'}
+                  colorType={EColorType.physical}
                   icon={'fist'}
                   value={damage}
                 />
               </li>
               <li>
                 <StatValue
-                  colorType={'natural'}
+                  colorType={EColorType.natural}
                   icon={'sprint'}
                   value={mathAPS(attackDelay)}
                 />
               </li>
               <li>
                 <StatValue
-                  colorType={'mental'}
+                  colorType={EColorType.mental}
                   icon={'healPlus'}
                   value={healValue}
                 />
