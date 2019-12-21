@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, SyntheticEvent, useState } from 'react';
 
 import animation from './animation.module.scss';
 import { classJoin } from '../utils/classJoin';
@@ -6,6 +6,7 @@ import { classJoin } from '../utils/classJoin';
 interface IProps {
   animationName:
     | 'bounce'
+    | 'slideOutLeft'
     | 'slideInRight'
     | 'slideOutRight'
     | 'shake'
@@ -22,7 +23,8 @@ export const Animator: FC<IProps> = props => {
 
   const [animated, setAnimated] = useState(false);
 
-  const onAnimationEnd = () => {
+  const onAnimationEnd = (e: SyntheticEvent) => {
+    e.stopPropagation();
     setAnimated(true);
     if (props.onAnimationEnd) {
       props.onAnimationEnd();

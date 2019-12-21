@@ -1,8 +1,8 @@
-import { PlayerModel } from '../Player/PlayerModel';
+import { IPlayerBase } from '../Player/store/IPlayerBase';
 
 export class GameModel {
   static appName = 'game-app';
-  players: PlayerModel[] = [];
+  players: IPlayerBase[] = [];
   settings = {
     fullscreen: true,
     sfxVolume: 0.5,
@@ -16,4 +16,5 @@ export class GameModel {
     showPlayerExperienceText: false
   };
   clickCount = 0;
+  constructor(public dataVersion: string) {}
 }

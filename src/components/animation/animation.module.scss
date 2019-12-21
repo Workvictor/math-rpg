@@ -70,6 +70,26 @@
   }
 }
 
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(0) scale(0.9);
+  }
+  100% {
+    transform: translateX(-100%) scale(0.9);
+  }
+}
+
+.slideOutLeft {
+  transform: translateX(0) scale(1);
+  animation: slideOutLeft 750ms;
+  &.static {
+    transform: translateX(-100%) scale(0.9);
+  }
+}
+
 @keyframes shake {
   0% {
     transform: translateX(-3px);

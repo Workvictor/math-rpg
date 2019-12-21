@@ -1,23 +1,28 @@
-import React, { createRef, FC, memo, useEffect, useRef, useState } from 'react';
+import React, {
+  createRef,
+  FC,
+  memo,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import styled from 'styled-components';
 
 import { UIBlockInner } from '../layout';
 import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useHitDispatcher } from '../HitArea/Context';
-import { IconButton } from '../Button';
 import { useTimeout } from '../utils/useTimeout';
 import { Clob } from '../world/Clob';
 import { spreadRange } from '../utils/spreadRange';
-import { useGameDispatcher } from '../Game/GameContext';
 import { Animator } from '../animation/Animator';
-import { classJoin } from '../utils/classJoin';
-import { Icon } from '../Icon';
 import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
 import { StatValue } from '../StatValue';
-import layout from '../layout/layout.module.scss';
 import { mathAPS } from '../utils/mathAPS';
 import { EColorType } from '../layout/TextColor';
+import layout from '../layout/layout.module.scss';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -45,286 +50,147 @@ const Wrapper = styled(UIBlockInner)`
   }
 `;
 
-const LootBox = styled.div`
-  padding: 2px;
-`;
-
-const GoldWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  pointer-events: none;
-`;
-
-const Gold = styled(UIBlockInner)`
-  width: auto;
-  pointer-events: auto;
-  background-color: #212121;
-  padding: 0 6px 2px;
-  box-shadow: inset 0 0 0 1px #020202, 0 5px 7px -5px rgb(162, 124, 24);
-`;
-
-const ColorAvatar = styled(Avatar)`
-  &.aggressive {
-    color: ${props => props.theme.colors.darkred200};
-  }
-`;
-
 export const ClickableObject: FC<{
   clob: Clob;
   index: number;
+  damageDealt: number;
   isBoss?: boolean;
-  onLootBoxClose: (index: number) => void;
-  onKill: (index: number) => void;
-
-  playerTargetId: number | null;
-  playerDamage: number;
-  playerCanAttack: boolean;
-  playerAttackDelay: number;
-  playerNextAttackTime: number;
+  onKill: (index: number, goldAmount: number) => void;
+  onTargetMount: (index: number) => void;
 }> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
-  const hitRect = useRef<HTMLDivElement>();
-
-  const wrapperRef = createRef<HTMLDivElement>();
-  const wrapperRect = useRef<HTMLDivElement>();
+  const rect = useRef<DOMRect>();
 
   const hitDispatch = useHitDispatcher();
-
-  const gameDispatch = useGameDispatcher();
-
   const playerDispatch = usePlayerDispatcher();
 
-  const {
-    clob,
-    index,
-    onLootBoxClose,
-    onKill,
-
-    playerTargetId,
-    playerDamage,
-    playerCanAttack,
-    playerAttackDelay,
-    playerNextAttackTime
-  } = props;
-
-  const { level, label, attackTimeout, damage, iconType } = clob;
-
-  const [goldAmount, setGoldAmount] = useState(0);
-  const [goldIsPicked, setGoldIsPicked] = useState(false);
-
-  const [closeRequest, setCloseRequest] = useState(false);
+  const { clob } = props;
 
   const [isAnimated, setAnimated] = useState(false);
 
-  const [aggressive, setAggressive] = useState(false);
+  const [isDead, setIsDead] = useState(false);
 
   const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
-  useEffect(() => {
-    setGoldAmount(Math.max(1, spreadRange(clob.goldAmount)));
-  }, [clob.goldAmount]);
-
-  useEffect(() => {
-    if (wrapperRef.current) {
-      wrapperRect.current = wrapperRef.current;
+  const setHitRect = useCallback(() => {
+    if (hitRef.current && !rect.current) {
+      rect.current = hitRef.current.getBoundingClientRect();
     }
-  }, [wrapperRef]);
+  }, [hitRef]);
 
-  useTimeout(
-    () => {
-      onMobClick();
+  const animateDamage = useCallback(
+    (hp: number) => {
+      if (hp !== healthPoints && rect.current) {
+        const damageValue = clob.healthPoints - hp;
+        setAnimated(true);
+        hitDispatch({
+          type: 'addHit',
+          pageX: rect.current.left + rect.current.width / 2,
+          pageY: rect.current.top + rect.current.height / 2,
+          value: damageValue
+        });
+      }
     },
-    playerTargetId === index && playerCanAttack,
-    playerNextAttackTime - Date.now()
+    [clob.healthPoints, healthPoints, hitDispatch]
   );
 
-  const onPlayerAttack = () => {
-    if (hitRef.current) {
-      hitRect.current = hitRef.current;
+  const animateDeath = useCallback(
+    (hp: number) => {
+      if (hp === 0) {
+        setIsDead(true);
+        playerDispatch({
+          type: 'AddExp',
+          expReward: clob.expReward,
+          targetLevel: clob.level
+        });
+        props.onKill(props.index, Math.max(1, spreadRange(clob.goldAmount)));
+      }
+    },
+    [clob.expReward, clob.goldAmount, clob.level, playerDispatch, props]
+  );
+
+  useEffect(() => {
+    if (!isDead && props.damageDealt > 0) {
+      setHitRect();
+      const hp = Math.max(0, clob.healthPoints - props.damageDealt);
+      animateDamage(hp);
+      animateDeath(hp);
+      setHealthPoints(hp);
     }
-    if (playerCanAttack) {
-      onMobClick();
-    } else {
-      playerDispatch({
-        type: 'setTarget',
-        targetId: index
-      });
-    }
-  };
-
-  const onMobClick = () => {
-    if (hitRect.current) {
-      const rect = hitRect.current.getBoundingClientRect();
-      hitDispatch({
-        type: 'addHit',
-        pageX: rect.left + rect.width / 2,
-        pageY: rect.top + rect.height / 2,
-        value: playerDamage
-      });
-    }
-
-    playerDispatch({
-      type: 'didAttack',
-      targetId: index
-    });
-
-    if (!isAnimated) {
-      setAnimated(true);
-    }
-
-    if (!aggressive && damage > 0) {
-      setAggressive(true);
-    }
-
-    if (healthPoints - playerDamage <= 0) {
-      setHealthPoints(0);
-      onKill(index);
-      setAggressive(false);
-
-      playerDispatch({
-        type: 'setTarget',
-        targetId: null
-      });
-      playerDispatch({
-        type: 'addExp',
-        expReward: clob.expReward,
-        targetLevel: clob.level
-      });
-
-      return;
-    }
-
-    setHealthPoints(prev => Math.max(0, prev - playerDamage));
-  };
+  }, [
+    clob.healthPoints,
+    isDead,
+    props.damageDealt,
+    setHitRect,
+    animateDamage,
+    animateDeath
+  ]);
 
   useTimeout(
     () => {
       playerDispatch({
-        type: 'takeDamage',
-        damage
+        type: 'TakeDamage',
+        damage: clob.damage
       });
     },
-    damage > 0 && aggressive && healthPoints > 0,
-    attackTimeout
+    clob.damage > 0 && healthPoints > 0,
+    clob.attackTimeout
   );
 
   const onShakeEnd = () => {
     setAnimated(false);
   };
 
-  const onCloseLootBox = () => {
-    setCloseRequest(true);
-  };
-
-  const onPickGold = () => {
-    playerDispatch({
-      type: 'pickGold',
-      amount: goldAmount
-    });
-    gameDispatch({
-      type: 'addClickCount'
-    });
-    setGoldIsPicked(true);
-  };
-
-  const onRemoveGold = () => {
-    setGoldAmount(0);
-    onCloseLootBox();
-  };
-
-  const classes = classJoin([
-    playerTargetId === index && 'selected',
-    healthPoints <= 0 && 'disable'
-  ]);
-
-  const lootBoxClassName = classJoin([healthPoints <= 0 && 'active']);
-  const avatarClassName = classJoin([
-    healthPoints > 0 && aggressive && 'aggressive'
-  ]);
-
-  const onUnmount = () => {
-    if (closeRequest) {
-      onLootBoxClose(index);
+  const onAnimationEnd = () => {
+    if (!isDead) {
+      props.onTargetMount(props.index);
     }
   };
 
   return (
     <>
       <Animator
-        animationDelay={closeRequest ? 0 : index * 200}
-        animationName={closeRequest ? 'slideOutRight' : 'slideInRight'}
-        onAnimationEnd={onUnmount}
+        animationName={isDead ? 'slideOutLeft' : 'slideInRight'}
+        onAnimationEnd={onAnimationEnd}
       >
-        <LootBox className={lootBoxClassName}>
-          <Wrapper ref={wrapperRef} className={classes}>
-            <div ref={hitRef} className={layout.marginRight}>
-              <Animator
-                animationName={'shake'}
-                play={isAnimated}
-                onAnimationEnd={onShakeEnd}
-              >
-                <ColorAvatar
-                  size={56}
-                  iconType={iconType}
-                  level={level}
-                  className={avatarClassName}
-                />
-              </Animator>
-            </div>
-            <ul className={layout.cadenceList}>
-              <li>
-                {label}
-                {props.isBoss ? ' - [boss]' : ''}
-              </li>
-              <li>
-                <ul className={layout.columnList}>
-                  <li>
-                    <StatValue
-                      colorType={EColorType.physical}
-                      icon={'fist'}
-                      value={damage}
-                    />
-                  </li>
-                  <li>
-                    <StatValue
-                      colorType={EColorType.natural}
-                      icon={'sprint'}
-                      value={mathAPS(attackTimeout)}
-                    />
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <HealthBar value={healthPoints} max={clob.healthPoints} />
-              </li>
-            </ul>
-            <IconButton
-              disable={healthPoints <= 0 && playerTargetId === index}
-              onClick={onPlayerAttack}
+        <Wrapper>
+          <div ref={hitRef} className={layout.marginRight}>
+            <Animator
+              animationName={'shake'}
+              play={isAnimated}
+              onAnimationEnd={onShakeEnd}
             >
-              <Icon height={'24px'} type={'crossSwords'} />
-            </IconButton>
-          </Wrapper>
-          <GoldWrapper>
-            {healthPoints <= 0 && goldAmount > 0 && (
-              <Animator animationName={'drop'} animationDelay={100}>
-                <Animator
-                  animationName={'fadeOut'}
-                  play={goldIsPicked}
-                  onAnimationEnd={onRemoveGold}
-                >
-                  <Gold onClick={onPickGold}>{goldAmount} золото</Gold>
-                </Animator>
-              </Animator>
-            )}
-          </GoldWrapper>
-        </LootBox>
+              <Avatar size={56} iconType={clob.iconType} level={clob.level} />
+            </Animator>
+          </div>
+          <ul className={layout.cadenceList}>
+            <li>
+              {clob.label}
+              {props.isBoss ? ' - [boss]' : ''}
+            </li>
+            <li>
+              <ul className={layout.columnList}>
+                <li>
+                  <StatValue
+                    colorType={EColorType.physical}
+                    icon={'fist'}
+                    value={clob.damage}
+                  />
+                </li>
+                <li>
+                  <StatValue
+                    colorType={EColorType.natural}
+                    icon={'sprint'}
+                    value={mathAPS(clob.attackTimeout)}
+                  />
+                </li>
+              </ul>
+            </li>
+            <li>
+              <HealthBar value={healthPoints} max={clob.healthPoints} />
+            </li>
+          </ul>
+        </Wrapper>
       </Animator>
     </>
   );

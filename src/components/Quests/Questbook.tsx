@@ -9,7 +9,7 @@ import { usePlayerContext } from '../Player/PlayerContext';
 
 export const Questbook = () => {
   const { url } = useRouteMatch<{ gameName: string; locationId: string }>();
-  const { state } = usePlayerContext();
+  const state = usePlayerContext();
 
   const to = url
     .split('/')

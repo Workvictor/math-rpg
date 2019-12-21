@@ -13,18 +13,21 @@ import { clobs } from '../world/clobs';
 import { getColorTypeByLevelDelta } from '../utils/getColorTypeByLevelDelta';
 import layout from '../layout/layout.module.scss';
 import { classJoin } from '../utils/classJoin';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
 
 interface IProps {
   locationId: string;
   index: number;
-  levelDelta: number;
-  isLocked: boolean;
   room: RoomModel;
 }
 
 export const RoomCard: FC<IProps> = props => {
-  const { index, room, isLocked, levelDelta } = props;
+  const player = usePlayerSelector();
+  const { index, room } = props;
   const { label, locationId, name, level, icon } = room;
+
+  const levelDelta = player.level - room.level;
+  const isLocked = !player.unlockedRoomIds.includes(room.id);
 
   return (
     <Rythm r={2}>
@@ -63,7 +66,7 @@ export const RoomCard: FC<IProps> = props => {
             <LockView
               isLocked={isLocked}
               labelLocked={
-                <TextColor colorType={EColorType.stamina}>
+                <TextColor colorType={EColorType.grey}>
                   <p>
                     заблокировано. чтобы открыть пройдите предыдущий уровень
                   </p>

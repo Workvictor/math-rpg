@@ -5,9 +5,15 @@ import { classJoin } from '../utils/classJoin';
 
 interface IProps {
   className?: string;
+  onClick?: () => void;
 }
 
 export const UiFrame: FC<IProps> = props => {
-  const uiFrame = classJoin([props.className, styles.uiFrame]);
-  return <div className={uiFrame}>{props.children}</div>;
+  const { className, ...rest } = props;
+  const uiFrame = classJoin([className, styles.uiFrame]);
+  return (
+    <div className={uiFrame} {...rest}>
+      {props.children}
+    </div>
+  );
 };

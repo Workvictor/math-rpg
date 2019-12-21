@@ -1,35 +1,25 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
-import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
+import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useTimeout } from '../utils/useTimeout';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
 
 export const AreaRestore: FC = () => {
-  const { state: player } = usePlayerContext();
   const dispatch = usePlayerDispatcher();
-  const { stamina, staminaMax, healthPoints, healthPointsMax } = player;
+  const player = usePlayerSelector();
 
   useTimeout(() => {
     dispatch({
-      type: 'restoreStamina'
+      type: 'RestoreStamina'
     });
-  }, stamina < staminaMax);
+  }, player.stamina < player.staminaMax);
 
   useTimeout(() => {
     dispatch({
-      type: 'restoreHealth'
+      type: 'RestoreHealth',
+      amount: 5
     });
-  }, healthPoints < healthPointsMax);
-
-  useEffect(() => {
-    dispatch({
-      type: 'visitAreaRestore'
-    });
-    return () => {
-      dispatch({
-        type: 'leaveAreaRestore'
-      });
-    };
-  }, [dispatch]);
+  }, player.healthPoints < player.healthPointsMax);
 
   return null;
 };

@@ -1,26 +1,31 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import { Button } from '../Button';
-import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
+import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useTimer } from '../utils/useTimer';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
+import { useCombatContext, useCombatDispatcher } from '../Combat/Context';
 
 const StyledButton = styled(Button)`
   width: 90px;
 `;
 
 export const HealButton: FC = () => {
-  const { state: player } = usePlayerContext();
   const playerDispatch = usePlayerDispatcher();
+  const player = usePlayerSelector();
 
-  const { nextHealTime } = player;
+  const [nextHealTime, setNextHealTime] = useState(
+    Date.now() + player.healRefreshTimeout
+  );
 
   const refreshing = nextHealTime > Date.now();
 
   const onHeal = () => {
     playerDispatch({
-      type: 'healSelf'
+      type: 'HealSelf'
     });
+    setNextHealTime(Date.now() + player.healRefreshTimeout);
   };
 
   useTimer(refreshing);

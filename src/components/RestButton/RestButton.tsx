@@ -2,31 +2,35 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import { Button } from '../Button';
-import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
+import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useTimer } from '../utils/useTimer';
 import { useTimeout } from '../utils/useTimeout';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
+import { useCombatContext, useCombatDispatcher } from '../Combat/Context';
 
 const StyledButton = styled(Button)`
   width: 90px;
 `;
 
 export const RestButton: FC = () => {
-  const { state: player } = usePlayerContext();
+  const player = usePlayerSelector();
   const playerDispatch = usePlayerDispatcher();
 
-  const { nextRestTime, targetId } = player;
+  const { nextRestTime, targetId } = useCombatContext();
+  const combatDispatcher = useCombatDispatcher();
 
   const refreshing = nextRestTime > Date.now();
 
   const onClick = () => {
-    playerDispatch({
-      type: 'rest'
+    combatDispatcher({
+      type: 'SetNextRestTime',
+      nextRestTime: player.restRefreshTimeout + Date.now()
     });
   };
 
   useTimeout(() => {
     playerDispatch({
-      type: 'restRestore'
+      type: 'RestRestore'
     });
   }, player.stamina < player.staminaMax && refreshing && targetId === null);
 

@@ -19,13 +19,13 @@ export const Quest: FC = () => {
   const { params } = useRouteMatch<{
     questId: string;
   }>();
-  const { state: player } = usePlayerContext();
+  const player = usePlayerContext();
   const dispatch = usePlayerDispatcher();
   const questId = parseInt(params.questId);
 
   const onSubmitQuest = () => {
     dispatch({
-      type: 'addQuest',
+      type: 'AddQuest',
       questId
     });
   };
@@ -33,8 +33,8 @@ export const Quest: FC = () => {
   const quest = getQuestById(questId);
 
   const locationLink =
-    player.location >= 0
-      ? `/${player.name}/locations/${player.location}`
+    player.currentLocationId >= 0
+      ? `/${player.name}/locations/${player.currentLocationId}`
       : `/${player.name}/locations`;
 
   return quest ? (

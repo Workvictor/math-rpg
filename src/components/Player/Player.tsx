@@ -15,6 +15,7 @@ import { Icon } from '../Icon';
 import { StatValue } from '../StatValue';
 import { mathAPS } from '../utils/mathAPS';
 import { EColorType } from '../layout/TextColor';
+import { usePlayerSelector } from './usePlayerSelector';
 
 const Wrapper = styled(BorderElevated)`
   width: 100%;
@@ -30,13 +31,13 @@ const Inner = styled(BorderInner)`
 `;
 
 export const Player: FC = memo(() => {
-  const { state } = usePlayerContext();
+  const state = usePlayerSelector();
   const dispatch = usePlayerDispatcher();
 
   const {
     level,
-    exp,
-    expMax,
+    experience,
+    experienceNext,
     mana,
     manaMax,
     stamina,
@@ -51,7 +52,7 @@ export const Player: FC = memo(() => {
 
   useTimeout(() => {
     dispatch({
-      type: 'restoreStamina'
+      type: 'RestoreStamina'
     });
   }, stamina < staminaMax);
 
@@ -102,7 +103,7 @@ export const Player: FC = memo(() => {
                 />
               </li>
             </ul>
-            <ExperienceBar value={exp} max={expMax} />
+            <ExperienceBar value={experience} max={experienceNext} />
           </div>
           <Button to={`/${name}/info`} className={layout.typography4}>
             {statPoints > 0 || skillPoints > 0 ? (

@@ -1,23 +1,20 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useRouteMatch } from 'react-router';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { Rythm, UIBlockInner } from '../layout';
-import { HitArea } from '../HitArea';
-import { HitContextProvider } from '../HitArea/Context';
-import { usePlayerContext, usePlayerDispatcher } from '../Player/PlayerContext';
+import { Rythm } from '../layout';
+import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { Clob } from '../world/Clob';
-import { spreadRange } from '../utils/spreadRange';
 import { RoomModel } from '../world/RoomModel';
-import { room } from '../world/rooms';
-import { locations } from '../world/world';
-import { Button } from '../Button';
-import { IRoomRoute } from './IRoomRoute';
 import { fillByChance } from '../utils/fillByChance';
 import { clobs } from '../world/clobs';
 import { randomValueFromRange } from '../utils/randomValueFromRange';
 import { SmoothScroll } from '../SmoothScroll';
 import { sortBy } from '../utils/sortBy';
 import { ClickableObject } from '../ClickableObject';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
+import { getSumBy } from '../utils/getSumBy';
+import { RoomControls } from './RoomControls';
+import { DropArea } from '../DropArea/DropArea';
+import { useTimeout } from '../utils/useTimeout';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -28,15 +25,15 @@ export const Room: FC<{ room: RoomModel }> = props => {
     objects: rObjs
   } = props.room;
 
-  const firstTimeUnlockLocation = useRef<boolean>();
-  const firstTimeUnlockRoom = useRef<boolean>();
-
-  const { params } = useRouteMatch<IRoomRoute>();
-
-  const { state: player } = usePlayerContext();
+  const player = usePlayerSelector();
   const dispatch = usePlayerDispatcher();
 
-  const [bossIsKilled, setBossIsKilled] = useState(false);
+  const [targetId, setTargetId] = useState<number>(0);
+  const [targetIsMounted, setTargetIsMounted] = useState(false);
+
+  const [goldLoot, setGoldLoot] = useState<{ index: number; amount: number }[]>(
+    []
+  );
 
   const [killCount, setKillCount] = useState(0);
   const [killCountMax, setKillCountMax] = useState(1);
@@ -44,38 +41,13 @@ export const Room: FC<{ room: RoomModel }> = props => {
     { key: number; clob: Clob; isBoss?: boolean }[]
   >([]);
 
-  useEffect(() => {
-    return () => {
-      dispatch({
-        type: 'setTarget',
-        targetId: null
-      });
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!firstTimeUnlockLocation.current && nextLocationId) {
-      firstTimeUnlockLocation.current = !player.unlockedLocations.includes(
-        nextLocationId
-      );
-    }
-  }, [nextLocationId, player.unlockedLocations]);
-
-  useEffect(() => {
-    if (!firstTimeUnlockRoom.current && nextRoom) {
-      firstTimeUnlockRoom.current = !player.unlockedRoomNames.includes(
-        nextRoom
-      );
-    }
-  }, [nextRoom, player.unlockedRoomNames]);
-
-  useEffect(() => {
+  const init = useCallback(() => {
     const sortedByChance = sortBy(rObjs, 'chance', -1);
 
     const clobTypeTable = fillByChance(
       sortedByChance.map(i => i.clobType),
       sortedByChance.map(i => i.chance),
-      spreadRange(clobsCount)
+      clobsCount
     ).map((type, key) => {
       const clob = clobs[type]?.setLevel(
         randomValueFromRange([Math.max(1, level - 1), level + 1])
@@ -94,6 +66,7 @@ export const Room: FC<{ room: RoomModel }> = props => {
       goldAmountValue: 4
     });
 
+    setTargetId(0);
     setKillCount(0);
     setKillCountMax(clobTypeTable.length + 1);
     setObjects([
@@ -102,99 +75,107 @@ export const Room: FC<{ room: RoomModel }> = props => {
     ]);
   }, [clobsCount, level, props.room.bossType, rObjs]);
 
-  const clear = () => {
-    //TODO add notify before reload
-    setKillCount(0);
-    setKillCountMax(1);
-    setObjects([]);
-  };
+  useEffect(() => {
+    init();
+  }, [init]);
 
-  const onMobKill = useCallback((index: number) => {
+  const onMobKill = useCallback((index: number, amount: number) => {
+    setObjects(prev => prev.filter(item => item.key !== index));
+    setGoldLoot(p => [...p, { index, amount }]);
     setKillCount(prev => prev + 1);
+    setTargetId(index + 1);
   }, []);
 
-  const onLootBoxClose = useCallback((index: number) => {
-    setObjects(prev => prev.filter(item => item.key !== index));
+  const onGoldUnmount = useCallback((index: number) => {
+    setGoldLoot(p => p.filter(i => i.index !== index));
+  }, []);
+
+  const [nextAttackTime, setNextAttackTime] = useState(Date.now());
+  const [playerCanAttack, setPlayerCanAttack] = useState(false);
+
+  const [damage, setDamage] = useState<{ index: number; value: number }[]>([]);
+
+  const playerDispatch = usePlayerDispatcher();
+
+  const playerDidAttack = useCallback(() => {
+    if (playerCanAttack) {
+      playerDispatch({
+        type: 'DidAttack'
+      });
+      setNextAttackTime(Date.now() + player.attackDelay);
+      setDamage(prev => [...prev, { index: targetId, value: player.damage }]);
+    }
+  }, [
+    playerCanAttack,
+    playerDispatch,
+    player.attackDelay,
+    player.damage,
+    targetId
+  ]);
+
+  useEffect(() => {
+    if (player.stamina >= 5 && nextAttackTime <= Date.now()) {
+      console.log('useEffect setPlayerCanAttack')
+      setPlayerCanAttack(true);
+    }
+  }, [nextAttackTime, player.stamina]);
+
+  useTimeout(
+    () => {
+      console.log('useTimeout')
+      playerDidAttack();
+    },
+    targetIsMounted && player.stamina >= 5 && nextAttackTime <= Date.now(),
+    Math.max(0, nextAttackTime - Date.now())
+  );
+
+  const onTargetMount = useCallback(() => {
+    setTargetIsMounted(true);
   }, []);
 
   useEffect(() => {
     if (killCount === killCountMax) {
       nextLocationId &&
         dispatch({
-          type: 'addUnlockedLocation',
+          type: 'AddUnlockedLocationId',
           locationId: nextLocationId
         });
       nextRoom &&
         dispatch({
-          type: 'unlockRoom',
-          roomName: nextRoom
+          type: 'AddUnlockedRoomId',
+          roomId: nextRoom
         });
     }
   }, [dispatch, killCount, killCountMax, nextLocationId, nextRoom]);
 
   return (
-    <HitContextProvider>
-      <SmoothScroll>
-        {killCount === killCountMax && (
-          <Rythm>
-            <UIBlockInner>
-              молодец, всех победил!
-              {nextLocationId &&
-              firstTimeUnlockLocation.current &&
-              player.unlockedLocations.includes(nextLocationId) ? (
-                <div>
-                  Новая локация доступна{' '}
-                  <Button
-                    to={`/${params.gameName}/locations/${nextLocationId}`}
-                    onClick={clear}
-                  >
-                    {locations[nextLocationId].name}
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  {nextRoom &&
-                    firstTimeUnlockRoom.current &&
-                    player.unlockedRoomNames.includes(nextRoom) && (
-                      <div>
-                        Новая зона [{room[nextRoom].label}] доступна{' '}
-                        <Button
-                          onClick={clear}
-                          to={`/${params.gameName}/locations/${params.locationId}}`}
-                        >
-                          выход
-                        </Button>
-                      </div>
-                    )}
-                </>
-              )}
-            </UIBlockInner>
-          </Rythm>
-        )}
-        {objects.map(i => {
+    <SmoothScroll>
+      <RoomControls
+        onRepeat={init}
+        killCountMax={killCountMax}
+        killCount={killCount}
+      />
+      {objects
+        .filter(i => i.key === targetId)
+        .map(i => {
+          const damageDealt = getSumBy(
+            damage.filter(d => d.index === i.key),
+            'value'
+          );
           return (
             <Rythm key={i.key}>
               <ClickableObject
                 index={i.key}
+                damageDealt={damageDealt}
                 isBoss={i.isBoss}
                 clob={i.clob}
                 onKill={onMobKill}
-                onLootBoxClose={onLootBoxClose}
-                playerTargetId={player.targetId}
-                playerCanAttack={
-                  (player.targetId === i.key || player.targetId === null) &&
-                  player.nextAttackTime <= Date.now() &&
-                  player.stamina >= 5
-                }
-                playerNextAttackTime={player.nextAttackTime}
-                playerAttackDelay={player.attackDelay}
-                playerDamage={player.damage}
+                onTargetMount={onTargetMount}
               />
             </Rythm>
           );
         })}
-      </SmoothScroll>
-      <HitArea />
-    </HitContextProvider>
+      <DropArea goldLoot={goldLoot} onGoldUnmount={onGoldUnmount} />
+    </SmoothScroll>
   );
 };

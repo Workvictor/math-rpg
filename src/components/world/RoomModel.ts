@@ -26,15 +26,17 @@ interface IConstructor {
   locationId: number;
   level: number;
   prevRoom?: TRoomName;
-  nextRoom?: TRoomName;
+  nextRoom?: number;
   nextLocationId?: number;
   bossType: TClobType;
+  id: number;
   exclusiveClobs: TClobType[];
 }
 
 export class RoomModel implements IConstructor {
   level: number = 1;
   name: string;
+  id: number;
   label: string;
   description?: string;
   clobsTypes: Clob[];
@@ -46,7 +48,7 @@ export class RoomModel implements IConstructor {
   locationId: number;
   icon: TIcons;
   prevRoom?: TRoomName;
-  nextRoom?: TRoomName;
+  nextRoom?: number;
   nextLocationId?: number;
 
   constructor(props: IConstructor) {
@@ -55,6 +57,7 @@ export class RoomModel implements IConstructor {
       label,
       description,
       icon,
+      id,
       clobsTypes,
       clobsCount,
       locationId,
@@ -67,6 +70,7 @@ export class RoomModel implements IConstructor {
       bossType,
       exclusiveClobs
     } = props;
+    this.id = id;
     this.level = level;
     this.objects = objects;
     this.bossType = bossType;
