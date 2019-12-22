@@ -43,7 +43,7 @@ export const clobs: { [key in TClobType]: Clob } = {
 
   rat: new Clob('крыса', 'rat').setModifiers({
     damageValue: 0.5,
-    healthPointValue: 0.8,
+    healthPointValue: 0.75,
     attackTimeoutValue: 0.75,
     expValue: 0.65
   }),
