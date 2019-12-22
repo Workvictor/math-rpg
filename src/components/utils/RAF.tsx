@@ -1,7 +1,8 @@
 import React from 'react';
 
 export const useRaf = (
-  callback: (timeElapsed: number, timeFromStart: number) => boolean
+  callback: (timeElapsed: number, timeFromStart: number) => void,
+  wakeUp: boolean = true
 ) => {
   const startTime = React.useRef<number>(Date.now());
   const frameTime = React.useRef<number>(Date.now());
@@ -13,8 +14,9 @@ export const useRaf = (
     const timeElapsed = Date.now() - startTime.current;
     startTime.current = Date.now();
     rafId.current = window.requestAnimationFrame(onEachFrame);
-    setIsRunning(callback(timeElapsed, timeFromStart));
-  }, [callback]);
+    callback(timeElapsed, timeFromStart);
+    setIsRunning(wakeUp);
+  }, [callback, wakeUp]);
 
   React.useLayoutEffect(() => {
     if (isRunning) {

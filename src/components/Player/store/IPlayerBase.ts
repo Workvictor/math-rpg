@@ -15,6 +15,8 @@ export interface IPlayerBase extends IPlayerStats {
   healthPointsPercentBonus: number;
   damageRange: number[];
   healRefreshTimeout: number;
+  nextHealTime: number;
+  nextAttackTime: number;
   healthPointsPerSecond: number;
   skillPoints: number;
   statPoints: number;

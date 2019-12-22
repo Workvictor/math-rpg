@@ -6,6 +6,7 @@ import { getManaMax } from './store/getManaMax';
 import { getAttackDelayValue } from './store/getAttackDelayValue';
 import { getHealValue } from './store/getHealValue';
 import { getDamageValue } from './store/getDamageValue';
+import { getCritChance } from './store/getCritChance';
 
 export const usePlayerSelector = (): IPlayer => {
   const state = usePlayerContext();
@@ -17,6 +18,7 @@ export const usePlayerSelector = (): IPlayer => {
     manaMax: getManaMax(state),
     damage: getDamageValue(state),
     attackDelay: getAttackDelayValue(state),
-    healValue: getHealValue(state)
+    healValue: getHealValue(state),
+    critChance: getCritChance(state)
   };
 };

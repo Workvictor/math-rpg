@@ -14,7 +14,9 @@ import { usePlayerSelector } from '../Player/usePlayerSelector';
 import { getSumBy } from '../utils/getSumBy';
 import { RoomControls } from './RoomControls';
 import { DropArea } from '../DropArea/DropArea';
-import { useTimeout } from '../utils/useTimeout';
+import { useRaf } from '../utils/RAF';
+import { Divider } from '../layout/Divider';
+import layout from '../layout/layout.module.scss';
 
 export const Room: FC<{ room: RoomModel }> = props => {
   const {
@@ -29,11 +31,16 @@ export const Room: FC<{ room: RoomModel }> = props => {
   const dispatch = usePlayerDispatcher();
 
   const [targetId, setTargetId] = useState<number>(0);
+
   const [targetIsMounted, setTargetIsMounted] = useState(false);
 
   const [goldLoot, setGoldLoot] = useState<{ index: number; amount: number }[]>(
     []
   );
+
+  const [damage, setDamage] = useState<
+    { index: number; value: number; isCritical?: boolean }[]
+  >([]);
 
   const [killCount, setKillCount] = useState(0);
   const [killCountMax, setKillCountMax] = useState(1);
@@ -60,13 +67,15 @@ export const Room: FC<{ room: RoomModel }> = props => {
 
     const boss = clobs[props.room.bossType].setLevel(level + 2).setModifiers({
       expValue: 1.5,
-      damageValue: 1.5,
-      attackTimeoutValue: 1.5,
+      damageValue: 1,
+      attackTimeoutValue: 1,
       healthPointValue: 3,
       goldAmountValue: 4
     });
 
     setTargetId(0);
+    setGoldLoot([]);
+    setDamage([]);
     setKillCount(0);
     setKillCountMax(clobTypeTable.length + 1);
     setObjects([
@@ -90,48 +99,31 @@ export const Room: FC<{ room: RoomModel }> = props => {
     setGoldLoot(p => p.filter(i => i.index !== index));
   }, []);
 
-  const [nextAttackTime, setNextAttackTime] = useState(Date.now());
-  const [playerCanAttack, setPlayerCanAttack] = useState(false);
-
-  const [damage, setDamage] = useState<{ index: number; value: number }[]>([]);
-
   const playerDispatch = usePlayerDispatcher();
 
   const playerDidAttack = useCallback(() => {
-    if (playerCanAttack) {
-      playerDispatch({
-        type: 'DidAttack'
-      });
-      setNextAttackTime(Date.now() + player.attackDelay);
-      setDamage(prev => [...prev, { index: targetId, value: player.damage }]);
-    }
-  }, [
-    playerCanAttack,
-    playerDispatch,
-    player.attackDelay,
-    player.damage,
-    targetId
-  ]);
-
-  useEffect(() => {
-    if (player.stamina >= 5 && nextAttackTime <= Date.now()) {
-      console.log('useEffect setPlayerCanAttack')
-      setPlayerCanAttack(true);
-    }
-  }, [nextAttackTime, player.stamina]);
-
-  useTimeout(
-    () => {
-      console.log('useTimeout')
-      playerDidAttack();
-    },
-    targetIsMounted && player.stamina >= 5 && nextAttackTime <= Date.now(),
-    Math.max(0, nextAttackTime - Date.now())
-  );
+    playerDispatch({
+      type: 'DidAttack'
+    });
+    const isCritical = Math.random() * 100 <= player.critChance;
+    const value = isCritical ? player.damage * 1.5 : player.damage;
+    setDamage(prev => [...prev, { index: targetId, value, isCritical }]);
+  }, [playerDispatch, player.critChance, player.damage, targetId]);
 
   const onTargetMount = useCallback(() => {
     setTargetIsMounted(true);
   }, []);
+
+  useRaf(() => {
+    if (
+      targetIsMounted &&
+      killCount !== killCountMax &&
+      player.stamina >= 5 &&
+      player.nextAttackTime <= Date.now()
+    ) {
+      playerDidAttack();
+    }
+  });
 
   useEffect(() => {
     if (killCount === killCountMax) {
@@ -150,32 +142,37 @@ export const Room: FC<{ room: RoomModel }> = props => {
 
   return (
     <SmoothScroll>
-      <RoomControls
-        onRepeat={init}
-        killCountMax={killCountMax}
-        killCount={killCount}
-      />
-      {objects
-        .filter(i => i.key === targetId)
-        .map(i => {
-          const damageDealt = getSumBy(
-            damage.filter(d => d.index === i.key),
-            'value'
-          );
-          return (
-            <Rythm key={i.key}>
-              <ClickableObject
-                index={i.key}
-                damageDealt={damageDealt}
-                isBoss={i.isBoss}
-                clob={i.clob}
-                onKill={onMobKill}
-                onTargetMount={onTargetMount}
-              />
-            </Rythm>
-          );
-        })}
-      <DropArea goldLoot={goldLoot} onGoldUnmount={onGoldUnmount} />
+      <div className={layout.flexColumnBetween}>
+        <div>
+          <RoomControls
+            onRepeat={init}
+            killCountMax={killCountMax}
+            killCount={killCount}
+          />
+          {objects
+            .filter(i => i.key === targetId)
+            .map(i => {
+              const damageDealt = getSumBy(
+                damage.filter(d => d.index === i.key),
+                'value'
+              );
+              return (
+                <Rythm key={i.key}>
+                  <ClickableObject
+                    onMount={onTargetMount}
+                    index={i.key}
+                    damageDealt={damageDealt}
+                    isBoss={i.isBoss}
+                    clob={i.clob}
+                    onKill={onMobKill}
+                  />
+                </Rythm>
+              );
+            })}
+          <Divider />
+        </div>
+        <DropArea goldLoot={goldLoot} onGoldUnmount={onGoldUnmount} />
+      </div>
     </SmoothScroll>
   );
 };

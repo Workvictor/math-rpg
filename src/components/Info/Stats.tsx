@@ -34,6 +34,7 @@ export const Stats: FC = () => {
     spirit,
     goldAmount,
     statPoints,
+    critChance,
     skillPoints
   } = usePlayerSelector();
 
@@ -144,6 +145,12 @@ export const Stats: FC = () => {
             attacks per second
             <hr />
             {mathAPS(attackDelay)}aps
+          </li>
+          <li>
+            <Icon type={'bladeDrag'} />
+            crit chance
+            <hr />
+            {critChance}%
           </li>
           <li>
             <Icon type={'healPlus'} />

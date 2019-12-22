@@ -21,7 +21,7 @@ export const LootFrame: FC<IProps> = memo(props => {
   useEffect(() => {
     const tmid = setTimeout(() => {
       setIsPicked(true);
-    }, 5000);
+    }, 45000);
     return () => {
       clearTimeout(tmid);
     };

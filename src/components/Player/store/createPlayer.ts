@@ -7,7 +7,7 @@ import { getExperienceForNextLevel } from './getExperienceNextForLevel';
 export const skillPointsPerLevel = 1;
 export const statPointsPerLevel = 3;
 
-const dataVersion = '0.0.2';
+const dataVersion = '0.0.10';
 // TODO
 export const createPlayer = (
   name: string,
@@ -19,21 +19,23 @@ export const createPlayer = (
     name,
     level,
     experience,
-    baseHealthPoints: 35,
+    baseHealthPoints: 15,
     skillPoints: (level - 1) * skillPointsPerLevel,
     statPoints: (level - 1) * statPointsPerLevel,
-    physique: 10,
-    agility: 10,
-    spirit: 10,
+    physique: 5,
+    agility: 5,
+    spirit: 5,
     experienceNext: getExperienceForNextLevel(1),
     experienceCache: [],
     healthPointsFlatBonus: 0,
     healthPointsPercentBonus: 0,
     damageRange: [],
     healthPointsPerSecond: 0,
-    restPointsPerSecond: 3,
-    staminaCostPerAttack: 5,
+    restPointsPerSecond: 2,
+    staminaCostPerAttack: 3,
     healRefreshTimeout: 45000,
+    nextHealTime: 0,
+    nextAttackTime: 0,
     restRefreshTimeout: 45000,
     questbook: [],
     goldAmount: 0,

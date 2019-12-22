@@ -6,7 +6,12 @@ export const useTimeout = (
   timeout = 1000
 ) => {
   const [isRunning, setIsRunning] = useState(false);
+  const tmidRef = useRef<number>();
   const ref = useRef<() => void>();
+
+  useEffect(() => {
+    return () => clearInterval(tmidRef.current);
+  }, []);
 
   // wakeUp morpheus
   useEffect(() => {
@@ -19,11 +24,10 @@ export const useTimeout = (
   // a tick timer that runs callback
   useEffect(() => {
     if (isRunning && wakeUp) {
-      const tid = setTimeout(() => {
+      tmidRef.current = setTimeout(() => {
         ref.current && ref.current();
         setIsRunning(false);
       }, timeout);
-      return () => clearInterval(tid);
     }
   }, [isRunning, timeout, wakeUp]);
 };

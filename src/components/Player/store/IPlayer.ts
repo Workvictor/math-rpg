@@ -7,4 +7,5 @@ export interface IPlayer extends IPlayerBase {
   damage: number;
   attackDelay: number;
   healValue: number;
+  critChance: number;
 }

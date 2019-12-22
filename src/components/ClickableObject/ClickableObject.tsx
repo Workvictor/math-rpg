@@ -56,10 +56,9 @@ export const ClickableObject: FC<{
   damageDealt: number;
   isBoss?: boolean;
   onKill: (index: number, goldAmount: number) => void;
-  onTargetMount: (index: number) => void;
+  onMount?: (index: number) => void;
 }> = memo(props => {
   const hitRef = createRef<HTMLDivElement>();
-  const rect = useRef<DOMRect>();
 
   const hitDispatch = useHitDispatcher();
   const playerDispatch = usePlayerDispatcher();
@@ -72,26 +71,21 @@ export const ClickableObject: FC<{
 
   const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
 
-  const setHitRect = useCallback(() => {
-    if (hitRef.current && !rect.current) {
-      rect.current = hitRef.current.getBoundingClientRect();
-    }
-  }, [hitRef]);
-
   const animateDamage = useCallback(
     (hp: number) => {
-      if (hp !== healthPoints && rect.current) {
-        const damageValue = clob.healthPoints - hp;
+      if (hp !== healthPoints && hitRef.current) {
+        const rect = hitRef.current.getBoundingClientRect();
+        const damageValue = healthPoints - hp;
         setAnimated(true);
         hitDispatch({
           type: 'addHit',
-          pageX: rect.current.left + rect.current.width / 2,
-          pageY: rect.current.top + rect.current.height / 2,
+          pageX: rect.left + rect.width / 2,
+          pageY: rect.top + rect.height / 2,
           value: damageValue
         });
       }
     },
-    [clob.healthPoints, healthPoints, hitDispatch]
+    [clob.healthPoints, healthPoints, hitDispatch, hitRef]
   );
 
   const animateDeath = useCallback(
@@ -111,7 +105,6 @@ export const ClickableObject: FC<{
 
   useEffect(() => {
     if (!isDead && props.damageDealt > 0) {
-      setHitRect();
       const hp = Math.max(0, clob.healthPoints - props.damageDealt);
       animateDamage(hp);
       animateDeath(hp);
@@ -121,7 +114,6 @@ export const ClickableObject: FC<{
     clob.healthPoints,
     isDead,
     props.damageDealt,
-    setHitRect,
     animateDamage,
     animateDeath
   ]);
@@ -142,8 +134,8 @@ export const ClickableObject: FC<{
   };
 
   const onAnimationEnd = () => {
-    if (!isDead) {
-      props.onTargetMount(props.index);
+    if (!isDead && props.onMount) {
+      props.onMount(props.index);
     }
   };
 

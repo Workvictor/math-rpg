@@ -15,17 +15,12 @@ export const HealButton: FC = () => {
   const playerDispatch = usePlayerDispatcher();
   const player = usePlayerSelector();
 
-  const [nextHealTime, setNextHealTime] = useState(
-    Date.now() + player.healRefreshTimeout
-  );
-
-  const refreshing = nextHealTime > Date.now();
+  const refreshing = player.nextHealTime > Date.now();
 
   const onHeal = () => {
     playerDispatch({
       type: 'HealSelf'
     });
-    setNextHealTime(Date.now() + player.healRefreshTimeout);
   };
 
   useTimer(refreshing);
@@ -36,7 +31,7 @@ export const HealButton: FC = () => {
     <StyledButton soundType={'healing'} disable={disable} onClick={onHeal}>
       лечить
       {refreshing && (
-        <span>({Math.ceil((nextHealTime - Date.now()) / 1000)})</span>
+        <span>({Math.ceil((player.nextHealTime - Date.now()) / 1000)})</span>
       )}
     </StyledButton>
   );

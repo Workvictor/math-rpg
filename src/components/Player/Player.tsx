@@ -2,16 +2,14 @@ import React, { FC, memo } from 'react';
 import styled from 'styled-components';
 
 import { BorderElevated, BorderInner } from '../layout';
-import { usePlayerContext, usePlayerDispatcher } from './PlayerContext';
+import { usePlayerDispatcher } from './PlayerContext';
 import { Avatar } from '../Avatar';
-import { Button } from '../Button';
 import { ManaBar } from '../StatusBar/ManaBar';
 import { StaminaBar } from '../StatusBar/StaminaBar';
 import { ExperienceBar } from '../StatusBar/ExpirienceBar';
 import { useTimeout } from '../utils/useTimeout';
 import { Health } from './Health';
 import layout from '../layout/layout.module.scss';
-import { Icon } from '../Icon';
 import { StatValue } from '../StatValue';
 import { mathAPS } from '../utils/mathAPS';
 import { EColorType } from '../layout/TextColor';
@@ -60,25 +58,6 @@ export const Player: FC = memo(() => {
     <Wrapper>
       <Inner>
         <div className={layout.flexStart}>
-          <Avatar
-            iconType={'cementShoes'}
-            level={level}
-            className={layout.marginRight}
-          />
-          <ul className={layout.cadenceList}>
-            <li>{name}</li>
-            <li>
-              <Health />
-            </li>
-            <li>
-              <ManaBar value={mana} max={manaMax} />
-            </li>
-            <li>
-              <StaminaBar value={stamina} max={staminaMax} />
-            </li>
-          </ul>
-        </div>
-        <div className={layout.flexStart}>
           <div className={layout.fullWidth}>
             <ul className={layout.columnList}>
               <li>
@@ -103,17 +82,29 @@ export const Player: FC = memo(() => {
                 />
               </li>
             </ul>
-            <ExperienceBar value={experience} max={experienceNext} />
+            <hr className={layout.divider} />
           </div>
-          <Button to={`/${name}/info`} className={layout.typography4}>
-            {statPoints > 0 || skillPoints > 0 ? (
-              <Icon type={'healPlus'} className={layout.marginRight} />
-            ) : (
-              <Icon type={'skills'} className={layout.marginRight} />
-            )}
-            skills
-          </Button>
         </div>
+        <div className={layout.flexStart}>
+          <Avatar
+            iconType={'cementShoes'}
+            level={level}
+            className={layout.marginRight}
+          />
+          <ul className={layout.cadenceList}>
+            <li>{name}</li>
+            <li>
+              <Health />
+            </li>
+            <li>
+              <ManaBar value={mana} max={manaMax} />
+            </li>
+            <li>
+              <StaminaBar value={stamina} max={staminaMax} />
+            </li>
+          </ul>
+        </div>
+        <ExperienceBar value={experience} max={experienceNext} />
       </Inner>
     </Wrapper>
   );

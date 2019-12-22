@@ -6,6 +6,7 @@ import { addExp } from './addExp';
 import { getHealthPointsValue } from './getHealthPointValue';
 import { getHealValue } from './getHealValue';
 import { getStaminaPerSecond } from './getStaminaPerSecond';
+import { getAttackDelayValue } from './getAttackDelayValue';
 
 export const reducer = (state: IPlayerBase, action: Actions): IPlayerBase => {
   switch (action.type) {
@@ -27,7 +28,8 @@ export const reducer = (state: IPlayerBase, action: Actions): IPlayerBase => {
     case 'DidAttack':
       return {
         ...state,
-        stamina: state.stamina - state.staminaCostPerAttack
+        stamina: state.stamina - state.staminaCostPerAttack,
+        nextAttackTime: getAttackDelayValue(state) + Date.now()
       };
     case 'AddUnlockedRoomId':
       return {
@@ -78,7 +80,8 @@ export const reducer = (state: IPlayerBase, action: Actions): IPlayerBase => {
         healthPoints: Math.min(
           getHealthPointsValue(state),
           state.healthPoints + getHealValue(state)
-        )
+        ),
+        nextHealTime: state.healRefreshTimeout + Date.now()
       };
     case 'RestoreHealth':
       return {

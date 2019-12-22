@@ -90,8 +90,15 @@ section hr,
 }
 
 .flexBetween {
-  composes: flex;
+  composes: flexCenter;
   justify-content: space-between;
+}
+
+.flexColumnBetween {
+  composes: flexBetween;
+  align-items: stretch;
+  flex-direction: column;
+  height: 100%;
 }
 
 .flexEnd {
