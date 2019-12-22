@@ -13,6 +13,7 @@ const Wrapper = styled(FlexStart)`
   font-size: 16px;
   align-items: flex-end;
   justify-content: space-between;
+  flex-shrink: 0;
 `;
 const ChildWrapper = styled.div`
   margin-right: 4px;

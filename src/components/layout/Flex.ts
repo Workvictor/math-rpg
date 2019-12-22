@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const Flex = styled.div`
   display: flex;
   align-items: center;
-  flex-shrink: 0;
 `;
 
 export const FlexStart = styled(Flex)`
