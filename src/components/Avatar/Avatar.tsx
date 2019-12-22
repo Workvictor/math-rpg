@@ -14,7 +14,7 @@ export const Wrapper = styled(Border)<IView>`
   position: relative;
   flex-grow: 0;
   flex-shrink: 0;
-  font-size: ${({ size = 64 }) => size}px;
+  font-size: ${({ size = 56 }) => size}px;
   color: ${({ theme }) => theme.colors.grey65};
 `;
 

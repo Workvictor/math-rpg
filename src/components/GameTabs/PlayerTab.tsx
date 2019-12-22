@@ -8,10 +8,10 @@ import { IGameRoute } from '../Game/IGameRoute';
 
 export const PlayerTab = () => {
   const { params } = useRouteMatch<IGameRoute>();
-  const { state } = usePlayerContext();
+  const state = usePlayerContext();
   return (
     <TabLabel label={'Информация'}>
-      <Button to={`/${params.gameName}/locations/${state.location}`}>
+      <Button to={`/${params.gameName}/locations/${state.currentLocationId}`}>
         назад
       </Button>
     </TabLabel>

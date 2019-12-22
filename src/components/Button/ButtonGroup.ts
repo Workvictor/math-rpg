@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 export const ButtonGroup = styled.div`
-  display: inline-block;
+  display: inline-flex;
+  align-items: stretch;
   background-color: ${props => props.theme.colors.grey0};
   border: 2px solid ${props => props.theme.colors.grey0};
   border-radius: 4px;

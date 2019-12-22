@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Clob } from './Clob';
 import { TRoomName } from './rooms';
 import { TClobType } from './clobs';
+import { TIcons } from '../Icon/icons';
 
 interface IRoomObject {
   chance: number;
@@ -17,7 +18,7 @@ interface IConstructor {
   name: string;
   label: string;
   description?: string;
-  icon: ReactNode;
+  icon: TIcons;
   clobsTypes: Clob[];
   objects: IRoomObject[];
   goals: IRoomGoal[];
@@ -25,15 +26,17 @@ interface IConstructor {
   locationId: number;
   level: number;
   prevRoom?: TRoomName;
-  nextRoom?: TRoomName;
+  nextRoom?: number;
   nextLocationId?: number;
   bossType: TClobType;
+  id: number;
   exclusiveClobs: TClobType[];
 }
 
 export class RoomModel implements IConstructor {
   level: number = 1;
   name: string;
+  id: number;
   label: string;
   description?: string;
   clobsTypes: Clob[];
@@ -43,9 +46,9 @@ export class RoomModel implements IConstructor {
   goals: IRoomGoal[];
   clobsCount: number;
   locationId: number;
-  icon: ReactNode;
+  icon: TIcons;
   prevRoom?: TRoomName;
-  nextRoom?: TRoomName;
+  nextRoom?: number;
   nextLocationId?: number;
 
   constructor(props: IConstructor) {
@@ -54,6 +57,7 @@ export class RoomModel implements IConstructor {
       label,
       description,
       icon,
+      id,
       clobsTypes,
       clobsCount,
       locationId,
@@ -66,6 +70,7 @@ export class RoomModel implements IConstructor {
       bossType,
       exclusiveClobs
     } = props;
+    this.id = id;
     this.level = level;
     this.objects = objects;
     this.bossType = bossType;

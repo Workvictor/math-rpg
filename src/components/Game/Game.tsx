@@ -14,6 +14,8 @@ import { HealButton } from '../HealButton';
 import { Button } from '../Button';
 import { LocationSuspense } from '../LocationSuspense';
 import { RestButton } from '../RestButton';
+import layout from '../layout/layout.module.scss';
+import { Icon } from '../Icon';
 
 export const Game: FC = () => {
   const { params, path } = useRouteMatch<IGameRoute>();
@@ -22,29 +24,8 @@ export const Game: FC = () => {
     <PlayerProvider gameName={params.gameName}>
       <Route path={`${path}`}>
         <GameTabs />
-        <BorderInner>
-          <Route path={`${path}/locations/:locationId`}>
-            <Player />
-          </Route>
-          <Padbox>
-            <Divider />
-            <Route path={`${path}/locations/:locationId`}>
-              <BorderInner>
-                <Padbox>
-                  <ButtonGroup>
-                    <HealButton />
-                    <RestButton />
-                    <Route exact path={`${path}/locations/:locationId`}>
-                      <Button disable>чинить(скоро)</Button>
-                    </Route>
-                  </ButtonGroup>
-                </Padbox>
-              </BorderInner>
-            </Route>
-          </Padbox>
-        </BorderInner>
-        <Divider />
       </Route>
+      <Divider />
 
       <Switch>
         <Route path={`${path}/locations`}>
@@ -58,6 +39,38 @@ export const Game: FC = () => {
         </Route>
         <Redirect to={`/${params.gameName}/locations`} />
       </Switch>
+
+      <Route path={`${path}`}>
+        <Divider />
+        <BorderInner>
+          <Padbox>
+            <Route path={`${path}/locations/:locationId`}>
+              <ButtonGroup>
+                <Route exact path={`${path}/locations/:locationId`}>
+                  <Button
+                    to={`/${params.gameName}/info`}
+                    className={layout.typography4}
+                  >
+                    <Icon type={'skills'} className={layout.marginRight} />
+                    skills
+                  </Button>
+                </Route>
+                <Route exact path={`${path}/locations/:locationId/:roomName`}>
+                  <HealButton />
+                </Route>
+                {/*<RestButton />*/}
+                {/*<Route exact path={`${path}/locations/:locationId`}>*/}
+                {/*  <Button disable>чинить(скоро)</Button>*/}
+                {/*</Route>*/}
+              </ButtonGroup>
+            </Route>
+            <Divider />
+          </Padbox>
+          <Route path={`${path}/locations/:locationId`}>
+            <Player />
+          </Route>
+        </BorderInner>
+      </Route>
     </PlayerProvider>
   );
 };

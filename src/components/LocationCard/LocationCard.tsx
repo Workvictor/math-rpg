@@ -13,9 +13,9 @@ interface IProps {
 
 export const LocationCard: FC<IProps> = ({ location }) => {
   const { id, name, image, quote } = location;
-  const { state } = usePlayerContext();
-  const locationIsTheSame = state.location === id;
-  const isUnlocked = state.unlockedLocations.includes(id);
+  const state = usePlayerContext();
+  const locationIsTheSame = state.currentLocationId === id;
+  const isUnlocked = state.unlockedLocationIds.includes(id);
 
   const styleBody = {
     backgroundImage: `url(${image})`
@@ -38,7 +38,7 @@ export const LocationCard: FC<IProps> = ({ location }) => {
               {locationIsTheSame ? 'продолжить' : 'войти'}
             </Button>
           ) : (
-            `Чтобы открыть, пройдите "${locations[id - 1].name}"`
+            `недоступно`
           )}
         </div>
       </UiFrame>

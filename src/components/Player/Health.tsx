@@ -1,14 +1,14 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
-import { usePlayerContext } from './PlayerContext';
 import { useHistory } from 'react-router';
 import { HealthBar } from '../StatusBar/HealthBar';
 import { useUIContext } from '../UIContext';
 import { locations } from '../world/world';
 import { Modal } from '../Modal';
+import { usePlayerSelector } from './usePlayerSelector';
 
 export const Health: FC = () => {
-  const { state: player } = usePlayerContext();
+  const player = usePlayerSelector();
 
   const history = useHistory();
 
@@ -31,10 +31,10 @@ export const Health: FC = () => {
       setIsOpen(true);
       // TODO set player [Home] link
       history.push(
-        `/${player.name}/locations/${locations[player.location].id}`
+        `/${player.name}/locations/${locations[player.currentLocationId].id}`
       );
     }
-  }, [player.healthPoints, history, player.location, player.name]);
+  }, [player.healthPoints, history, player.currentLocationId, player.name]);
 
   return (
     <>

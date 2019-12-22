@@ -8,16 +8,16 @@ import { useGameContext } from '../Game/GameContext';
 import layout from '../layout/layout.module.scss';
 import styles from './styles.module.scss';
 import { IconButton } from '../Button';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
 
 export const Stats: FC = () => {
   const gameContext = useGameContext();
-  const { state } = usePlayerContext();
   const dispatch = usePlayerDispatcher();
 
   const {
     level,
-    exp,
-    expMax,
+    experience,
+    experienceNext,
     mana,
     manaMax,
     stamina,
@@ -30,38 +30,39 @@ export const Stats: FC = () => {
     healthPointsMax,
     healRefreshTimeout,
     agility,
-    strength,
-    intelligence,
+    physique,
+    spirit,
     goldAmount,
     statPoints,
+    critChance,
     skillPoints
-  } = state;
+  } = usePlayerSelector();
 
   useTimeout(() => {
     dispatch({
-      type: 'restoreStamina'
+      type: 'RestoreStamina'
     });
   }, stamina < staminaMax);
 
   const onAddStrength = () => {
     dispatch({
-      type: 'upgradeStat',
+      type: 'UpgradeStat',
       amount: 1,
-      statName: 'strength'
+      statName: 'physique'
     });
   };
   const onAddAgility = () => {
     dispatch({
-      type: 'upgradeStat',
+      type: 'UpgradeStat',
       amount: 1,
       statName: 'agility'
     });
   };
   const onAddIntelligence = () => {
     dispatch({
-      type: 'upgradeStat',
+      type: 'UpgradeStat',
       amount: 1,
-      statName: 'intelligence'
+      statName: 'spirit'
     });
   };
 
@@ -78,7 +79,7 @@ export const Stats: FC = () => {
               <Icon type={'strong'} />
               strength
               <hr />
-              {strength}
+              {physique}
             </span>
             <IconButton onClick={onAddStrength} disable={statPoints <= 0}>
               <Icon type={'healPlus'} />
@@ -100,7 +101,7 @@ export const Stats: FC = () => {
               <Icon type={'smart'} />
               intelligence
               <hr />
-              {intelligence}
+              {spirit}
             </span>
             <IconButton onClick={onAddIntelligence} disable={statPoints <= 0}>
               <Icon type={'healPlus'} />
@@ -146,6 +147,12 @@ export const Stats: FC = () => {
             {mathAPS(attackDelay)}aps
           </li>
           <li>
+            <Icon type={'bladeDrag'} />
+            crit chance
+            <hr />
+            {critChance}%
+          </li>
+          <li>
             <Icon type={'healPlus'} />
             heal value
             <hr />
@@ -161,7 +168,7 @@ export const Stats: FC = () => {
             <Icon type={'info'} />
             experience
             <hr />
-            {exp}/{expMax}
+            {experience}/{experienceNext}
           </li>
           <li>
             <Icon type={'click'} />

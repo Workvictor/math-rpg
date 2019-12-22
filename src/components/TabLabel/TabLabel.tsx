@@ -1,15 +1,15 @@
 import React, { FC, lazy, ReactNode, Suspense } from 'react';
 import styled from 'styled-components';
-
-import { FlexStart, Tab, Flex } from '../layout';
 import { Route, Switch } from 'react-router';
+
+import { FlexStart, Tab } from '../layout';
+import layout from '../layout/layout.module.scss';
+
 const Navbar = lazy(() => import('../Navigation'));
 
 const Wrapper = styled(FlexStart)`
-  height: 42px;
   overflow: hidden;
   position: relative;
-  bottom: -1px;
   font-size: 16px;
   align-items: flex-end;
   justify-content: space-between;
@@ -28,21 +28,25 @@ export const TabLabel: FC<ITabLabel> = props => {
   return (
     <Wrapper>
       <Tab>
-        <Flex>
-          {children && <ChildWrapper>{children}</ChildWrapper>}
+        <div className={layout.flexBetween}>
           <div>{label}</div>
-        </Flex>
+          <div>
+            <div className={layout.flexCenter}>
+              <div>{children && <ChildWrapper>{children}</ChildWrapper>}</div>
+              <Suspense fallback={null}>
+                <Switch>
+                  <Route path={'/newgame'}>
+                    <Navbar />
+                  </Route>
+                  <Route path={'/:gameName'}>
+                    <Navbar />
+                  </Route>
+                </Switch>
+              </Suspense>
+            </div>
+          </div>
+        </div>
       </Tab>
-      <Suspense fallback={null}>
-        <Switch>
-          <Route path={'/newgame'}>
-            <Navbar />
-          </Route>
-          <Route path={'/:gameName'}>
-            <Navbar />
-          </Route>
-        </Switch>
-      </Suspense>
     </Wrapper>
   );
 };

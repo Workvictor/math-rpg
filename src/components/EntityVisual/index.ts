@@ -1,1 +1,0 @@
-export { EntityVisualBody } from './EntityVisualBody';

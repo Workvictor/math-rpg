@@ -19,12 +19,11 @@ export const Typer = ({ children }: ITyper) => {
       ? Math.min(text.current.length, currentText.length + 1)
       : text.current.length;
     setCurrentText(text.current.slice(0, nextIndex));
-    return anim && currentText.length < text.current.length;
   }, [currentText, anim]);
 
   const onClick = () => setAnim(false);
 
-  useRaf(loop);
+  useRaf(loop, anim && currentText.length < text.current.length);
 
   return <div onClick={onClick}>{currentText}</div>;
 };

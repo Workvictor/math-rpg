@@ -1,14 +1,15 @@
 import { GameModel } from './GameModel';
-import { PlayerModel } from '../Player/PlayerModel';
 import { readGameState } from './readGameState';
 import { UIModel } from '../UIContext/UIModel';
+import { createPlayer } from '../Player/store/createPlayer';
+import { IPlayerBase } from '../Player/store/IPlayerBase';
 
 type TReloadGame = { type: 'reloadGame' };
 type TLoadGame = { type: 'loadGame' };
 type TDeletePlayer = { type: 'deletePlayer'; name: string };
 type TStartNewGame = { type: 'startNewGame'; name: string };
 type TAddClickCount = { type: 'addClickCount' };
-type TOnPlayerUpdate = { type: 'onPlayerUpdate'; player: PlayerModel };
+type TOnPlayerUpdate = { type: 'onPlayerUpdate'; player: IPlayerBase };
 type TOnUIModelUpdate = { type: 'onUIUpdate'; state: UIModel };
 
 export type GameActions =
@@ -23,7 +24,7 @@ export type GameActions =
 export const reducer = (state: GameModel, action: GameActions) => {
   switch (action.type) {
     case 'reloadGame':
-      return new GameModel();
+      return new GameModel(state.dataVersion);
     case 'deletePlayer':
       return {
         ...state,
@@ -34,7 +35,7 @@ export const reducer = (state: GameModel, action: GameActions) => {
     case 'startNewGame':
       return {
         ...state,
-        players: [new PlayerModel(action.name), ...state.players]
+        players: [createPlayer(action.name), ...state.players]
       };
     case 'addClickCount':
       return {

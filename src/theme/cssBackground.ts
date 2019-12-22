@@ -5,7 +5,7 @@ import { images } from './images';
 
 export const cssBackground = {
   cssMarble: css`
-    background: ${colors.grey50} url(${images.marble});
+    background: ${colors.grey20} url(${images.marble});
   `,
   cssRock: css`
     background: ${colors.grey50} url(${images.rock});

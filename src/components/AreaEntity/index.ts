@@ -1,1 +1,0 @@
-export { AreaEntity } from './AreaEntity';
