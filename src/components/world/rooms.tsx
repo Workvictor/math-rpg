@@ -14,7 +14,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     description: 'Отыщите оружие',
     clobsCount: 10,
     clobsTypes: [clobs.barrel, clobs.smallRat],
-    icon: 'hideout', // <Hideout height={'48px'} />,
+    icon: 'hideout',
     locationId: 0,
     nextRoom: 1,
     goals: [
@@ -80,7 +80,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     clobsCount: 28,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
     icon: 'windmill',
-    locationId: 1,
+    locationId: 0,
     goals: [
       {
         clobType: 'wolf',
@@ -117,7 +117,7 @@ export const room: { [key in TRoomName]: RoomModel } = {
     clobsCount: 46,
     clobsTypes: [clobs.wolf, clobs.bear, clobs.barrel, clobs.skeleton],
     icon: 'forest',
-    locationId: 1,
+    locationId: 0,
     goals: [
       {
         clobType: 'bear',

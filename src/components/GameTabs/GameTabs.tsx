@@ -17,7 +17,7 @@ export const GameTabs = () => {
       <Route exact path={`${path}/locations/:locationId`}>
         <LocationTab />
       </Route>
-      <Route exact path={`${path}/locations/:locationId/:roomName`}>
+      <Route exact path={`${path}/locations/:locationId/:roomIndex`}>
         <RoomTab />
       </Route>
       <Route path={`${path}/:tab?`}>

@@ -69,6 +69,11 @@ section hr,
   width: 100%;
 }
 
+.shrinkNo {
+  composes: fullWidth;
+  flex-shrink: 0;
+}
+
 .shrinkFull {
   composes: fullWidth;
   flex-shrink: 1;
@@ -87,6 +92,11 @@ section hr,
 .flexStart {
   composes: flex;
   align-items: flex-start;
+}
+
+.flexStretch {
+  composes: flex;
+  align-items: stretch;
 }
 
 .flexBetween {

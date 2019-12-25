@@ -1,4 +1,5 @@
 import { IPlayerBase } from './IPlayerBase';
+import { IPlayerStats } from './IPlayerStats';
 
 interface AddExp {
   type: 'AddExp';
@@ -55,7 +56,7 @@ interface RestRestore {
 }
 interface UpgradeStat {
   type: 'UpgradeStat';
-  statName: keyof Pick<IPlayerBase, 'physique' | 'agility' | 'spirit'>;
+  statName: keyof IPlayerStats;
   amount: number;
 }
 interface DidAttack {

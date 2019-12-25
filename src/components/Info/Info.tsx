@@ -14,6 +14,7 @@ import { Bookmark } from '../Icon/Bookmark';
 import { IGameRoute } from '../Game/IGameRoute';
 import { Stats } from './Stats';
 import { SmoothScroll } from '../SmoothScroll';
+import { SkillTree } from '../SkillTree';
 
 const TabButton = styled(IconButton)`
   font-size: 28px;
@@ -64,7 +65,7 @@ export const Info = () => {
             <UnderConstruction />
           </Route>
           <Route path={`${root}/skills`}>
-            <UnderConstruction />
+            <SkillTree />
           </Route>
           <Redirect to={root} />
         </Switch>

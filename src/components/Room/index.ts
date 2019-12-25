@@ -1,1 +1,1 @@
-export { Room } from './Room';
+export { RoomView } from './RoomView';

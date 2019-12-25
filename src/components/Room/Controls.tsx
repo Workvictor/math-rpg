@@ -3,9 +3,9 @@ import { useRouteMatch } from 'react-router';
 
 import { Rythm, UIBlockInner } from '../layout';
 import { Button } from '../Button';
-import { IRoomRoute } from './IRoomRoute';
 import { ProgressBar } from '../ProgressBar';
 import layout from '../layout/layout.module.scss';
+import { IRoomRoute } from './Route';
 
 interface IProps {
   killCount: number;
@@ -13,7 +13,7 @@ interface IProps {
   onRepeat: () => void;
 }
 
-export const RoomControls: FC<IProps> = props => {
+export const Controls: FC<IProps> = props => {
   const { params } = useRouteMatch<IRoomRoute>();
   const { killCount, killCountMax, onRepeat } = props;
 

@@ -77,7 +77,7 @@ export const Stats: FC = () => {
           <li>
             <span>
               <Icon type={'strong'} />
-              strength
+              physique
               <hr />
               {physique}
             </span>
@@ -99,7 +99,7 @@ export const Stats: FC = () => {
           <li>
             <span>
               <Icon type={'smart'} />
-              intelligence
+              spirit
               <hr />
               {spirit}
             </span>

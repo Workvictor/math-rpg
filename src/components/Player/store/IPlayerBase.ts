@@ -7,7 +7,6 @@ export interface IPlayerBase extends IPlayerStats {
   baseHealthPoints: number;
   experience: number;
   experienceNext: number;
-  experienceCache: number[];
   healthPoints: number;
   stamina: number;
   mana: number;

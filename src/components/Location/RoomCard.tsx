@@ -2,32 +2,27 @@ import React, { FC } from 'react';
 
 import { Rythm } from '../layout';
 import { Animator } from '../animation/Animator';
-import { RoomModel } from '../world/RoomModel';
 import { UiFrame } from '../UiFrame';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { EColorType, TextColor } from '../layout/TextColor';
 import { LockView } from '../layout/LockView';
-import { GoalList } from '../GoalList';
-import { clobs } from '../world/clobs';
 import { getColorTypeByLevelDelta } from '../utils/getColorTypeByLevelDelta';
 import layout from '../layout/layout.module.scss';
 import { classJoin } from '../utils/classJoin';
 import { usePlayerSelector } from '../Player/usePlayerSelector';
+import { IRoom } from '../Room/createRoom';
+import { useRouteMatch } from 'react-router';
+import { ILocationRoute } from './ILocationRoute';
 
-interface IProps {
-  locationId: string;
-  index: number;
-  room: RoomModel;
-}
-
-export const RoomCard: FC<IProps> = props => {
+export const RoomCard: FC<IRoom> = props => {
+  const { params } = useRouteMatch<ILocationRoute>();
   const player = usePlayerSelector();
-  const { index, room } = props;
-  const { label, locationId, name, level, icon } = room;
 
-  const levelDelta = player.level - room.level;
-  const isLocked = !player.unlockedRoomIds.includes(room.id);
+  const { label, index, level, icon } = props;
+
+  const levelDelta = player.level - level;
+  const isLocked = !player.unlockedRoomIds.includes(index);
 
   return (
     <Rythm r={2}>
@@ -50,15 +45,6 @@ export const RoomCard: FC<IProps> = props => {
                   <b className={layout.typography5}>[ {level} ]</b>
                 </TextColor>
               </h3>
-              <div>
-                <GoalList
-                  title={'Задания:'}
-                  items={room.goals.map(i => ({
-                    label: `убить [${clobs[i.clobType].label}]`,
-                    count: i.count
-                  }))}
-                />
-              </div>
             </div>
           </div>
           <hr className={layout.divider} />
@@ -73,7 +59,7 @@ export const RoomCard: FC<IProps> = props => {
                 </TextColor>
               }
             >
-              <Button disable={isLocked} to={`${locationId}/${name}`}>
+              <Button disable={isLocked} to={`${params.locationId}/${index}`}>
                 войти
               </Button>
             </LockView>
