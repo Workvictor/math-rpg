@@ -11,6 +11,7 @@ import { BorderInner } from '../layout';
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { usePlayerDispatcher } from '../Player/PlayerContext';
+import { usePlayerSelector } from '../Player/usePlayerSelector';
 
 type PerkType = 'addFlatAmount' | 'addPercentAmount';
 
@@ -97,9 +98,8 @@ const perks = [
 ];
 
 export const SkillTree = () => {
+  const playerState = usePlayerSelector();
   const playerDispatcher = usePlayerDispatcher();
-  const [] = useState();
-  console.log(perks);
 
   const onUpgradeStat = (
     statName: keyof IPlayerStats,
@@ -109,6 +109,10 @@ export const SkillTree = () => {
       type: 'UpgradeStat',
       amount,
       statName
+    });
+    playerDispatcher({
+      type: 'RemoveSkillPoint',
+      amount: 1
     });
   };
 
@@ -132,6 +136,7 @@ export const SkillTree = () => {
                   </li>
                   <li>
                     <Button
+                      disable={playerState.skillPoints <= 0}
                       onClick={onUpgradeStat(
                         perk.bonus.statName,
                         perk.bonus.amount.value

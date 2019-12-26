@@ -7,7 +7,7 @@ import { getExperienceForNextLevel } from './getExperienceNextForLevel';
 export const skillPointsPerLevel = 1;
 export const statPointsPerLevel = 3;
 
-const dataVersion = '0.0.11';
+const dataVersion = '0.0.12';
 // TODO
 export const createPlayer = (
   name: string,

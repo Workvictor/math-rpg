@@ -62,9 +62,14 @@ interface UpgradeStat {
 interface DidAttack {
   type: 'DidAttack';
 }
+interface RemoveSkillPoint {
+  type: 'RemoveSkillPoint';
+  amount: number;
+}
 
 export type Actions =
   | AddExp
+  | RemoveSkillPoint
   | RegenerateHealth
   | AddQuest
   | RemoveQuest

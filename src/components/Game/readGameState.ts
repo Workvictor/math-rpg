@@ -2,7 +2,7 @@ import { GameModel } from './GameModel';
 import { createPlayer } from '../Player/store/createPlayer';
 
 export const readGameState = () => {
-  const newGame = new GameModel('0.0.1');
+  const newGame = new GameModel('0.0.2');
   const savedGame = localStorage.getItem(GameModel.appName);
 
   if (!savedGame) {
