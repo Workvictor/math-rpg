@@ -14,8 +14,6 @@ import { UIBlockInner } from '../layout';
 import { usePlayerDispatcher } from '../Player/PlayerContext';
 import { useHitDispatcher } from '../HitArea/Context';
 import { useTimeout } from '../utils/useTimeout';
-import { Clob } from '../world/Clob';
-import { spreadRange } from '../utils/spreadRange';
 import { Animator } from '../animation/Animator';
 import { Avatar } from '../Avatar';
 import { HealthBar } from '../StatusBar/HealthBar';
@@ -23,6 +21,7 @@ import { StatValue } from '../StatValue';
 import { mathAPS } from '../utils/mathAPS';
 import { EColorType } from '../layout/TextColor';
 import layout from '../layout/layout.module.scss';
+import { TIcons } from '../Icon/icons';
 
 const Wrapper = styled(UIBlockInner)`
   position: relative;
@@ -50,101 +49,70 @@ const Wrapper = styled(UIBlockInner)`
   }
 `;
 
-export const ClickableObject: FC<{
-  clob: Clob;
-  index: number;
-  damageDealt: number;
-  isBoss?: boolean;
-  onKill: (index: number, goldAmount: number) => void;
-  onMount?: (index: number) => void;
-}> = memo(props => {
+interface IProps {
+  damageTakenAll: number;
+  damage: number;
+  healthPoints: number;
+  attackDelay: number;
+  isDead: boolean;
+  icon: TIcons;
+  level: number;
+  name: string;
+  isBoss: boolean;
+  hpMax: number;
+}
+
+export const ClickableObject: FC<IProps> = memo(mob => {
   const hitRef = createRef<HTMLDivElement>();
 
   const hitDispatch = useHitDispatcher();
   const playerDispatch = usePlayerDispatcher();
 
-  const { clob } = props;
-
   const [isAnimated, setAnimated] = useState(false);
-
-  const [isDead, setIsDead] = useState(false);
-
-  const [healthPoints, setHealthPoints] = useState(clob.healthPoints);
+  const [damageTaken, setDamageTaken] = useState(0);
 
   const animateDamage = useCallback(
-    (hp: number) => {
-      if (hp !== healthPoints && hitRef.current) {
+    (value: number) => {
+      if (hitRef.current) {
         const rect = hitRef.current.getBoundingClientRect();
-        const damageValue = healthPoints - hp;
         setAnimated(true);
         hitDispatch({
           type: 'addHit',
           pageX: rect.left + rect.width / 2,
           pageY: rect.top + rect.height / 2,
-          value: damageValue
+          value
         });
       }
     },
-    [clob.healthPoints, healthPoints, hitDispatch, hitRef]
-  );
-
-  const animateDeath = useCallback(
-    (hp: number) => {
-      if (hp === 0) {
-        setIsDead(true);
-        playerDispatch({
-          type: 'AddExp',
-          expReward: clob.expReward,
-          targetLevel: clob.level
-        });
-        props.onKill(props.index, Math.max(1, spreadRange(clob.goldAmount)));
-      }
-    },
-    [clob.expReward, clob.goldAmount, clob.level, playerDispatch, props]
+    [hitDispatch, hitRef]
   );
 
   useEffect(() => {
-    if (!isDead && props.damageDealt > 0) {
-      const hp = Math.max(0, clob.healthPoints - props.damageDealt);
-      animateDamage(hp);
-      animateDeath(hp);
-      setHealthPoints(hp);
+    if (mob.damageTakenAll > damageTaken) {
+      const delta = mob.damageTakenAll - damageTaken;
+      setDamageTaken(mob.damageTakenAll);
+      animateDamage(delta);
     }
-  }, [
-    clob.healthPoints,
-    isDead,
-    props.damageDealt,
-    animateDamage,
-    animateDeath
-  ]);
+  }, [mob.damageTakenAll, animateDamage, damageTaken]);
 
   useTimeout(
     () => {
       playerDispatch({
         type: 'TakeDamage',
-        damage: clob.damage
+        damage: mob.damage
       });
     },
-    clob.damage > 0 && healthPoints > 0,
-    clob.attackTimeout
+    mob.damage > 0 && mob.healthPoints > 0,
+    mob.attackDelay
   );
 
   const onShakeEnd = () => {
     setAnimated(false);
   };
 
-  const onAnimationEnd = () => {
-    if (!isDead && props.onMount) {
-      props.onMount(props.index);
-    }
-  };
-
   return (
     <>
-      <Animator
-        animationName={isDead ? 'slideOutLeft' : 'slideInRight'}
-        onAnimationEnd={onAnimationEnd}
-      >
+      <Animator animationName={mob.isDead ? 'slideOutLeft' : 'slideInRight'}>
         <Wrapper>
           <div ref={hitRef} className={layout.marginRight}>
             <Animator
@@ -152,13 +120,13 @@ export const ClickableObject: FC<{
               play={isAnimated}
               onAnimationEnd={onShakeEnd}
             >
-              <Avatar size={56} iconType={clob.iconType} level={clob.level} />
+              <Avatar size={56} iconType={mob.icon} level={mob.level} />
             </Animator>
           </div>
           <ul className={layout.cadenceList}>
             <li>
-              {clob.label}
-              {props.isBoss ? ' - [boss]' : ''}
+              {mob.name}
+              {mob.isBoss ? ' - [ boss ]' : ''}
             </li>
             <li>
               <ul className={layout.columnList}>
@@ -166,20 +134,20 @@ export const ClickableObject: FC<{
                   <StatValue
                     colorType={EColorType.physical}
                     icon={'fist'}
-                    value={clob.damage}
+                    value={mob.damage}
                   />
                 </li>
                 <li>
                   <StatValue
                     colorType={EColorType.natural}
                     icon={'sprint'}
-                    value={mathAPS(clob.attackTimeout)}
+                    value={mathAPS(mob.attackDelay)}
                   />
                 </li>
               </ul>
             </li>
             <li>
-              <HealthBar value={healthPoints} max={clob.healthPoints} />
+              <HealthBar value={mob.healthPoints} max={mob.hpMax} />
             </li>
           </ul>
         </Wrapper>

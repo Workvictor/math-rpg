@@ -19,10 +19,7 @@ export const addExp = (
       ...state,
       experience: overCupExp,
       level,
-      experienceNext: getExperienceForNextLevel(level, state.experienceCache),
-      experienceCache: state.experienceCache
-        .slice(-1)
-        .concat(state.experienceNext),
+      experienceNext: getExperienceForNextLevel(level),
       skillPoints: state.skillPoints + skillPointsPerLevel,
       statPoints: state.statPoints + statPointsPerLevel
     };

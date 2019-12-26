@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import { ScrollArea } from '../layout';
+import { classJoin } from '../utils/classJoin';
 
 export const ScrollAreaWrapper = styled.div`
   overflow: hidden;
@@ -24,10 +25,17 @@ export const ScrollAreaWrapper = styled.div`
   }
 `;
 
-export const SmoothScroll: FC = props => {
+interface IProps {
+  type?: 'horizontal' | 'vertical';
+}
+
+export const SmoothScroll: FC<IProps> = props => {
+  const { type } = props;
   return (
     <ScrollAreaWrapper>
-      <ScrollArea>{props.children}</ScrollArea>
+      <ScrollArea className={classJoin([type || 'vertical'])}>
+        {props.children}
+      </ScrollArea>
     </ScrollAreaWrapper>
   );
 };

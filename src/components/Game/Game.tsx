@@ -13,7 +13,6 @@ import { ButtonGroup } from '../Button/ButtonGroup';
 import { HealButton } from '../HealButton';
 import { Button } from '../Button';
 import { LocationSuspense } from '../LocationSuspense';
-import { RestButton } from '../RestButton';
 import layout from '../layout/layout.module.scss';
 import { Icon } from '../Icon';
 
@@ -55,7 +54,7 @@ export const Game: FC = () => {
                     skills
                   </Button>
                 </Route>
-                <Route exact path={`${path}/locations/:locationId/:roomName`}>
+                <Route exact path={`${path}/locations/:locationId/:roomIndex`}>
                   <HealButton />
                 </Route>
                 {/*<RestButton />*/}

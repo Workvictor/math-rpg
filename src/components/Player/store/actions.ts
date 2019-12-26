@@ -1,4 +1,5 @@
 import { IPlayerBase } from './IPlayerBase';
+import { IPlayerStats } from './IPlayerStats';
 
 interface AddExp {
   type: 'AddExp';
@@ -55,15 +56,20 @@ interface RestRestore {
 }
 interface UpgradeStat {
   type: 'UpgradeStat';
-  statName: keyof Pick<IPlayerBase, 'physique' | 'agility' | 'spirit'>;
+  statName: keyof IPlayerStats;
   amount: number;
 }
 interface DidAttack {
   type: 'DidAttack';
 }
+interface RemoveSkillPoint {
+  type: 'RemoveSkillPoint';
+  amount: number;
+}
 
 export type Actions =
   | AddExp
+  | RemoveSkillPoint
   | RegenerateHealth
   | AddQuest
   | RemoveQuest

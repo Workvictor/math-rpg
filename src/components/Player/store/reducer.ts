@@ -17,6 +17,11 @@ export const reducer = (state: IPlayerBase, action: Actions): IPlayerBase => {
         ...state,
         goldAmount: state.goldAmount + action.amount
       };
+    case 'RemoveSkillPoint':
+      return {
+        ...state,
+        skillPoints: state.skillPoints - action.amount
+      };
     case 'RestRestore':
       return {
         ...state,
